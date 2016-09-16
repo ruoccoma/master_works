@@ -1,14 +1,11 @@
 from __future__ import print_function
 
-from keras.datasets import cifar10
 from keras.layers import Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
 from keras.models import model_from_yaml
 from keras.optimizers import SGD
-from keras.preprocessing.image import ImageDataGenerator
-from keras.utils import np_utils
 
 yaml_model_filename = "model.yml"
 model_weights_filename = "weights"
