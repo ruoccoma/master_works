@@ -13,6 +13,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 
 nb_classes = 10
+batch_size = 32
 
 # the data, shuffled and split between train and test sets
 (X_train, y_train), (X_test, y_test) = cifar10.load_data()
@@ -28,11 +29,7 @@ model = generate_model(X_train.shape[1:], nb_classes)
 train_model(model, X_train, X_test, Y_train, Y_test)
 save_model(model)
 
-model = load()
-model = generate_model(X_train.shape[1:], nb_classes)
-sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(loss='categorical_crossentropy',
-              optimizer=sgd,
-              metrics=['accuracy'])
+# model = load()
+
 
 print(model.evaluate(X_train, Y_train, batch_size))
