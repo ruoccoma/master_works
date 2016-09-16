@@ -13,6 +13,13 @@ from keras.utils import np_utils
 yaml_model_filename = "model.yml"
 model_weights_filename = "weights"
 
+
+def compile_model(model):
+	# let's train the model using SGD + momentum (how original).
+	sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+	model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
+
 def generate_model(input_shape, nb_classes):
 	model = Sequential()
 	model.add(Convolution2D(32, 3, 3, border_mode='same', input_shape=input_shape))
@@ -33,9 +40,7 @@ def generate_model(input_shape, nb_classes):
 	model.add(Dropout(0.5))
 	model.add(Dense(nb_classes))
 	model.add(Activation('softmax'))
-	# let's train the model using SGD + momentum (how original).
-	sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-	model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+	compile_model(model)
 
 	return model
 
@@ -50,6 +55,7 @@ def load():
 	# load weights into new model
 	loaded_model.load_weights(model_weights_filename)
 	print("Loaded model from disk")
+	compile_model(loaded_model)
 	return loaded_model
 
 

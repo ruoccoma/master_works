@@ -10,7 +10,7 @@ from keras.optimizers import SGD
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 
-batch_size = 1024
+batch_size = 32
 nb_classes = 10
 data_augmentation = False
 nb_epoch = 1

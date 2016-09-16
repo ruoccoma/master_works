@@ -39,5 +39,4 @@ else:
     train_model(model, X_train, X_test, Y_train, Y_test)
     save_model(model)
 
-
 print(model.evaluate(X_train, Y_train, batch_size))
