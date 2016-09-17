@@ -2,7 +2,7 @@ import numpy
 from PIL import Image
 
 
-def image2RBKpixelarray(filepath):
+def image2RGBpixelarray(filepath):
 	im = Image.open(filepath)
 	image_map = list(im.getdata())
 	image_map = numpy.array(image_map)
