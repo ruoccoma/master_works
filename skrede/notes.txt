@@ -1,0 +1,37 @@
+
+	
+DROPOUT
+	Dropout is a regularization technique for reducing overfitting in neural 
+	networks by preventing complex co-adaptations on training data. It is a 
+	very efficient way of performing model averaging with neural networks. 
+	The term "dropout" refers to dropping out units (both hidden and visible) 
+	in a neural network.
+	
+LOCAL RECEPTIVE FIELDS
+    E.x. for a 28x28 image, 5x5 pixels are sent to each neuron in the 
+    hidden layer.
+    
+POOLING
+	Take the output of e.g. 2x2 neurons in the first hidden layer and summarize
+	them into one output. Max-pooling = output the maximum activation in the 2x2
+	input region.
+
+	Intuition: Throw away information about where a feature is found.
+	Only interested in the existence of a feature, does not matter where it was
+	found (only placement relative to other features found matters).
+	
+		http://neuralnetworksanddeeplearning.com/chap6.html
+	####
+	  We can think of max-pooling as a way for the network to ask whether a 
+	  given feature is found anywhere in a region of the image. It then 
+	  throws away the exact positional information. The intuition is that 
+	  once a feature has been found, its exact location isn't as important as 
+	  its rough location relative to other features. A big benefit is that 
+	  there are many fewer pooled features, and so this helps reduce the 
+	  number of parameters needed in later layers.
+	####
+
+STRIDE
+    In local receptive fields, the stride is how "fast" the window is moving.
+    E.g. if the 5x5 window moves 2 pixels to the right (or down) for each
+    neuron, the stride is 2.
