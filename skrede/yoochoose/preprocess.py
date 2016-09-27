@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+import sys
 
 '''
 -Session ID – the id of the session. In one session there are one or many clicks. Could be represented as an integer number.
@@ -12,7 +13,7 @@ import pickle
 
 raw_file = 'yoochoose-clicks.dat'
 out_file = 'processed_data.csv'
-n_lines_to_read = 50000
+n_lines_to_read = 10000
 
 # Read up to n_lines_to_read of lines from the dataset and put sessions in a dictionary
 def gather_sessions():
@@ -39,6 +40,7 @@ def gather_sessions():
 	return sessions
 
 sessions = gather_sessions()
+print("-------------------------------------------")
 print("Number of sessions before filtering:", len(sessions.keys()))
 
 # Remove sessions with only one click
@@ -69,15 +71,6 @@ def create_item_map():
 item_map = create_item_map()
 print("Number of items:", len(item_map.keys()))
 
-with open('item-map.pickle', 'wb') as f:
-	pickle.dump(item_map, f)
-
-with open('sessions.pickle', 'wb') as f:
-	pickle.dump(sessions, f)
-
-with open('read-lines.txt', 'w') as f:
-	f.write(str(n_lines_to_read)+'\n')
-
 def convert_items_to_vec():
 	n_items = len(item_map.keys())
 	item_vec = {}
@@ -87,8 +80,39 @@ def convert_items_to_vec():
 		index = int(item_map[k])
 		vec[index] = 1
 		vec = list(vec)
-		item_vec[index] = vec
+		item_vec[k] = vec
 
 	return item_vec
 
 item_vec = convert_items_to_vec()
+
+def convert_sessions_to_vec():
+	count = 0
+	session_vec = []
+	for k in sessions.keys():
+		session = sessions[k]
+		vec_session = []
+		for i in session:
+			vec_session.append(item_vec[i])
+			count += 1
+		session_vec.append(vec_session)
+
+	print("Total number of items in sessions:", count)
+	print("Size of an item vector in bytes:", sys.getsizeof(session_vec[0][0]))
+	bytes_per_vector = sys.getsizeof(session_vec[0][0])
+	total_bytes_used_on_item_vectors = bytes_per_vector * count
+	KB = total_bytes_used_on_item_vectors/1024
+	MB = KB/1024
+	print("MB used on item vectors:", MB)
+	return session_vec
+
+session_vec = convert_sessions_to_vec()
+print("Number of sessions in vec format:",len(session_vec))
+
+with open('sessions.pickle', 'wb') as f:
+	pickle.dump(session_vec, f)
+
+with open('read-lines.txt', 'w') as f:
+	f.write(str(n_lines_to_read)+'\n')
+
+print("-------------------------------------------")
