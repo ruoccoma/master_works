@@ -13,7 +13,7 @@ import sys
 
 raw_file = 'yoochoose-clicks.dat'
 out_file = 'processed_data.csv'
-n_lines_to_read = 10000
+n_lines_to_read = 8000
 
 # Read up to n_lines_to_read of lines from the dataset and put sessions in a dictionary
 def gather_sessions():
@@ -114,5 +114,8 @@ with open('sessions.pickle', 'wb') as f:
 
 with open('read-lines.txt', 'w') as f:
 	f.write(str(n_lines_to_read)+'\n')
+
+with open('item_vec_size.txt', 'w') as f:
+	f.write(str(len(session_vec[0][0]))+'\n')
 
 print("-------------------------------------------")
