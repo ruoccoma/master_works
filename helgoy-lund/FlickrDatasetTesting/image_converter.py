@@ -11,7 +11,7 @@ import pickle
 import time
 import datetime
 
-from sqliteDatabase import db_insert, db_get
+from sqliteDatabase import db_insert_image_vector, db_get, db_keys
 
 
 def fetch_all_imagepaths():
@@ -94,13 +94,13 @@ def write_result_to_file(results):
 
 def write_result_to_database(results):
 	for result_tuple in results:
-		db_insert(result_tuple[0], result_tuple[1])
+		db_insert_image_vector(result_tuple[0], result_tuple[1])
 
 
-def generate_dictionary_file():
+def generate_and_store_images():
 	if __name__ == '__main__':
 		pool = Pool(os.cpu_count())  # process per core
-		result = pool.map_async(image2RGBpixelarray, fetch_all_imagepaths()[:10])
+		result = pool.map_async(image2RGBpixelarray, fetch_all_imagepaths())
 		pool.close()
 		old_remaining = -1
 		while True:
@@ -132,7 +132,12 @@ def create_image():
 	void. Saves img to current dir.
 	"""
 	now = datetime.datetime.now()
-	rgb_array = db_get("1002674143_1b742ab4b8.jpg")
+	# old = time.time()
+	rgb_array = db_get("997722733_0cb5439472.jpg")
+	# all_images = db_keys()
+	# new = time.time()
+	# print("Time to get from DB: " + str(new - old))
+	# print("All images length: " + str(len(all_images)))
 	red = rgb_array[0][0]
 	green = rgb_array[0][1]
 	blue = rgb_array[0][2]
@@ -151,7 +156,9 @@ def create_image():
 	im2.putdata(rgb_tuples_list)
 	im2.save(str(now.hour) + str(now.minute) + ".jpg")
 
-# generate_dictionary_file()
+create_image()
+#
+# generate_and_store_images()
 
 # img_dict = load_img_dict("async-image_RGB_img_dict-8090")
 # img_dict = load_img_dict("test-image_RGB_img_dict-10")
