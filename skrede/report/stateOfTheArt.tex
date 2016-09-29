@@ -1,2 +1,18 @@
 \chapter{State of the Art}
-mmmmmmh
+
+\TODO{A lot of this should be in the introduction instead}\\
+\TODO{Much of this information is sourced from \cite{DBLP:journals/corr/Lipton15} and should maybe be referenced. However (what I have used so far) is pretty obvious (?) stuff for those who know a bit about RNNs, so might not be needed.}\\
+
+Neural networks achieve great results in many different machine learning tasks these days. One example is the use of deep neural networks in Google DeepMind's AlphaGo program, which became the first Computer Go program that to beat a professional human \cite{BBC:go-champion}.
+
+The growth in computing power has made neural networks more applicable. Also, they work well in some cases where other methods struggle.
+
+Standard neural networks are not well suited to handle cases where the training and test data are not independent. And they are not suited for inputs and outputs of varying length either. Recurrent neural networks works better in these cases. If neural networks already have state of the art performance on a problem then it might be worth looking into using recurrent neural networks to further increase the performance. Standard neural networks are not the only model that lacks the ability to evaluate data points in sequence, for example support vector machines and logistic regression do not have a sense of time either.
+
+Markov models can represent time dependencies, but becomes infeasible to use when the number of dependencies grow big. RNNs have the advantage that they can represent an exponential amount of hidden states in the hidden nodes.
+
+
+
+For more detail on the state of the art on RNNs, we refer to Zachary Chase Lipton's comprehensive paper "A Critical Review of Recurrent Neural Networks
+for Sequence Learning" \cite{DBLP:journals/corr/Lipton15}
+

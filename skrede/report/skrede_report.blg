@@ -1,0 +1,62 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: skrede_report.aux
+A level-1 auxiliary file: titlepage.aux
+A level-1 auxiliary file: introduction.aux
+A level-1 auxiliary file: motivations.aux
+A level-1 auxiliary file: stateOfTheArt.aux
+A level-1 auxiliary file: challanges.aux
+A level-1 auxiliary file: ideas.aux
+A level-1 auxiliary file: experimentation.aux
+A level-1 auxiliary file: analysisOfResults.aux
+A level-1 auxiliary file: conclusion.aux
+A level-1 auxiliary file: furtherWork.aux
+A level-1 auxiliary file: acronyms.aux
+A level-1 auxiliary file: appendix-b.aux
+The style file: unsrt.bst
+Database file #1: references.bib
+Warning--entry type for "BBC:go-champion" isn't style-file defined
+--line 14 of file references.bib
+Warning--I didn't find a database entry for "einstein"
+You've used 2 entries,
+            1791 wiz_defined-function locations,
+            470 strings with 4023 characters,
+and the built_in function-call counts, 278 in all, are:
+= -- 22
+> -- 8
+< -- 0
++ -- 4
+- -- 2
+* -- 6
+:= -- 53
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 2
+chr.to.int$ -- 0
+cite$ -- 2
+duplicate$ -- 13
+empty$ -- 33
+format.name$ -- 2
+if$ -- 60
+int.to.chr$ -- 0
+int.to.str$ -- 2
+missing$ -- 1
+newline$ -- 13
+num.names$ -- 2
+pop$ -- 6
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 9
+stack$ -- 0
+substring$ -- 0
+swap$ -- 2
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 2
+width$ -- 3
+write$ -- 22
+(There were 2 warnings)

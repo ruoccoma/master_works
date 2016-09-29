@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{DBLP:journals/corr/Lipton15}
+Zachary~Chase Lipton.
+\newblock A critical review of recurrent neural networks for sequence learning.
+\newblock {\em CoRR}, abs/1506.00019, 2015.
+
+\bibitem{BBC:go-champion}
+BBC.
+\newblock Google achieves ai 'breakthrough' by beating go champion.
+\newblock \url{http://www.bbc.com/news/technology-35420579}.
+
+\end{thebibliography}

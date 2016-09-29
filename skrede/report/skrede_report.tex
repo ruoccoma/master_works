@@ -8,11 +8,15 @@
 \usepackage{amsthm}                   		% for Ã¥ lage teoremer og lignende.
 \usepackage{graphicx}                 		% inkludering av grafikk
 \usepackage{subfig}                   		% hvis du vil kunne ha flere figurer inni en figur
-\usepackage{listings}     		            % Fin for inkludering av kildekode
+\usepackage{listings}     		            % main aim is to include the source code of any programming language within your document
 
 \usepackage[nottoc]{tocbibind} 				% Includes references in table of contents
-\usepackage{acronym}
+\usepackage{acronym}						% This pack­age en­sures that all acronyms used in the text are spelled out in full at least once.
 \usepackage{hyperref}           		    % Lager hyperlinker i evt. pdf-dokument
+\usepackage{url}							%
+
+\usepackage{xcolor}
+\newcommand\TODO[1]{\textcolor{red}{#1}}
 
 % Title Page
 \title{Title}
@@ -58,3 +62,19 @@
 \end{document}
 % ==============================================
 % ==============================================
+
+
+
+% ==============================================
+% =========== LATEX EXAMPLES ===================
+% ==============================================
+
+% =========== Code - listing ===================
+\begin{lstlisting}
+Put your code here.
+\end{lstlisting}
+
+\lstinputlisting[language=Python, firstline=37, lastline=45]{source_filename.py}
+
+% =========== TODO =============================
+\TODO{But I'm worried about the text}
