@@ -22,14 +22,18 @@ import math
 import os
 import random
 import zipfile
+import pickle
 
 import numpy as np
 import six
 import tensorflow as tf
 
+# Plotting import
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
 
 filename = "Flickr8k_text/Flickr8k.token.txt"
-#filename = "text8.zip"
 
 # Read the data into a list of strings.
 def read_data(filename):
@@ -164,7 +168,8 @@ with graph.as_default():
   init = tf.initialize_all_variables()
 
 # Step 5: Begin training.
-num_steps = 100001
+#num_steps = 100001
+num_steps = 1
 
 with tf.Session(graph=graph) as session:
   # We must initialize all variables before we use them.
@@ -221,11 +226,39 @@ def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
   plt.savefig(filename)
 
 
-from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
+# Saving embedding space to file
+def save_model(labels, embeddings):
+  word_dict = {}
 
-tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
-plot_only = 500
-low_dim_embs = tsne.fit_transform(final_embeddings[:plot_only,:])
-labels = [reverse_dictionary[i] for i in xrange(plot_only)]
-plot_with_labels(low_dim_embs, labels)
+
+  for key, data in zip(labels, embeddings):
+    word_dict[labels[key]] = data
+
+  pickle.dump(word_dict, open("word_embeddings-" + str(len(word_dict)), "wb"))
+  print("Saved model to disk")
+
+
+def main():
+
+  #Settings
+  plotting = False
+  saving = True
+  saving_normalized = False
+
+  if(plotting):
+    tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
+    plot_only = 500
+    low_dim_embs = tsne.fit_transform(final_embeddings[:plot_only, :])
+    labels = [reverse_dictionary[i] for i in xrange(plot_only)]
+    plot_with_labels(low_dim_embs, labels)
+
+  if(saving):
+    if(saving_normalized):
+      save_model(reverse_dictionary, embeddings)
+    else:
+      save_model(reverse_dictionary, final_embeddings)
+
+main()
+
+
+
