@@ -2,17 +2,17 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import re
 import os
+import re
 import sys
 import tarfile
 from os import listdir
 from os.path import isfile, join
 
-from six.moves import urllib
 import tensorflow as tf
+from six.moves import urllib
 
-from sqliteDatabase import db_insert_image_vector, db_get_image_vector, db_keys_images
+from image_database_helper import store_image_vector_to_db
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -113,7 +113,7 @@ def convert_images_to_vectors():
 		for i in range(num_images):
 			image_path = "Flicker8k_Dataset/" + images[i]
 			image_data = tf.gfile.FastGFile(image_path, 'rb').read()
-			db_insert_image_vector(images[i], sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0])
+			store_image_vector_to_db(images[i], sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0])
 			print(str(i + 1) + "/" + num_images_string)
 
 
@@ -137,18 +137,9 @@ def maybe_download_and_extract():
 	tarfile.open(filepath, 'r:gz').extractall(dest_directory)
 
 
-def get_image_vector_from_db(image_name):
-	return db_get_image_vector(image_name)
-
-
 def fetch_all_imagepaths():
 	dirpath = "Flicker8k_Dataset"
 	return [f for f in listdir(dirpath) if isfile(join(dirpath, f))]
-
-
-def write_result_to_database(results):
-	for result_tuple in results:
-		db_insert_image_vector(result_tuple[0], result_tuple[1])
 
 
 def main(_):
