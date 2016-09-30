@@ -1,7 +1,9 @@
 \chapter{State of the Art}
 
 \TODO{A lot of this should be in the introduction instead}\\
-\TODO{Much of this information is sourced from \cite{DBLP:journals/corr/Lipton15} and should maybe be referenced. However (what I have used so far) is pretty obvious (?) stuff for those who know a bit about RNNs, so might not be needed.}\\
+\TODO{I have written too much about RNN, should write about the state of the art on session based recommender systems (?)}
+\TODO{Much of this information is sourced from \cite{DBLP:journals/corr/Lipton15} and should maybe be referenced more. However (what I have used so far) is pretty obvious (?) stuff for those who know a bit about RNNs, so might not be needed.}
+\TODO{This is a mess and needs to be cleaned up. *Seperate between state of the art on recommender systems and state of the art on RNN.}\\
 
 Neural networks achieve great results in many different machine learning tasks these days. One example is the use of deep neural networks in Google DeepMind's AlphaGo program, which became the first Computer Go program that to beat a professional human \cite{BBC:go-champion}.
 
@@ -9,10 +11,59 @@ The growth in computing power has made neural networks more applicable. Also, th
 
 Standard neural networks are not well suited to handle cases where the training and test data are not independent. And they are not suited for inputs and outputs of varying length either. Recurrent neural networks works better in these cases. If neural networks already have state of the art performance on a problem then it might be worth looking into using recurrent neural networks to further increase the performance. Standard neural networks are not the only model that lacks the ability to evaluate data points in sequence, for example support vector machines and logistic regression do not have a sense of time either.
 
-Markov models can represent time dependencies, but becomes infeasible to use when the number of dependencies grow big. RNNs have the advantage that they can represent an exponential amount of hidden states in the hidden nodes.
+Markov models can represent time dependencies, but becomes infeasible to use when the number of dependencies grow big. RNNs have the advantage that they can represent an exponential amount of hidden states in the hidden nodes.\\
+
+\TODO{This might not be worth mentioning..}
+Earlier it has been difficult to train RNNs due to vanishing and exploding gradients, but improved architectures (LSTM) and better gradient-following heuristics have made RNNs very usable \cite{DBLP:journals/corr/Lipton15}.\\
 
 
+For more detail on the state of the art on RNNs, we refer to a comprehensive paper by Lipton et al. called "A Critical Review of Recurrent Neural Networks
+for Sequence Learning" \cite{DBLP:journals/corr/Lipton15}\\
 
-For more detail on the state of the art on RNNs, we refer to Zachary Chase Lipton's comprehensive paper "A Critical Review of Recurrent Neural Networks
-for Sequence Learning" \cite{DBLP:journals/corr/Lipton15}
+RNNs have become very popular in the last few years. Variants of Long Short Term Memory (LSTM) networks have improved RNNs a lot. Nowadays, researchers try to add attention to RNNs. This means that the RNN picks information from a larger collection of information, to look at during each step \cite{COLAH:understanding-lstm}. We are not exploring this in here.\\
 
+LSTM and Bidirectional Recurrent Neural Networks (BRNN) are two of the most successful RNN architectures.
+LSTM overcomes the earlier problems with training. BRNN uses information from both the future and the past to output the current information. These two methods can be combined \cite{DBLP:journals/corr/Lipton15}.
+
+BRNN is not applicable in the online setting, since we don't have access to information from the future.\\
+
+
+Recurrent neural networks have recently been used to outperform earlier neural network approaches and matching the best results of non-neural network approaches on natural language translation \cite{DBLP:journals/corr/SutskeverVL14}. In 2014 RNN was used to do image captioning with then state-of-the-art results \cite{DBLP:journals/corr/MaoXYWY14a}.
+
+Some of the state-of-the-art models for recommender systems are matrix factorization models and restricted Bolzmann machines (RBM) \cite{AGS:implicit-recommender-systems}.
+
+Neighborhood methods have been extensively used in session-based recommendations.
+\TODO{Elaborate more on this}
+
+\section{Matrix factorization models}
+Matrix factorization is a collaborative filtering approach that tries to estimate hidden latent features. These latent features determines how a user would rate an item. For example if the items are movies, then a user might prefer action movies, so we want to discover this latent feature and thus be able to predict the rating from a certain user on a certain item. Quickly explained we have a matrix $\textbf{R}$ that contains all known ratings done by users on items. $\textbf{R}$ has the size $\vert \textbf{U} \vert \times \vert \textbf{I} \vert$, where $\textbf{U}$ is the set of users and $\textbf{I}$ is the set of items. If we want to discover $L$ latent features, then we try to find two matrices $\textbf{P}$ (a $\vert \textbf{U} \vert \times L$ matrix) and $\textbf{Q}$ (a $\vert \textbf{I} \vert \times L$ matrix), such that
+$$ \textbf{R} \approx \textbf{P} \times \textbf{Q}^T = \hat{\textbf{R}}$$
+Here $\hat{\textbf{R}}$ is an approximation to $\textbf{R}$. This approximation can be found by making initial guesses for $\textbf{P}$ and $\textbf{Q}$, and then use gradient decent to improve the approximation over multiple iterations. Then, to find an approximation of a user rating on an item, we calculate the dot product of the two vectors corresponding to the user and the item in $\textbf{P}$ and $\textbf{Q}$ respectively. A more detailed explanation of this can be found here \cite{QUUX:matrix-factorization-tutorial}
+
+\section{Restricted Bolzmann machines}
+Restricted Bolzmann machines also try to find latent features that objects might have in common. RBM are a form of neural network that has a visible and a hidden layer. The hidden layer has nodes for each object (e.g. movies) and the visible nodes represent the features (e.g. being a sci-fi movie, or being an animated movie). Given input data, the BRM tries to fit the weights in the network to best represent the observed data. This input could as an example be binary vectors that represent which movies users like, where each vector represents one user. After the training is done, the BRM can be asked which movies someone who likes sci-fi probably would like (if we know that a node represents this feature), and the network would activate the nodes that represented the sci-fi movies. Note that this activation is done with probability, so a sci-fi movie would have a high chance of being activated and visa versa for non-sci-fi movies. We don't need to know which features the nodes represent, when we have a new user that we would like to recommend movies to, we use an input vector like the ones used in training and this will activate the relevant features for this user, and the RBM can then recommend movies.
+\TODO{I don't like this explanation.. I don't think it is very good. Might need to read more about BRM to be able to give a better explanation. But the point of this paper is not to be a comprehensive guide to BRMs, so I should not use too much space on it. Maybe use a short and better explanation and refer to a more comprehensive explanation?} 
+
+\section{About the papers I have read}
+\TODO{This stuff is sort of about the state of the art on RNN as recommender system.}
+
+\subsection{Session-based Recommendations with Recurrent Neural Networks}
+Hidasi et al. \cite{DBLP:journals/corr/HidasiKBT15} have recently proposed to use RNNs in a recommender system. In their experiments they achieve marked improvements over currently widely used approaches. They propose a new ranking loss function that is suited to training their model. In the network they use GRU layers, this is used to combat the vanishing gradient problem. As input they used 1-of-N encoding (one-hot encoding). They also tried using an input vector that also encoded the previous clicked items, with the hope to strengthen the memory effect. The latter input method is a normalized vector where the oldest clicks have the lowest value. Also, they tried using an embedding layer between the input and GRU layers, but the 1-of-N encoding always performed better. But connecting the input layer to the deeper GRU layers as well, improved results. They session parallell mini-batcehs. \TODO{Ask Massimiliano how it is possible to use session parallel mini-batches here. My intuition is that one needs to run sessions in serial order in a batch, since the hidden states must be reset between each session. So the sessions can't interfere with each other...}
+There might be hundreds of thousands of items, so it is not feasible to calculate a score for each item at each step, sampling is therefore used. The highest ranked items in the output are chosen as the positive examples, and the highest ranking items from other training examples are used as negative examples. These negative examples are probably popular items that the user ignored. Bayesian Personalized Ranking and a custom TOP1 ranking are used as loss functions.
+The result of the experiments is that the RNN performs substantially better than the item-KNN approach (which was the best of the baseline approaches used to compare results).
+
+
+\subsection{Modelling Contextual Information in Session-Aware Recommender Systems with Neural Networks}
+Build on the above paper, but only considers unseen items as valid recommendations.
+
+Here a session is defined to end when a user has been inactive for more than a predefined number of minutes.
+
+They use a richer description of the events than the last paper. The last paper used item clicks as events and only cared about what item that was. Here multiple types of events are used, and these have a number of properties but are all related to an item. And each item is described by a number of item attributes. \TODO{Seems like no item id is available, only a description of each event by its attributes.}
+
+Both Feed Forward Neural Networks (FFNN) and RNNs are used to produce the top-N recommendations in this model. RNN is used to capture data dependency between events. FFNN is as a ranking score estimator. So the RNN creates a representation of the current state of the session, which is sent to the FFNN along with the data on the new item. Both the event data (input to the RNN) and the item data are embedded before being sent further. The embedded item data and the RNN representation output of the session/event is gathered together and dropout is applied as regularization on the FFNN. \TODO{Not clear how the dropout is applied, but seems to be on the FFNN. However the figure shows a merge/dropout layer before the FFNN, so not really sure..}
+
+They also use a Matrix Factorization model. \TODO{Consider explaining this model that they use a bit more.} Both models (MF and NN) outperform the chosen baseline approaches. RNN considered more attractive when no session modeling assumption is made.
+
+
+\subsection{Deep Neural Networks for YouTube Recommendations}
+\TODO{Write a bit about this one as well?}

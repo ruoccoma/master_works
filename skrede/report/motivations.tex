@@ -1,1 +1,8 @@
 \chapter{Motivations}
+Matrix factorization has no sense of time, and is less efficient when we have less data (like in short sessions, without user history). RNNs utilizes memory of past events and can hopefully use the information of the last actions (and their sequence) to weigh up for the lack of more data on the user.
+
+Matrix factorization approaches often resort to item-to-item recommendations (recommending similar items) in the case oh short sessions.\\
+
+Progress in model architectures, training algorithms, and parallell computing has taken RNNs from being more of a curiosity to becoming a model that can compete with state-of-the-art models. The improvements have also made RNNs easier to use. Training them was really difficult earlier.
+
+Many other models are tied by restrictions on the input and output data. RNNs avoids the assumption of independence between examples and are not limited to fixed-dimension input and output.

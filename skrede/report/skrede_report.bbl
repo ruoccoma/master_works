@@ -10,4 +10,37 @@ BBC.
 \newblock Google achieves ai 'breakthrough' by beating go champion.
 \newblock \url{http://www.bbc.com/news/technology-35420579}.
 
+\bibitem{COLAH:understanding-lstm}
+Christopher Olah.
+\newblock Understanding lstm networks.
+\newblock \url{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}.
+
+\bibitem{DBLP:journals/corr/SutskeverVL14}
+Ilya Sutskever, Oriol Vinyals, and Quoc~V. Le.
+\newblock Sequence to sequence learning with neural networks.
+\newblock {\em CoRR}, abs/1409.3215, 2014.
+
+\bibitem{DBLP:journals/corr/MaoXYWY14a}
+Junhua Mao, Wei Xu, Yi~Yang, Jiang Wang, and Alan~L. Yuille.
+\newblock Deep captioning with multimodal recurrent neural networks (m-rnn).
+\newblock {\em CoRR}, abs/1412.6632, 2014.
+
+\bibitem{AGS:implicit-recommender-systems}
+Will Kirwin.
+\newblock Implicit recommender systems: Biased matrix factorization.
+\newblock
+  \url{http://activisiongamescience.github.io/2016/01/11/Implicit-Recommender-Systems-Biased-Matrix-Factorization/}.
+
+\bibitem{QUUX:matrix-factorization-tutorial}
+Albert~Au Yeung.
+\newblock Matrix factorization: A simple tutorial and implementation in python.
+\newblock
+  \url{http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/}.
+
+\bibitem{DBLP:journals/corr/HidasiKBT15}
+Bal{\'{a}}zs Hidasi, Alexandros Karatzoglou, Linas Baltrunas, and Domonkos
+  Tikk.
+\newblock Session-based recommendations with recurrent neural networks.
+\newblock {\em CoRR}, abs/1511.06939, 2015.
+
 \end{thebibliography}

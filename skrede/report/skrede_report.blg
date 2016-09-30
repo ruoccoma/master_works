@@ -16,47 +16,52 @@ A level-1 auxiliary file: appendix-b.aux
 The style file: unsrt.bst
 Database file #1: references.bib
 Warning--entry type for "BBC:go-champion" isn't style-file defined
---line 14 of file references.bib
-Warning--I didn't find a database entry for "einstein"
-You've used 2 entries,
+--line 77 of file references.bib
+Warning--entry type for "AGS:implicit-recommender-systems" isn't style-file defined
+--line 85 of file references.bib
+Warning--entry type for "QUUX:matrix-factorization-tutorial" isn't style-file defined
+--line 93 of file references.bib
+Warning--entry type for "COLAH:understanding-lstm" isn't style-file defined
+--line 101 of file references.bib
+You've used 8 entries,
             1791 wiz_defined-function locations,
-            470 strings with 4023 characters,
-and the built_in function-call counts, 278 in all, are:
-= -- 22
-> -- 8
+            500 strings with 5275 characters,
+and the built_in function-call counts, 1184 in all, are:
+= -- 91
+> -- 62
 < -- 0
-+ -- 4
-- -- 2
-* -- 6
-:= -- 53
-add.period$ -- 6
-call.type$ -- 2
-change.case$ -- 2
++ -- 25
+- -- 17
+* -- 39
+:= -- 212
+add.period$ -- 24
+call.type$ -- 8
+change.case$ -- 8
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 13
-empty$ -- 33
-format.name$ -- 2
-if$ -- 60
+cite$ -- 8
+duplicate$ -- 52
+empty$ -- 129
+format.name$ -- 17
+if$ -- 261
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 1
-newline$ -- 13
-num.names$ -- 2
-pop$ -- 6
+int.to.str$ -- 8
+missing$ -- 4
+newline$ -- 43
+num.names$ -- 8
+pop$ -- 24
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 9
+skip$ -- 36
 stack$ -- 0
 substring$ -- 0
-swap$ -- 2
+swap$ -- 8
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 2
-width$ -- 3
-write$ -- 22
-(There were 2 warnings)
+while$ -- 8
+width$ -- 9
+write$ -- 82
+(There were 4 warnings)

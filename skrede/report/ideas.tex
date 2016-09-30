@@ -5,5 +5,13 @@
 	\item Use RNN to learn embedding space: SESSION\_2\_VEC
 	\item Combine session output vectors to a user vector: USER\_2\_VEC
 	\item Use word2vec to represent title of book. Give this as input to RNN (Or use vector representation of other types of input)
-	\item Use LSTM (long term short term memory) or BRNN instead of GRN
+	\item Use LSTM (long term short term memory) or BRNN instead of GRU. (GRU is a special version of LTSM). 
+	\item When we have a rich user history (logged in users), we can make use of information such as:  user generally give low ratings, an item generally get low ratings. We don't have less such information in shorter sessions, but there might still be some information we could extract and utilize. Two different types of information here (sort of): extra information that the (e.g.) e-commerce site can supply (e.g. geo location), and information that we can extract from the data we already have in a dataset. The second variant is sort of what we want the NN to discover on its own though.
+	\item It is (probably) inefficient to use the one-hot encoding to encode the input items to our RNN, maybe it would be smart to use a word2vec approach and thus be able to capture some more meaning in the item representation. If sessions are viewed as sentences, a slightly modified word2vec algorithm should be able to encode the input items. But are items words or characters in such an analogy? Or maybe it does not matter.
+	\item Since there might be multiple relevant items the recommender system could present to the user and that the user would want to click (not one clearly correct output), it could be useful to let users give feedback to the system by e.g. rating the top N items suggested by the system. In practice, if the RNN recommender system is used online, this is partially solved since it can show more than one item to the user and get feedback on which item was clicked (if any). But when the user clicks on one item it does not tell us whether the others were totally irrelevant or just a bit less relevant than the item clicked. 
+	
+	If the user clicks on one of the other suggestions later in the session, this might be perceived as a positive feedback to that recommendation, but it is hard to make such assumptions and speculations in a good way.
+	
+	
+	
 \end{itemize}

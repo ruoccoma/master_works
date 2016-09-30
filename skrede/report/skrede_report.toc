@@ -1,12 +1,18 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Motivations}{2}{chapter.2}
 \contentsline {chapter}{\numberline {3}State of the Art}{3}{chapter.3}
-\contentsline {chapter}{\numberline {4}Challanges}{4}{chapter.4}
-\contentsline {chapter}{\numberline {5}Ideas}{5}{chapter.5}
-\contentsline {chapter}{\numberline {6}Experimentation}{6}{chapter.6}
-\contentsline {chapter}{\numberline {7}Analysis of Results}{7}{chapter.7}
-\contentsline {chapter}{\numberline {8}Conclusion}{8}{chapter.8}
-\contentsline {chapter}{\numberline {9}Further Work}{9}{chapter.9}
-\contentsline {chapter}{\numberline {A}List of Acronyms}{10}{appendix.A}
-\contentsline {chapter}{\numberline {B}appendix-b}{11}{appendix.B}
-\contentsline {chapter}{Bibliography}{12}{appendix*.2}
+\contentsline {section}{\numberline {3.1}Matrix factorization models}{4}{section.3.1}
+\contentsline {section}{\numberline {3.2}Restricted Bolzmann machines}{5}{section.3.2}
+\contentsline {section}{\numberline {3.3}About the papers I have read}{5}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Session-based Recommendations with Recurrent Neural Networks}{5}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Modelling Contextual Information in Session-Aware Recommender Systems with Neural Networks}{6}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Deep Neural Networks for YouTube Recommendations}{7}{subsection.3.3.3}
+\contentsline {chapter}{\numberline {4}Challanges}{8}{chapter.4}
+\contentsline {chapter}{\numberline {5}Ideas}{9}{chapter.5}
+\contentsline {chapter}{\numberline {6}Experimentation}{11}{chapter.6}
+\contentsline {chapter}{\numberline {7}Analysis of Results}{12}{chapter.7}
+\contentsline {chapter}{\numberline {8}Conclusion}{13}{chapter.8}
+\contentsline {chapter}{\numberline {9}Further Work}{14}{chapter.9}
+\contentsline {chapter}{\numberline {A}List of Acronyms}{15}{appendix.A}
+\contentsline {chapter}{\numberline {B}appendix-b}{16}{appendix.B}
+\contentsline {chapter}{Bibliography}{17}{appendix*.2}
