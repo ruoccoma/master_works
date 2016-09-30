@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from sqliteDatabase import db_get, db_keys
+from sqliteDatabase import db_get_image_vector, db_keys_images
 
 DATABASE_FILE_PATH = "database/database.db"
 
@@ -106,10 +106,10 @@ def train_and_test_graph():
 
 
 def main():
-	all_images = db_keys(DATABASE_FILE_PATH)
+	all_images = db_keys_images(DATABASE_FILE_PATH)
 	print("Number of images %i" % len(all_images))
 	print("Image: %s" % all_images[0][0])
-	print("Image vector: %s" % db_get(all_images[0][0], DATABASE_FILE_PATH))
+	print("Image vector: %s" % db_get_image_vector(all_images[0][0], DATABASE_FILE_PATH))
 
 	train_and_test_graph()
 

@@ -12,7 +12,7 @@ from os.path import isfile, join
 from six.moves import urllib
 import tensorflow as tf
 
-from sqliteDatabase import db_insert_image_vector, db_get, db_keys
+from sqliteDatabase import db_insert_image_vector, db_get_image_vector, db_keys_images
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -138,7 +138,7 @@ def maybe_download_and_extract():
 
 
 def get_image_vector_from_db(image_name):
-	return db_get(image_name)
+	return db_get_image_vector(image_name)
 
 
 def fetch_all_imagepaths():

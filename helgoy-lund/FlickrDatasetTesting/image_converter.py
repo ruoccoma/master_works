@@ -11,7 +11,7 @@ import pickle
 import time
 import datetime
 
-from sqliteDatabase import db_insert_image_vector, db_get, db_keys
+from sqliteDatabase import db_insert_image_vector, db_get_image_vector, db_keys_images
 
 
 def fetch_all_imagepaths():
@@ -133,7 +133,7 @@ def create_image():
 	"""
 	now = datetime.datetime.now()
 	# old = time.time()
-	rgb_array = db_get("997722733_0cb5439472.jpg")
+	rgb_array = db_get_image_vector("997722733_0cb5439472.jpg")
 	# all_images = db_keys()
 	# new = time.time()
 	# print("Time to get from DB: " + str(new - old))
