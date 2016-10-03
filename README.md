@@ -9,4 +9,5 @@ _./skrede_: Recurrent Neural Network for Recommendation and User Representation
 
 _./havikbotn_: Deep Retrieval Models for Q/A
 
-_./remi_: <>
+_./remi_: Dynamic Memory Network Applied To Retrieval-Based Dialogue Systems
+
