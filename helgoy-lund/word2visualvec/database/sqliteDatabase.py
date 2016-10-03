@@ -58,29 +58,34 @@ def db_keys_captions():
 	return cursor.execute("""SELECT filename FROM captions""").fetchall()
 
 
-def db_get_caption_vectors(filename, default=None):
+def db_get_caption_vectors(filename):
 	db = generate_db_connection()
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT caption_vector FROM captions WHERE filename = ?""", (filename,)).fetchall()
-	if result is None:
-		return default
 	return result
 
 
-def db_insert_caption_vector(filename, caption_vector):
+def db_insert_caption_vector(filename, caption_text, caption_vector):
 	db = generate_db_connection()
 
 	cursor = db.cursor()
-	cursor.execute("""INSERT INTO captions VALUES (?,?)""", (filename, caption_vector))
+	cursor.execute("""INSERT INTO captions VALUES (?,?,?)""", (filename, caption_text, caption_vector))
 	db.commit()
+
+
+def db_get_caption_text(caption_vector):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
+	return result
 
 
 DB_FILE_PATH = ""
 for path in sys.path:
-	if path.endswith("master_works/helgoy-lund/word2visualvec"):
+	if path.endswith("master_works"):
 		DB_FILE_PATH = path
 		break
-DB_FILE_PATH += "/database/database.db"
+DB_FILE_PATH += "/helgoy-lund/word2visualvec/database/database.db"
 
 sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
@@ -88,5 +93,5 @@ sqlite3.register_converter("array", convert_array)
 outer_db = generate_db_connection()
 c = outer_db.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS images (filename TEXT UNIQUE, image_vector array)''')
-c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_vector array)''')
+c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_text TEXT, caption_vector array)''')
 outer_db.commit()
