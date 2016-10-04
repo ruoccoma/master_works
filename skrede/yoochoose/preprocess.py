@@ -11,111 +11,55 @@ import sys
  then the value will be an 8-10 digits number. If the item has been clicked under regular category, i.e. sport, then the value will be a number between 1 to 12. 
 '''
 
-raw_file = 'yoochoose-clicks.dat'
-out_file = 'processed_data.csv'
-n_lines_to_read = 8000
+training_clicks_file = 'yoochoose-clicks.dat'
+processed_training_data_file = 'processed_training.txt'
+items_file = 'processed_data_items.txt'
 
-# Read up to n_lines_to_read of lines from the dataset and put sessions in a dictionary
-def gather_sessions():
-	sessions = {}	
-	with open(raw_file, buffering=200000) as f:
-		try:
-			lines_read = 0
-			for line in f:
-				# use a limit for number of lines to read
-				if lines_read == n_lines_to_read:
-					break
+'''
+Read the dataset file. Count the number of items and the number of sessions. Write each session
+to one line in the output file. Each line consists of the items in that session, in the original
+order.
+'''
+def process_sessions(in_file, out_file, store_num_items=True):
+	n_sessions = 0
+	item_clicks = {}
+	session_id = -1
 
+	with open(in_file, buffering=200000) as f:
+		with open(out_file, 'w') as of:
+			try:
+				# read first session id
+				line = f.readline()
 				session_id = line.split(',')[0]
-				item_id = line.split(',')[2]
+				f.seek(0)
 
-				if session_id in sessions:
-					sessions[session_id].append(item_id)
-				else:
-					sessions[session_id] = [item_id]
+				session = ""
+				session_length = 0
+				for line in f:
+					new_session_id = line.split(',')[0]
+					item_id = line.split(',')[2]
 
-				lines_read += 1
-		except Exception as e:
-			print(str(e))
-	return sessions
+					# Collection of all item_ids that are used
+					if item_id not in item_clicks:
+						item_clicks[item_id] = len(item_clicks.keys())
 
-sessions = gather_sessions()
-print("-------------------------------------------")
-print("Number of sessions before filtering:", len(sessions.keys()))
-
-# Remove sessions with only one click
-def filter_sessions():
-	filtered_sessions = {}
-	for k in sessions.keys():
-		if len(sessions[k]) > 1:
-			filtered_sessions[k] = sessions[k]
-
-	return filtered_sessions
+					# update the items in the session or write out old session and start on new
+					if new_session_id==session_id:
+						session += " " + item_id
+						session_length += 1
+					else:
+						if session_length > 1:
+							of.write(session +'\n')
+						session = " " + item_id
+						session_id = new_session_id
+						session_length = 1
 
 
-sessions = filter_sessions()
-print("Number of sessions:",len(sessions.keys()))
+			except Exception as e:
+				print(str(e))
 
-# Creates a dictionary with all items and an index in a dictionary. Indexes start with 0 and upwards.
-# This lets us map the items to vectors
-def create_item_map():
-	item_map = {}
-	for k in sessions.keys():
-		v = sessions[k]
-		for item in v:
-			if item not in item_map:
-				item_map[item] = len(item_map.keys())
+	if store_num_items:
+		with open(items_file, 'w') as f:
+			
 
-	return item_map
-
-item_map = create_item_map()
-print("Number of items:", len(item_map.keys()))
-
-def convert_items_to_vec():
-	n_items = len(item_map.keys())
-	item_vec = {}
-
-	for k in item_map.keys():
-		vec = np.zeros(n_items)
-		index = int(item_map[k])
-		vec[index] = 1
-		vec = list(vec)
-		item_vec[k] = vec
-
-	return item_vec
-
-item_vec = convert_items_to_vec()
-
-def convert_sessions_to_vec():
-	count = 0
-	session_vec = []
-	for k in sessions.keys():
-		session = sessions[k]
-		vec_session = []
-		for i in session:
-			vec_session.append(item_vec[i])
-			count += 1
-		session_vec.append(vec_session)
-
-	print("Total number of items in sessions:", count)
-	print("Size of an item vector in bytes:", sys.getsizeof(session_vec[0][0]))
-	bytes_per_vector = sys.getsizeof(session_vec[0][0])
-	total_bytes_used_on_item_vectors = bytes_per_vector * count
-	KB = total_bytes_used_on_item_vectors/1024
-	MB = KB/1024
-	print("MB used on item vectors:", MB)
-	return session_vec
-
-session_vec = convert_sessions_to_vec()
-print("Number of sessions in vec format:",len(session_vec))
-
-with open('sessions.pickle', 'wb') as f:
-	pickle.dump(session_vec, f)
-
-with open('read-lines.txt', 'w') as f:
-	f.write(str(n_lines_to_read)+'\n')
-
-with open('item_vec_size.txt', 'w') as f:
-	f.write(str(len(session_vec[0][0]))+'\n')
-
-print("-------------------------------------------")
+process_sessions(training_clicks_file, processed_training_data_file)
