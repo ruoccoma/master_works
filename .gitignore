@@ -104,3 +104,4 @@ gen### Example user template template
 *.iml
 out
 gen
+/helgoy-lund/word2visualvec/database/database.db
