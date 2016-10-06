@@ -1,19 +1,21 @@
 import tensorflow as tf
-
 from data_helper import generate_data
+from sklearn.metrics import mean_squared_error
 
 data_x, data_y = generate_data()
 
-training_data_x = data_x[:int(len(data_x) * 0.75)]
-training_data_y = data_y[:int(len(data_y) * 0.75)]
+trainig_test_ratio = 0.95
 
-test_data_x = data_x[:int(len(data_x) * 0.15)]
-test_data_y = data_y[:int(len(data_y) * 0.15)]
+training_data_x = data_x[:int(len(data_x) * trainig_test_ratio)]
+training_data_y = data_y[:int(len(data_y) * trainig_test_ratio)]
+
+test_data_x = data_x[:int(len(data_x) * 1 - trainig_test_ratio)]
+test_data_y = data_y[:int(len(data_y) * 1 - trainig_test_ratio)]
 
 # Parameters
 learning_rate = 0.01
-training_epochs = 15
-batch_size = 100
+training_epochs = 5
+batch_size = 500
 display_step = 1
 
 # Network parameters
@@ -26,6 +28,9 @@ n_output = 2048  # Size of image vectors
 x = tf.placeholder("float", [None, n_input])
 y = tf.placeholder("float", [None, n_output])
 
+
+def compare_vectors(v1, v2):
+	return mean_squared_error(v1, v2)
 
 # Create model
 def multilayer_perceptron(x, weights, biases):
@@ -55,12 +60,13 @@ biases = {
 }
 
 # Construct model
-prediction = multilayer_perceptron(x, weights, biases)
+prediction_tensor = multilayer_perceptron(x, weights, biases)
 
 # Define loss and optimizer
-cost = tf.reduce_mean(tf.square(prediction - y))
+cost = tf.reduce_mean(tf.square(prediction_tensor - y))
 # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+# optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+optimizer = tf.train.RMSPropOptimizer(learning_rate=0.01).minimize(cost)
 
 # Initializing all variables
 init = tf.initialize_all_variables()
@@ -107,12 +113,29 @@ def train_and_test_graph():
 		# Calculate accuracy
 		# accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 		# prediction_eval = accuracy.eval({x: test_data_x, y: test_data_y})
-		# vector_eval = cosine_similarity.eval({x: test_data_x, y: test_data_y})
-		predictions = prediction.eval({x: test_data_x, y: test_data_y})
+		predictions = prediction_tensor.eval({x: test_data_x, y: test_data_y})
 
 		y_eval = y.eval({x: test_data_x, y: test_data_y})
-		print("Accuracy:", predictions)
 
+		guessed_vectors = []
+		c = 1
+		len_preds = len(predictions)
+		for prediction in predictions:
+			print("%s/%s" % (c, len_preds))
+			best_prediction = y_eval[0]
+			best_prediction_mse = compare_vectors(prediction, y_eval[0])
+			for y_item in y_eval:
+				mse_comparison = compare_vectors(prediction, y_item)
+				if mse_comparison < best_prediction_mse:
+					best_prediction = y_item
+					best_prediction_mse = mse_comparison
+			guessed_vectors = best_prediction
+			c += 1
+
+		correct_prediction = tf.equal(guessed_vectors, y)
+		accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+		# print("Accuracy:", accuracy.eval({x: test_data_x, y: test_data_y}))
+		print("Accuracy:", accuracy.eval({x: test_data_x, y: test_data_y}))
 
 
 def main():
