@@ -21,5 +21,3 @@ def testing():
 	print(get_caption_vectors_for_image(image_name))
 	for vector in get_caption_vectors_for_image(image_name):
 		print(vector)
-
-testing()

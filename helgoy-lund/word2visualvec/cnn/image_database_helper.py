@@ -12,4 +12,4 @@ def fetch_all_image_names():
 
 
 def fetch_image_vector(image_name):
-	return db_get_image_vector(image_name)
+	return db_get_image_vector(image_name)[0]
