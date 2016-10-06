@@ -23,7 +23,7 @@ import os
 import random
 import zipfile
 import pickle
-
+import sys
 import numpy as np
 import six
 import tensorflow as tf
@@ -33,7 +33,15 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 
 
-filename = "Flickr8k_text/Flickr8k.token.txt"
+DATA_FILEPATH = ""
+for path in sys.path:
+  if path.endswith("master_works"):
+      DATA_FILEPATH = path
+      break
+
+
+
+DATA_FILEPATH += "/helgoy-lund/word2visualvec/data/Flickr8k/Flickr8k.token.txt"
 
 # Read the data into a list of strings.
 def read_data(filename):
@@ -46,7 +54,7 @@ def read_data(filename):
           data.append(x.lower())
   return data
 
-words = read_data(filename)
+words = read_data(DATA_FILEPATH)
 print('Data size', len(words))
 
 # Step 2: Build the dictionary and replace rare words with UNK token.
@@ -259,6 +267,5 @@ def main():
       save_model(reverse_dictionary, final_embeddings)
 
 main()
-
 
 
