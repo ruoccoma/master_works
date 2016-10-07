@@ -42,6 +42,12 @@ def db_get_image_vector(filename, default=None):
 	return result
 
 
+def db_all_images():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
+
+
 def db_insert_image_vector(filename, image_vector):
 	db = generate_db_connection()
 
@@ -77,6 +83,13 @@ def db_get_caption_text(caption_vector):
 	db = generate_db_connection()
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
+	return result
+
+
+def db_get_filename_caption_tuple_from_vector(caption_vector):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT filename,caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
 	return result
 
 
