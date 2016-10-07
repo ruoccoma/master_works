@@ -9,6 +9,7 @@ from image_database_helper import fetch_all_image_names, fetch_image_vector
 
 def generate_data(size=-1):
 	if os.path.isfile(get_filename(size)):
+		print("Loaded data from local storage")
 		pickle_file = open(get_filename(size), 'rb')
 		dataset = pickle.load(pickle_file)
 		return dataset
