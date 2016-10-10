@@ -93,6 +93,12 @@ def db_get_filename_caption_tuple_from_vector(caption_vector):
 	return result
 
 
+def db_get_caption_table_size():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT COUNT(*) FROM captions""").fetchone()
+	return result
+
 DB_FILE_PATH = ""
 for path in sys.path:
 	if path.endswith("master_works"):
