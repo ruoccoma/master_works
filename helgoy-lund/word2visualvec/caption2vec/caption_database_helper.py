@@ -19,7 +19,7 @@ def fetch_image_name_for_vecgor(vector):
 
 
 def fetch_caption_count():
-	return db_get_caption_table_size
+	return db_get_caption_table_size()
 
 
 def testing():
