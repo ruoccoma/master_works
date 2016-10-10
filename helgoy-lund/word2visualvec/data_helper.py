@@ -3,7 +3,7 @@
 import os.path
 import pickle
 
-from caption_database_helper import get_caption_vectors_for_image
+from caption_database_helper import get_caption_vectors_for_image, fetch_caption_count
 from image_database_helper import fetch_all_image_names, fetch_image_vector
 
 
@@ -21,6 +21,9 @@ def generate_data(size=-1):
 		else:
 			all_image_names = fetch_all_image_names()
 		num_images = len(all_image_names)
+
+		validate_database(num_images)
+
 		print("Generating data for %s images" % num_images)
 		counter = 1
 		for image_name in all_image_names:
@@ -36,6 +39,13 @@ def generate_data(size=-1):
 		pickle_file = open(get_filename(size), 'wb')
 		pickle.dump(dataset, pickle_file)
 		return dataset
+
+
+def validate_database(num_images):
+	if num_images == 0:
+		raise IOError('No images in database')
+	elif fetch_caption_count() == 0:
+		raise IOError('No captions in database')
 
 
 def get_filename(size):
