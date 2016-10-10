@@ -1,4 +1,4 @@
-from sqliteDatabase import db_insert_image_vector, db_get_image_vector, db_keys_images
+from sqliteDatabase import db_insert_image_vector, db_get_image_vector, db_keys_images, db_all_images
 
 
 # DATABASE_FILE_REF = "../database/database.db"
@@ -12,4 +12,9 @@ def fetch_all_image_names():
 
 
 def fetch_image_vector(image_name):
-	return db_get_image_vector(image_name)
+	return db_get_image_vector(image_name)[0]
+
+
+def fetch_image_vector_pairs():
+	pairs = db_all_images()
+	return pairs
