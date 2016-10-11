@@ -75,8 +75,7 @@ def getAvgFeatureVecs(sentences, model, num_features):
 		#
 		# Print a status message every 1000th sentence
 		if counter % 1000. == 0.:
-			print
-			"Review %d of %d" % (counter, len(sentences))
+			print("Review %d of %d" % (counter, len(sentences)))
 		#
 		# Call the function (defined above) that makes average feature vectors
 		sentenceFeatureVecs[counter] = makeFeatureVec(sentence, model, \
