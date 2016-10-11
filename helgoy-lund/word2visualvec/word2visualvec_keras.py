@@ -66,61 +66,66 @@ def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
 
 
-def insert_and_remove_last(list, element):
-	list.insert(0, element)
-	del list[-1]
-	return list
+def insert_and_remove_last(array, element):
+	array.insert(0, element)
+	del array[-1]
+	return array
+
+
+from random import randint
+import numpy
 
 
 def test_model(model):
-	img_num = 0
+	test_size = 3
 	all_caption_vectors = fetch_test_captions_vectors()
+	numpy.random.shuffle(all_caption_vectors)
+	start = randint(0, len(all_caption_vectors) - test_size)
+	samples = all_caption_vectors[start:start + test_size]
+	print("\nRESULTS")
+	for i in range(len(samples)):
+		correct_caption_vector_list = all_caption_vectors[i:i + 1]
+		correct_caption_vector = correct_caption_vector_list[0]
 
-	correct_caption_vector_list = all_caption_vectors[img_num:img_num + 1]
-	correct_caption_vector = correct_caption_vector_list[img_num]
+		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_vector(correct_caption_vector)
+		# correct_image_vector = fetch_image_vector(correct_image_filename)
 
-	correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_vector(correct_caption_vector)
-	correct_image_vector = fetch_image_vector(correct_image_filename)
+		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
 
-	predicted_image_vector = model.predict(correct_caption_vector_list)[img_num]
+		image_vector_pairs = fetch_image_vector_pairs()
+		first_image_vector = image_vector_pairs[0][1]
+		first_image_filename = image_vector_pairs[0][0]
 
-	image_vector_pairs = fetch_image_vector_pairs()
-	first_image_vector = image_vector_pairs[img_num][1]
-	first_image_filename = image_vector_pairs[img_num][0]
+		best_image_vector_mse_list = [0 for i in range(5)]
+		best_image_vector_name_list = ["" for i in range(5)]
+		best_image_vector_list = [[] for i in range(5)]
 
-	best_image_vector_mse_list = [0 for i in range(5)]
-	best_image_vector_name_list = ["" for i in range(5)]
-	best_image_vector_list = [[] for i in range(5)]
+		best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, compare_vectors(predicted_image_vector, first_image_vector))
+		best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, first_image_filename)
+		best_image_vector_list = insert_and_remove_last(best_image_vector_list, first_image_vector)
 
-	insert_and_remove_last(best_image_vector_mse_list, compare_vectors(predicted_image_vector, first_image_vector))
-	insert_and_remove_last(best_image_vector_name_list, first_image_filename)
-	insert_and_remove_last(best_image_vector_list, first_image_vector)
-
-	print("Finding closest image vector...")
-	for name, image_vector in image_vector_pairs[1:]:
-		temp_mse = compare_vectors(predicted_image_vector, image_vector)
-		if temp_mse < best_image_vector_mse_list[0]:
-			insert_and_remove_last(best_image_vector_mse_list, temp_mse)
-			insert_and_remove_last(best_image_vector_name_list, name)
-			insert_and_remove_last(best_image_vector_list, image_vector)
-	print("")
-	print("RESULTS")
-	print("")
-	print("Correct caption:\t", correct_image_caption)
-	print("")
-	print("Correct filename:\t", correct_image_filename)
-	print("")
-	print("Result:")
-	for i in range(len(best_image_vector_mse_list)):
-		print(i+1, best_image_vector_name_list[i])
+		for name, image_vector in image_vector_pairs[1:]:
+			temp_mse = compare_vectors(predicted_image_vector, image_vector)
+			if temp_mse < best_image_vector_mse_list[0]:
+				best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, temp_mse)
+				best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, name)
+				best_image_vector_list = insert_and_remove_last(best_image_vector_list, image_vector)
+		print("")
+		print("Correct caption:\t", correct_image_caption)
+		print("")
+		print("Correct filename:\t", correct_image_filename)
+		print("")
+		print("Result:")
+		for i in range(len(best_image_vector_mse_list)):
+			print(i + 1, best_image_vector_name_list[i])
+		print("")
 
 
 def fetch_test_captions_vectors():
-	data_x, data_y = generate_data(10)
+	data_x, data_y = generate_data(200)
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
-	testing_data_x = test_x[5:10]
-	return testing_data_x
+	return test_x
 
 
 word2visualvec_main()
