@@ -11,7 +11,7 @@ encoded = Dense(32, activation='relu')(encoded)
 
 decoded = Dense(64, activation='relu')(encoded)
 decoded = Dense(128, activation='relu')(decoded)
-decoded = Dense(784, activation='sigmoid')(decoded)
+decoded = Dense(784, activation='sigmoid', name="siste-decoded")(decoded)
 
 # this model maps an input to its reconstruction
 autoencoder = Model(input=input_img, output=decoded)
@@ -22,9 +22,13 @@ encoder = Model(input=input_img, output=encoded)
 # create a placeholder for an encoded (32-dimensional) input
 encoded_input = Input(shape=(encoding_dim,))
 # retrieve the last layer of the autoencoder model
-decoder_layer = autoencoder.layers[-1]
+decoder_layer1 = autoencoder.layers[-3]
+decoder_layer2 = autoencoder.layers[-2]
+decoder_layer3 = autoencoder.layers[-1]
+
 # create the decoder model
-decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
+# decoder = Model(input=encoded_input, output=decoder_layer(encoded_input))
+decoder = Model(input=encoded_input, output=decoder_layer3(decoder_layer2(decoder_layer1(encoded_input))))
 
 autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
 
