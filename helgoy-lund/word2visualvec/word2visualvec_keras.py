@@ -14,7 +14,7 @@ import autoencoder_keras
 
 # Settings
 SAVE_MODEL = True
-LOAD_MODEL = False
+LOAD_MODEL = True
 MODELS = [feedforward_keras, autoencoder_keras]
 MODEL = MODELS[0]
 MODEL_SUFFIX = ""
@@ -23,7 +23,7 @@ MODEL_SUFFIX = ""
 def word2visualvec_main():
 	if LOAD_MODEL:
 		# model = load_model(MODEL.__name__)
-		model = load_model("encoder")
+		model = load_model("feedforward_keras-e_30")
 	else:
 		model = MODEL.train()
 
@@ -66,6 +66,12 @@ def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
 
 
+def insert_and_remove_last(list, element):
+	list.insert(0, element)
+	del list[-1]
+	return list
+
+
 def test_model(model):
 	img_num = 0
 	all_caption_vectors = fetch_test_captions_vectors()
@@ -82,28 +88,31 @@ def test_model(model):
 	first_image_vector = image_vector_pairs[img_num][1]
 	first_image_filename = image_vector_pairs[img_num][0]
 
-	best_image_vector_mse = compare_vectors(predicted_image_vector, first_image_vector)
-	best_image_vector_name = first_image_filename
-	best_image_vector = first_image_vector
+	best_image_vector_mse_list = [0 for i in range(5)]
+	best_image_vector_name_list = ["" for i in range(5)]
+	best_image_vector_list = [[] for i in range(5)]
+
+	insert_and_remove_last(best_image_vector_mse_list, compare_vectors(predicted_image_vector, first_image_vector))
+	insert_and_remove_last(best_image_vector_name_list, first_image_filename)
+	insert_and_remove_last(best_image_vector_list, first_image_vector)
+
 	print("Finding closest image vector...")
 	for name, image_vector in image_vector_pairs[1:]:
 		temp_mse = compare_vectors(predicted_image_vector, image_vector)
-		if temp_mse < best_image_vector_mse:
-			best_image_vector_mse = temp_mse
-			best_image_vector_name = name
-			best_image_vector = image_vector
-		elif temp_mse == best_image_vector_mse:
-			print("Identical")
+		if temp_mse < best_image_vector_mse_list[0]:
+			insert_and_remove_last(best_image_vector_mse_list, temp_mse)
+			insert_and_remove_last(best_image_vector_name_list, name)
+			insert_and_remove_last(best_image_vector_list, image_vector)
 	print("")
 	print("RESULTS")
 	print("")
 	print("Correct caption:\t", correct_image_caption)
 	print("")
 	print("Correct filename:\t", correct_image_filename)
-	print("Best image name:\t", str(best_image_vector_name))
 	print("")
-	print("Correct vector:\t", correct_image_vector)
-	print("Best vector:\t", best_image_vector)
+	print("Result:")
+	for i in range(len(best_image_vector_mse_list)):
+		print(i+1, best_image_vector_name_list[i])
 
 
 def fetch_test_captions_vectors():
