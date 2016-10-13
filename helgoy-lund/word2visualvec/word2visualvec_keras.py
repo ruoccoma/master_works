@@ -1,12 +1,12 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from data_helper import generate_data
 from helper import split_list
 from keras.models import model_from_json
 from sklearn.metrics import mean_squared_error
 
 from caption_database_helper import db_get_filename_caption_tuple_from_vector
-from image_database_helper import fetch_image_vector, fetch_image_vector_pairs
+from image_database_helper import fetch_image_vector_pairs
+
+import numpy
 
 # Import models
 import feedforward_keras
@@ -23,7 +23,8 @@ MODEL_SUFFIX = ""
 def word2visualvec_main():
 	if LOAD_MODEL:
 		# model = load_model(MODEL.__name__)
-		model = load_model("feedforward_keras-e_30")
+		# model = load_model("feedforward_keras-e_500")
+		model = load_model("encoder")
 	else:
 		model = MODEL.train()
 
@@ -87,7 +88,8 @@ def test_model(model):
 		correct_caption_vector_list = all_caption_vectors[i:i + 1]
 		correct_caption_vector = correct_caption_vector_list[0]
 
-		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_vector(correct_caption_vector)
+		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_vector(
+			correct_caption_vector)
 		# correct_image_vector = fetch_image_vector(correct_image_filename)
 
 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
@@ -95,21 +97,23 @@ def test_model(model):
 		image_vector_pairs = fetch_image_vector_pairs()
 		first_image_vector = image_vector_pairs[0][1]
 		first_image_filename = image_vector_pairs[0][0]
+		first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)
+		# print("first image mse:", first_image_mse, "predicted vector:", predicted_image_vector)
 
 		best_image_vector_mse_list = [0 for i in range(5)]
 		best_image_vector_name_list = ["" for i in range(5)]
 		best_image_vector_list = [[] for i in range(5)]
 
-		best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, compare_vectors(predicted_image_vector, first_image_vector))
+		best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, first_image_mse)
 		best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, first_image_filename)
 		best_image_vector_list = insert_and_remove_last(best_image_vector_list, first_image_vector)
 
-		for name, image_vector in image_vector_pairs[1:]:
-			temp_mse = compare_vectors(predicted_image_vector, image_vector)
-			if temp_mse < best_image_vector_mse_list[0]:
-				best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, temp_mse)
-				best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, name)
-				best_image_vector_list = insert_and_remove_last(best_image_vector_list, image_vector)
+		for temp_image_name, temp_image_vector in image_vector_pairs:
+			temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
+			if temp_image_mse < best_image_vector_mse_list[0]:
+				best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, temp_image_mse)
+				best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, temp_image_name)
+				best_image_vector_list = insert_and_remove_last(best_image_vector_list, temp_image_vector)
 		print("")
 		print("Correct caption:\t", correct_image_caption)
 		print("")
@@ -126,6 +130,7 @@ def fetch_test_captions_vectors():
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return test_x
+
 
 
 word2visualvec_main()
