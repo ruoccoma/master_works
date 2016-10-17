@@ -1,0 +1,20 @@
+# The RecSys datasets
+http://recsyswiki.com/wiki/Category:Dataset
+	# Three shopping datasets from RecSys
+	http://recsyswiki.com/wiki/Grocery_shopping_datasets
+
+# Ad-click prediction
+https://www.kaggle.com/c/outbrain-click-prediction
+
+# Recsys 2015 (yoochoose) dataset
+http://recsys.yoochoose.net/
+
+# Another challange with available datasets, 5 e-commerce datsets.
+https://tianchi.shuju.aliyun.com/datalab/index.htm
+
+# Multiple datasets here also.
+http://files.grouplens.org/datasets/
+	# The Movielens-1M dataset is used in 'Context-aware Sequential Recommendation'
+	#  it is a dataset for recommender systems.
+	http://files.grouplens.org/datasets/movielens/ml-1m.zip
+
