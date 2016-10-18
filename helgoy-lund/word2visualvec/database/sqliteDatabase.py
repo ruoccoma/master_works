@@ -64,6 +64,12 @@ def db_keys_captions():
 	return cursor.execute("""SELECT filename FROM captions""").fetchall()
 
 
+def db_all_filename_caption_vector_tuple():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	return cursor.execute("""SELECT filename, caption_vector FROM captions""").fetchall()
+
+
 def db_get_caption_vectors(filename):
 	db = generate_db_connection()
 	cursor = db.cursor()
@@ -86,7 +92,7 @@ def db_get_caption_text(caption_vector):
 	return result
 
 
-def db_get_filename_caption_tuple_from_vector(caption_vector):
+def db_get_filename_caption_tuple_from_caption_vector(caption_vector):
 	db = generate_db_connection()
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT filename,caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
