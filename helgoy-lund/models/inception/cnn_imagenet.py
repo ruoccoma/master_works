@@ -9,17 +9,15 @@ import tarfile
 from os import listdir
 from os.path import isfile, join
 
+import settings
 import tensorflow as tf
 from six.moves import urllib
+from sklearn.preprocessing import normalize
 
 from image_database_helper import store_image_vector_to_db
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string(
-	"""Path to classify_image_graph_def.pb, """
-	"""imagenet_synset_to_human_label_map.txt, and """
-	"""imagenet_2012_challenge_label_map_proto.pbtxt.""")
 
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 
@@ -100,7 +98,7 @@ def create_graph():
 
 
 def convert_images_to_vectors():
-	images = fetch_all_imagepaths()
+	images = fetch_all_imagepaths()[:10]
 
 	# Creates graph from saved GraphDef.
 	create_graph()
@@ -113,7 +111,9 @@ def convert_images_to_vectors():
 		for i in range(num_images):
 			image_path = "Flicker8k_Dataset/" + images[i]
 			image_data = tf.gfile.FastGFile(image_path, 'rb').read()
-			store_image_vector_to_db(images[i], sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0])
+			image_vector = sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0]
+			image_vector_norm = normalize(image_vector)
+			store_image_vector_to_db(images[i], image_vector_norm)
 			print(str(i + 1) + "/" + num_images_string)
 
 
@@ -138,7 +138,7 @@ def maybe_download_and_extract():
 
 
 def fetch_all_imagepaths():
-	dirpath = "Flicker8k_Dataset"
+	dirpath = settings.IMAGE_PATH
 	return [f for f in listdir(dirpath) if isfile(join(dirpath, f))]
 
 
