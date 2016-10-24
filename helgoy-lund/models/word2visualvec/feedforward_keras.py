@@ -1,4 +1,4 @@
-from data_helper import generate_data
+from embeddings_helper import structure_and_store_embeddings
 from list_helpers import split_list
 from keras.engine import Input
 from keras.engine import Model
@@ -21,7 +21,7 @@ def get_loss():
 
 
 def train():
-    data_x, data_y = generate_data()
+    data_x, data_y = structure_and_store_embeddings()
 
     training_test_ratio = 1
 

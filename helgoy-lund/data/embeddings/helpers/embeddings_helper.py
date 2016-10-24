@@ -2,17 +2,15 @@
 
 import os.path
 import pickle
+import settings
 
 from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count
 from image_database_helper import fetch_all_image_names, fetch_image_vector
 
 
-def generate_data(size=-1):
-	if os.path.isfile(get_filename(size)):
-		print("Loaded datasets from local storage")
-		pickle_file = open(get_filename(size), 'rb')
-		dataset = pickle.load(pickle_file)
-		return dataset
+def structure_and_store_embeddings(size=-1):
+	if embedding_exists(size):
+		return load_embeddings(size)
 	else:
 		sorted_caption_vector_data = []
 		sorted_image_data = []
@@ -36,9 +34,32 @@ def generate_data(size=-1):
 			counter += 1
 		print("Finished generating %s training example" % len(sorted_caption_vector_data))
 		dataset = [sorted_caption_vector_data, sorted_image_data]
-		pickle_file = open(get_filename(size), 'wb')
-		pickle.dump(dataset, pickle_file)
+
+		save_embeddings(dataset, size)
+
 		return dataset
+
+
+def save_embeddings(dataset, size):
+	pickle_file = open(find_filepath(size), 'wb')
+	pickle.dump(dataset, pickle_file)
+	pickle_file.close()
+
+
+def find_filepath(size):
+	return settings.STORED_EMBEDDINGS_DIR + get_filename(size)
+
+
+def embedding_exists(size):
+	return os.path.isfile(find_filepath(size))
+
+
+def load_embeddings(size):
+	print("Loaded datasets from local storage")
+	pickle_file = open(find_filepath(size), 'rb')
+	dataset = pickle.load(pickle_file)
+	pickle_file.close()
+	return dataset
 
 
 def validate_database(num_images):
@@ -49,4 +70,7 @@ def validate_database(num_images):
 
 
 def get_filename(size):
-	return "dataset-" + str(size) + ".picklefile"
+	filename = "%sdataset-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
+	print("Looking for %s" % filename)
+	return filename
+

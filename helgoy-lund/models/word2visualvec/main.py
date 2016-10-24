@@ -2,7 +2,7 @@ from random import randint
 
 import numpy
 from caption_database_helper import fetch_filename_caption_tuple
-from data_helper import generate_data
+from embeddings_helper import structure_and_store_embeddings
 from list_helpers import split_list, insert_and_remove_last
 from image_database_helper import fetch_image_vector_pairs
 from keras.models import model_from_json

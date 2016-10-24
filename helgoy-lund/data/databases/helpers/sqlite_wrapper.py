@@ -21,7 +21,7 @@ def convert_array(text):
 
 
 def generate_db_connection():
-	return sqlite3.connect(DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+	return sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 
 
 """ TABLE: IMAGES """
@@ -115,8 +115,6 @@ def db_get_caption_table_size():
 	result = cursor.execute("""SELECT COUNT(*) FROM captions""").fetchone()[0]
 	return result
 
-
-DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database.db"
 
 sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
