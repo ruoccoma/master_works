@@ -6,9 +6,7 @@ import numpy as np
 
 
 def adapt_array(arr):
-	"""
-    http://stackoverflow.com/a/31312102/190597 (SoulNibbler)
-    """
+	""" http://stackoverflow.com/a/31312102/190597 (SoulNibbler) """
 	out = io.BytesIO()
 	np.save(out, arr)
 	out.seek(0)
@@ -25,7 +23,8 @@ def generate_db_connection():
 	return sqlite3.connect(DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 
 
-# TABLE: IMAGES
+""" TABLE: IMAGES """
+
 
 def db_keys_images():
 	db = generate_db_connection()
@@ -56,7 +55,8 @@ def db_insert_image_vector(filename, image_vector):
 	db.commit()
 
 
-# TABLE: CAPTIONS
+""" TABLE: CAPTIONS """
+
 
 def db_keys_captions():
 	db = generate_db_connection()
@@ -76,11 +76,13 @@ def db_get_caption_vectors(filename):
 	result = cursor.execute("""SELECT caption_vector FROM captions WHERE filename = ?""", (filename,)).fetchall()
 	return result
 
+
 def db_get_all_caption_vectors():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT caption_vector FROM captions""").fetchall()
 	return result
+
 
 def db_insert_caption_vector(filename, caption_text, caption_vector):
 	db = generate_db_connection()
@@ -93,14 +95,16 @@ def db_insert_caption_vector(filename, caption_text, caption_vector):
 def db_get_caption_text(caption_vector):
 	db = generate_db_connection()
 	cursor = db.cursor()
-	result = cursor.execute("""SELECT caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
+	result = cursor.execute("""SELECT caption_text FROM captions WHERE caption_vector = ?""",
+	                        (caption_vector,)).fetchone()
 	return result
 
 
 def db_get_filename_caption_tuple_from_caption_vector(caption_vector):
 	db = generate_db_connection()
 	cursor = db.cursor()
-	result = cursor.execute("""SELECT filename,caption_text FROM captions WHERE caption_vector = ?""", (caption_vector,)).fetchone()
+	result = cursor.execute("""SELECT filename,caption_text FROM captions WHERE caption_vector = ?""",
+	                        (caption_vector,)).fetchone()
 	return result
 
 
@@ -109,6 +113,7 @@ def db_get_caption_table_size():
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT COUNT(*) FROM captions""").fetchone()[0]
 	return result
+
 
 DB_FILE_PATH = ""
 for path in sys.path:
