@@ -70,7 +70,5 @@ def validate_database(num_images):
 
 
 def get_filename(size):
-	filename = "%sdataset-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
-	print("Looking for %s" % filename)
-	return filename
+	return "%sdataset-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
 
