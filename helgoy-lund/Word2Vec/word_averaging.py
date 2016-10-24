@@ -92,7 +92,7 @@ for path in sys.path:
 		FILEPATH = path
 		break
 
-WORD_VECTOR_FILEPATH = FILEPATH + "/helgoy-lund/Word2Vec/word_embeddings-8915"
+WORD_VECTOR_FILEPATH = FILEPATH + "/helgoy-lund/Word2Vec/word_embeddings-128"
 DATA_FILEPATH = FILEPATH + "/helgoy-lund/word2visualvec/data/Flickr8k/Flickr8k.token.txt"
 
 getSentences(DATA_FILEPATH)

@@ -1,7 +1,7 @@
 import numpy as np
 
 from sqliteDatabase import db_get_caption_vectors, db_insert_caption_vector, db_get_filename_caption_tuple_from_vector, \
-	db_get_caption_table_size
+	db_get_caption_table_size, db_get_all_caption_vectors
 
 
 def insert_caption_vector_into_db(image_name, caption_vector):
@@ -13,6 +13,8 @@ def get_caption_vectors_for_image(image_name):
 	vector_list = [i[0] for i in vectors]
 	return vector_list
 
+def fetch_all_caption_vectors():
+	return db_get_all_caption_vectors()
 
 def fetch_image_name_for_vecgor(vector):
 	return db_get_filename_caption_tuple_from_vector(vector)
@@ -20,6 +22,7 @@ def fetch_image_name_for_vecgor(vector):
 
 def fetch_caption_count():
 	return db_get_caption_table_size()
+
 
 
 def testing():

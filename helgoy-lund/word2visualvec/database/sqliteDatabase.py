@@ -70,6 +70,11 @@ def db_get_caption_vectors(filename):
 	result = cursor.execute("""SELECT caption_vector FROM captions WHERE filename = ?""", (filename,)).fetchall()
 	return result
 
+def db_get_all_caption_vectors():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT caption_vector FROM captions""").fetchall()
+	return result
 
 def db_insert_caption_vector(filename, caption_text, caption_vector):
 	db = generate_db_connection()
