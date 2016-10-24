@@ -1,5 +1,5 @@
 from data_helper import generate_data
-from helper import split_list
+from list_helpers import split_list
 from keras.engine import Input
 from keras.engine import Model
 from keras.layers import Dense

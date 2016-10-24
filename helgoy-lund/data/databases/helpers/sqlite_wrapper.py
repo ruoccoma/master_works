@@ -1,6 +1,7 @@
 import io
 import sqlite3
 import sys
+import settings
 
 import numpy as np
 
@@ -115,12 +116,7 @@ def db_get_caption_table_size():
 	return result
 
 
-DB_FILE_PATH = ""
-for path in sys.path:
-	if path.endswith("master_works"):
-		DB_FILE_PATH = path
-		break
-DB_FILE_PATH += "/helgoy-lund/word2visualvec/databases/databases.db"
+DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database.db"
 
 sqlite3.register_adapter(np.ndarray, adapt_array)
 sqlite3.register_converter("array", convert_array)
