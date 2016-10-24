@@ -119,7 +119,7 @@ def test_model(model):
 
 
 def fetch_test_captions_vectors():
-	data_x, data_y = generate_data(1)
+	data_x, data_y = structure_and_store_embeddings(1)
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(data_x)
