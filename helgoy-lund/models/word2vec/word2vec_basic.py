@@ -171,7 +171,7 @@ with graph.as_default():
 
 # Step 5: Begin training.
 num_steps = 100001
-# num_steps = 1
+#num_steps = 1
 
 with tf.Session(graph=graph) as session:
 	# We must initialize all variables before we use them.
@@ -236,7 +236,7 @@ def save_model(labels, embeddings):
 	for key, data in zip(labels, embeddings):
 		word_dict[labels[key]] = data
 
-	pickle.dump(word_dict, open("word_embeddings-" + str(embedding_size), "wb"))
+	pickle.dump(word_dict, open("embeddings/word_embeddings-" + str(embedding_size), "wb"))
 	print("Saved model to disk")
 
 
