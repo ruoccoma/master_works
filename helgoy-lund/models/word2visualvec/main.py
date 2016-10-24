@@ -1,21 +1,19 @@
 from random import randint
 
 import numpy
-from caption_database_helper import db_get_filename_caption_tuple_from_caption_vector
+from caption_database_helper import fetch_filename_caption_tuple
 from data_helper import generate_data
-from helper import split_list, insert_and_remove_last
+from list_helpers import split_list, insert_and_remove_last
 from image_database_helper import fetch_image_vector_pairs
 from keras.models import model_from_json
 from sklearn.metrics import mean_squared_error
 
 # Import models
 import feedforward_keras
-import autoencoder_keras
-
 # Settings
 SAVE_MODEL = True
 LOAD_MODEL = False
-MODELS = [feedforward_keras, autoencoder_keras]
+MODELS = [feedforward_keras]
 MODEL = MODELS[0]
 MODEL_SUFFIX = "-overfit-relu"
 
@@ -80,7 +78,7 @@ def test_model(model):
 		correct_caption_vector_list = all_caption_vectors[i:i + 1]
 		correct_caption_vector = correct_caption_vector_list[0]
 
-		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_caption_vector(
+		correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(
 			correct_caption_vector)
 
 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
