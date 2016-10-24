@@ -7,7 +7,7 @@ CNN_NAME = "inception"
 WORD_EMBEDDING_METHOD = "word2vec"
 
 # Word2Vec
-WORD_EMBEDDING_DIMENSION = 300
+WORD_EMBEDDING_DIMENSION = 128
 WORD_EMBEDDING_DIR = ROOT_DIR + "/models/word2vec/embeddings/"
 WORD_FILEPATH = ROOT_DIR + "/data/datasets/Flickr_8k/Flickr8k.token.txt"
 
