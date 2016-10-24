@@ -4,6 +4,7 @@ import sys
 import numpy as np  # Make sure that numpy is imported
 
 from caption_database_helper import save_caption_vector
+import settings
 
 def getWordVectors(filepath):
 	return pickle.load(open(filepath, "rb"))
@@ -19,7 +20,7 @@ def getSentences(filepath):
 					sentence.append(x.lower())
 			sentences.append(sentence)
 
-		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), getWordVectors(WORD_VECTOR_FILEPATH), 128)
+		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION)), 128)
 
 	insertIntoDB(filepath, mean_vectors)
 
@@ -84,14 +85,4 @@ def getAvgFeatureVecs(sentences, model, num_features):
 		counter = counter + 1.
 	return sentenceFeatureVecs
 
-
-FILEPATH = ""
-for path in sys.path:
-	if path.endswith("master_works"):
-		FILEPATH = path
-		break
-
-WORD_VECTOR_FILEPATH = FILEPATH + "/helgoy-lund/word2vec/word_embeddings-128"
-DATA_FILEPATH = FILEPATH + "/helgoy-lund/word2visualvec/datasets/Flickr8k/Flickr8k.token.txt"
-
-getSentences(DATA_FILEPATH)
+getSentences(settings.WORD_FILEPATH)

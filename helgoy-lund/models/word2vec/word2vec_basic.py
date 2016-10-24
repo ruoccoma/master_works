@@ -33,7 +33,6 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import settings
 
-DATA_FILEPATH = settings.ROOT_DIR + "/data/datasets/Flickr_8k/Flickr8k.token.txt"
 
 
 # Read the datasets into a list of strings.
@@ -48,7 +47,7 @@ def read_data(filename):
 	return data
 
 
-words = read_data(DATA_FILEPATH)
+words = read_data(settings.WORD_FILEPATH)
 print('Data size', len(words))
 
 # Step 2: Build the dictionary and replace rare words with UNK token.
@@ -117,7 +116,7 @@ for i in range(8):
 # Step 4: Build and train a skip-gram model.
 
 batch_size = 128
-embedding_size = 300  # Dimension of the embedding vector.
+embedding_size = settings.WORD_EMBEDDING_DIMENSION  # Dimension of the embedding vector.
 skip_window = 1  # How many words to consider left and right.
 num_skips = 2  # How many times to reuse an input to generate a label.
 
@@ -236,7 +235,7 @@ def save_model(labels, embeddings):
 	for key, data in zip(labels, embeddings):
 		word_dict[labels[key]] = data
 
-	pickle.dump(word_dict, open("embeddings/word_embeddings-" + str(embedding_size), "wb"))
+	pickle.dump(word_dict, open("embeddings/word_embeddings-" + str(settings.WORD_EMBEDDING_DIMENSION), "wb"))
 	print("Saved model to disk")
 
 
