@@ -31,14 +31,9 @@ import tensorflow as tf
 # Plotting import
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+import settings
 
-DATA_FILEPATH = ""
-for path in sys.path:
-	if path.endswith("master_works"):
-		DATA_FILEPATH = path
-		break
-
-DATA_FILEPATH += "/helgoy-lund/word2visualvec/datasets/Flickr8k/Flickr8k.token.txt"
+DATA_FILEPATH = settings.ROOT_DIR + "/data/datasets/Flickr_8k/Flickr8k.token.txt"
 
 
 # Read the datasets into a list of strings.

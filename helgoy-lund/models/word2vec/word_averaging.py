@@ -3,8 +3,7 @@ import sys
 
 import numpy as np  # Make sure that numpy is imported
 
-from caption_database_helper import db_insert_caption_vector
-
+from caption_database_helper import save_caption_vector
 
 def getWordVectors(filepath):
 	return pickle.load(open(filepath, "rb"))
@@ -29,7 +28,7 @@ def insertIntoDB(filepath, mean_vectors):
 	with open(filepath) as f:
 		lineNumber = 0
 		for line in f.readlines():
-			db_insert_caption_vector(line.split("#")[0], ((line.split("#")[1])[1:]).strip(), mean_vectors[lineNumber])
+			save_caption_vector(line.split("#")[0], ((line.split("#")[1])[1:]).strip(), mean_vectors[lineNumber])
 			if lineNumber % 1000. == 0.:
 				print("Inserted %d of %d" % (lineNumber, len(mean_vectors)))
 			lineNumber += 1
