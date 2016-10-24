@@ -4,7 +4,7 @@ from keras.layers import Input, Dense
 from keras.models import Model, model_from_json
 from sklearn.metrics import mean_squared_error
 
-from caption_database_helper import db_get_filename_caption_tuple_from_vector
+from caption_database_helper import db_get_filename_caption_tuple_from_caption_vector
 from image_database_helper import fetch_image_vector_pairs
 
 

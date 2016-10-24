@@ -1,12 +1,16 @@
 from data_helper import generate_data
-from helper import split_list
+from helper import split_list, insert_and_remove_last
 from keras.models import model_from_json
 from sklearn.metrics import mean_squared_error
-
-from caption_database_helper import db_get_filename_caption_tuple_from_vector
-from image_database_helper import fetch_image_vector_pairs
-
+from PIL import Image
+from random import randint
 import numpy
+
+import webbrowser
+
+from caption_database_helper import db_get_filename_caption_tuple_from_caption_vector, \
+	fetch_all_filename_caption_vector_tuples
+from image_database_helper import fetch_image_vector_pairs
 
 # Import models
 import feedforward_keras
@@ -67,18 +71,10 @@ def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
 
 
-def insert_and_remove_last(array, element):
-	array.insert(0, element)
-	del array[-1]
-	return array
-
-
-from random import randint
-import numpy
 
 
 def test_model(model):
-	test_size = 3
+	test_size = 2
 	all_caption_vectors = fetch_test_captions_vectors()
 	numpy.random.shuffle(all_caption_vectors)
 	start = randint(0, len(all_caption_vectors) - test_size)
@@ -88,9 +84,8 @@ def test_model(model):
 		correct_caption_vector_list = all_caption_vectors[i:i + 1]
 		correct_caption_vector = correct_caption_vector_list[0]
 
-		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_vector(
+		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_caption_vector(
 			correct_caption_vector)
-		# correct_image_vector = fetch_image_vector(correct_image_filename)
 
 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
 
@@ -104,16 +99,20 @@ def test_model(model):
 		best_image_vector_name_list = ["" for i in range(5)]
 		best_image_vector_list = [[] for i in range(5)]
 
-		best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, first_image_mse)
-		best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, first_image_filename)
-		best_image_vector_list = insert_and_remove_last(best_image_vector_list, first_image_vector)
+		best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
+		best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
+		best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
 
 		for temp_image_name, temp_image_vector in image_vector_pairs:
 			temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
-			if temp_image_mse < best_image_vector_mse_list[0]:
-				best_image_vector_mse_list = insert_and_remove_last(best_image_vector_mse_list, temp_image_mse)
-				best_image_vector_name_list = insert_and_remove_last(best_image_vector_name_list, temp_image_name)
-				best_image_vector_list = insert_and_remove_last(best_image_vector_list, temp_image_vector)
+			for index in range(len(best_image_vector_list)):
+				if temp_image_mse < best_image_vector_mse_list[index]:
+					best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
+					                                                    temp_image_mse)
+					best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
+					                                                     temp_image_name)
+					best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
+					break
 		print("")
 		print("Correct caption:\t", correct_image_caption)
 		print("")
@@ -125,6 +124,58 @@ def test_model(model):
 		print("")
 
 
+def test_caption_vectors():
+	test_size = 1
+	all_caption_vectors = fetch_test_captions_vectors()
+	numpy.random.shuffle(all_caption_vectors)
+	start = randint(0, len(all_caption_vectors) - test_size)
+	samples = all_caption_vectors[start:start + test_size]
+	print("\nRESULTS")
+	for i in range(len(samples)):
+		correct_caption_vector_list = all_caption_vectors[i:i + 1]
+		correct_caption_vector = correct_caption_vector_list[0]
+
+		correct_image_filename, correct_image_caption = db_get_filename_caption_tuple_from_caption_vector(
+			correct_caption_vector)
+
+		caption_vector_pairs = fetch_all_filename_caption_vector_tuples()
+		first_caption_vector = caption_vector_pairs[0][1]
+		first_caption_filename = caption_vector_pairs[0][0]
+		first_caption_mse = compare_vectors(correct_caption_vector, first_caption_vector)
+
+		best_caption_vector_mse_list = [0 for i in range(5)]
+		best_caption_vector_name_list = ["" for i in range(5)]
+		best_caption_vector_list = [[] for i in range(5)]
+
+		best_caption_vector_mse_list = insert_and_remove_last(0, best_caption_vector_mse_list, first_caption_mse)
+		best_caption_vector_name_list = insert_and_remove_last(0, best_caption_vector_name_list, first_caption_filename)
+		best_caption_vector_list = insert_and_remove_last(0, best_caption_vector_list, first_caption_vector)
+
+		for temp_image_name, temp_caption_vector in caption_vector_pairs:
+			temp_caption_vector_mse = compare_vectors(correct_caption_vector, temp_caption_vector)
+			for index in range(len(best_caption_vector_list)):
+				if temp_caption_vector_mse < best_caption_vector_mse_list[index]:
+					best_caption_vector_mse_list = insert_and_remove_last(index, best_caption_vector_mse_list,
+					                                                      temp_caption_vector_mse)
+					best_caption_vector_name_list = insert_and_remove_last(index, best_caption_vector_name_list,
+					                                                       temp_image_name)
+					best_caption_vector_list = insert_and_remove_last(index, best_caption_vector_list,
+					                                                  temp_caption_vector)
+					break
+		print("")
+		print("Correct caption:\t", correct_image_caption)
+		print("")
+		print("Correct filename:\t", correct_image_filename)
+		print("")
+		print("Most similar images(chosen using caption vectors):")
+		for i in range(len(best_caption_vector_mse_list)):
+			filename = best_caption_vector_name_list[i]
+			img = Image.open("./cnn/Flicker8k_Dataset/" + filename)
+			img.show()
+			print(i + 1, filename)
+		print("")
+
+
 def fetch_test_captions_vectors():
 	data_x, data_y = generate_data(200)
 	training_test_ratio = 0.8
@@ -132,5 +183,5 @@ def fetch_test_captions_vectors():
 	return test_x
 
 
-
-word2visualvec_main()
+# word2visualvec_main()
+test_caption_vectors()
