@@ -15,21 +15,16 @@ SAVE_MODEL = True
 LOAD_MODEL = False
 MODELS = [feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-overfit-relu"
+MODEL_SUFFIX = "-normalized"
 
 
 def word2visualvec_main():
 	if LOAD_MODEL:
 		model = load_model(MODEL.__name__)
-		# model = load_model("feedforward_keras-e_500")
-		# model = load_model("encoder")
 	else:
 		model = MODEL.train()
-
 		if SAVE_MODEL:
 			save_model_to_file(model, MODEL.__name__)
-		# save_model_to_file(autoencoder, "autoencoder")
-		# save_model_to_file(decoder, "decoder")
 
 	test_model(model)
 

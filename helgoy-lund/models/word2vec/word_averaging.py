@@ -31,8 +31,8 @@ def insertIntoDB(filepath, mean_vectors):
 		lineNumber = 0
 		for line in f.readlines():
 			image_name = line.split("#")[0]
-			caption_vector = ((line.split("#")[1])[1:]).strip()
-			save_caption_vector(image_name, caption_vector, mean_vectors[lineNumber])
+			caption_text = ((line.split("#")[1])[1:]).strip()
+			save_caption_vector(image_name, caption_text, mean_vectors[lineNumber])
 			if lineNumber % 1000. == 0.:
 				print("Inserted %d of %d" % (lineNumber, len(mean_vectors)))
 			lineNumber += 1
@@ -71,14 +71,15 @@ def getAvgFeatureVecs(sentences, model, num_features):
 	counter = 0.
 	#
 	# Preallocate a 2D numpy array, for speed
-	sentenceFeatureVecs = np.zeros((len(sentences), num_features), dtype="float32")
+	len_sentences = len(sentences)
+	sentenceFeatureVecs = np.zeros((len_sentences, num_features), dtype="float32")
 	#
 	# Loop through the reviews
 	for sentence in sentences:
 		#
 		# Print a status message every 1000th sentence
 		if counter % 1000. == 0.:
-			print("Review %d of %d" % (counter, len(sentences)))
+			print("Review %d of %d" % (counter, len_sentences))
 		#
 		# Call the function (defined above) that makes average feature vectors
 		sentenceFeatureVecs[counter] = makeFeatureVec(sentence, model, \

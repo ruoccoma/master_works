@@ -1,5 +1,5 @@
 from embeddings_helper import structure_and_store_embeddings
-from list_helpers import split_list, l2norm
+from list_helpers import split_list, tf_l2norm
 from keras.engine import Input
 from keras.engine import Model
 from keras.layers import Dense, Lambda
@@ -29,14 +29,13 @@ def train():
     training_data_y, test_data_y = split_list(data_y, training_test_ratio)
 
     # this returns a tensor
-    inputs = Input(shape=(128,))
+    inputs = Input(shape=(300,))
 
     # a layer instance is callable on a tensor, and returns a tensor
-    X = Dense(512, activation='relu')(inputs)
+    X = Dense(400, activation='relu')(inputs)
+    X = Dense(800, activation='relu')(X)
     X = Dense(1024, activation='relu')(X)
-    X = Dense(1024, activation='relu')(X)
-    X = Dense(1024, activation='relu')(X)
-    X = Lambda(lambda x: l2norm(x))(X)
+    X = Lambda(lambda x: tf_l2norm(x))(X)
     X = Lambda(lambda x: abs(x))(X)
     predictions = Dense(2048, activation='softmax')(X)
 

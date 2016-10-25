@@ -9,11 +9,13 @@ import tarfile
 from os import listdir
 from os.path import isfile, join
 
-import settings
 import tensorflow as tf
 from six.moves import urllib
 
+import settings
 from image_database_helper import store_image_vector_to_db
+from list_helpers import l2norm
+import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -100,7 +102,7 @@ def create_graph():
 
 
 def convert_images_to_vectors():
-	images = fetch_all_imagepaths()[:10]
+	images = fetch_all_imagepaths()
 
 	# Creates graph from saved GraphDef.
 	create_graph()
@@ -114,7 +116,8 @@ def convert_images_to_vectors():
 			image_path = settings.IMAGE_DIR + "/" + images[i]
 			image_data = tf.gfile.FastGFile(image_path, 'rb').read()
 			image_vector = sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0]
-			store_image_vector_to_db(images[i], image_vector)
+			norm_image_vector = np.asarray(l2norm(image_vector))
+			store_image_vector_to_db(images[i], norm_image_vector)
 			print(str(i + 1) + "/" + num_images_string)
 
 
