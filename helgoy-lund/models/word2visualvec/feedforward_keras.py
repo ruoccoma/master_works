@@ -1,8 +1,8 @@
 from embeddings_helper import structure_and_store_embeddings
-from list_helpers import split_list
+from list_helpers import split_list, l2norm
 from keras.engine import Input
 from keras.engine import Model
-from keras.layers import Dense
+from keras.layers import Dense, Lambda
 
 # hyperparams
 epochs = 30
@@ -32,11 +32,13 @@ def train():
     inputs = Input(shape=(128,))
 
     # a layer instance is callable on a tensor, and returns a tensor
-    x = Dense(512, activation='relu')(inputs)
-    x = Dense(1024, activation='relu')(x)
-    x = Dense(1024, activation='relu')(x)
-    x = Dense(1024, activation='relu')(x)
-    predictions = Dense(2048, activation='softmax')(x)
+    X = Dense(512, activation='relu')(inputs)
+    X = Dense(1024, activation='relu')(X)
+    X = Dense(1024, activation='relu')(X)
+    X = Dense(1024, activation='relu')(X)
+    X = Lambda(lambda x: l2norm(x))(X)
+    X = Lambda(lambda x: abs(x))(X)
+    predictions = Dense(2048, activation='softmax')(X)
 
     # this creates a model that includes
     # the Input layer and three Dense layers
