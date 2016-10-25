@@ -4,7 +4,7 @@ import numpy
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import split_list, insert_and_remove_last
-from image_database_helper import fetch_image_vector_pairs
+from image_database_helper import fetch_all_image_vector_pairs
 from keras.models import model_from_json
 from sklearn.metrics import mean_squared_error
 
@@ -78,7 +78,7 @@ def test_model(model):
 
 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
 
-		image_vector_pairs = fetch_image_vector_pairs()
+		image_vector_pairs = fetch_all_image_vector_pairs()
 		first_image_vector = image_vector_pairs[0][1]
 		first_image_filename = image_vector_pairs[0][0]
 		first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)

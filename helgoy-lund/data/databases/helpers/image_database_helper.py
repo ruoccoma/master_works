@@ -13,5 +13,5 @@ def fetch_image_vector(image_name):
 	return wrapper.db_get_image_vector(image_name)[0]
 
 
-def fetch_image_vector_pairs():
-	return wrapper.db_all_images()
+def fetch_all_image_vector_pairs():
+	return wrapper.db_all_images_caption_pairs()

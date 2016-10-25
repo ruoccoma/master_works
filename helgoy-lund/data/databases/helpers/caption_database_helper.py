@@ -17,8 +17,8 @@ def fetch_all_caption_vectors():
 	return db_wrapper.db_get_all_caption_vectors()
 
 
-def fetch_filename_caption_tuple(image_vector):
-	return db_wrapper.db_get_filename_caption_tuple_from_caption_vector(image_vector)
+def fetch_filename_caption_tuple(caption_vector):
+	return db_wrapper.db_get_filename_caption_tuple_from_caption_vector(caption_vector)
 
 
 def fetch_caption_count():

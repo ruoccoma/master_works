@@ -10,7 +10,7 @@ sns.set_palette('muted')
 sns.set_context("notebook", font_scale=1.5,
                 rc={"lines.linewidth": 2.5})
 
-from image_database_helper import fetch_image_vector_pairs
+from image_database_helper import fetch_all_image_vector_pairs
 from caption_database_helper import fetch_all_caption_vectors
 
 # Random state.
@@ -18,8 +18,8 @@ RS = 20150101
 
 def plot_image_vectors():
 	# We first reorder the datasets points according to the handwritten numbers.
-	X = numpy.vstack([x[1] for x in fetch_image_vector_pairs()])
-	y = numpy.hstack([x[0] for x in fetch_image_vector_pairs()])
+	X = numpy.vstack([x[1] for x in fetch_all_image_vector_pairs()])
+	y = numpy.hstack([x[0] for x in fetch_all_image_vector_pairs()])
 
 	digits_proj = TSNE(random_state=RS).fit_transform(X)
 
@@ -29,7 +29,7 @@ def plot_image_vectors():
 def plot_word_averagings():
 	# We first reorder the datasets points according to the handwritten numbers.
 	X = numpy.vstack([x[0] for x in fetch_all_caption_vectors()[:1000]])
-	y = numpy.hstack([x[0] for x in fetch_image_vector_pairs()[:10]])
+	y = numpy.hstack([x[0] for x in fetch_all_image_vector_pairs()[:10]])
 
 	digits_proj = TSNE(random_state=RS).fit_transform(X)
 

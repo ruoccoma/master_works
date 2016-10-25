@@ -6,10 +6,10 @@ from keras.layers import Dense, Lambda
 
 # hyperparams
 epochs = 30
-batch_size = 32
+batch_size = 256
 validation_split = 0.2
 optimizer = "adadelta"
-loss = "categorical_crossentropy"
+loss = "cosine_proximity"
 
 
 def get_optimizer():
