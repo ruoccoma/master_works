@@ -20,7 +20,8 @@ def getSentences(filepath):
 					sentence.append(x.lower())
 			sentences.append(sentence)
 
-		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION)), 128)
+		word_vectors = getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION))
+		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), word_vectors, settings.WORD_EMBEDDING_DIMENSION)
 
 	insertIntoDB(filepath, mean_vectors)
 
@@ -29,7 +30,9 @@ def insertIntoDB(filepath, mean_vectors):
 	with open(filepath) as f:
 		lineNumber = 0
 		for line in f.readlines():
-			save_caption_vector(line.split("#")[0], ((line.split("#")[1])[1:]).strip(), mean_vectors[lineNumber])
+			image_name = line.split("#")[0]
+			caption_vector = ((line.split("#")[1])[1:]).strip()
+			save_caption_vector(image_name, caption_vector, mean_vectors[lineNumber])
 			if lineNumber % 1000. == 0.:
 				print("Inserted %d of %d" % (lineNumber, len(mean_vectors)))
 			lineNumber += 1
