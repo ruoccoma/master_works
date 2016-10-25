@@ -12,12 +12,16 @@ from os.path import isfile, join
 import settings
 import tensorflow as tf
 from six.moves import urllib
-from sklearn.preprocessing import normalize
 
 from image_database_helper import store_image_vector_to_db
 
 FLAGS = tf.app.flags.FLAGS
 
+tf.app.flags.DEFINE_string(
+	'model_dir', '/tmp/imagenet',
+	"""Path to classify_image_graph_def.pb, """
+	"""imagenet_synset_to_human_label_map.txt, and """
+	"""imagenet_2012_challenge_label_map_proto.pbtxt.""")
 
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 
@@ -25,9 +29,7 @@ DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-
 class NodeLookup(object):
 	"""Converts integer node ID's to human readable labels."""
 
-	def __init__(self,
-	             label_lookup_path=None,
-	             uid_lookup_path=None):
+	def __init__(self, label_lookup_path=None, uid_lookup_path=None):
 		if not label_lookup_path:
 			label_lookup_path = os.path.join(
 				FLAGS.model_dir, 'imagenet_2012_challenge_label_map_proto.pbtxt')
@@ -109,11 +111,10 @@ def convert_images_to_vectors():
 		num_images = len(images)
 		num_images_string = str(num_images)
 		for i in range(num_images):
-			image_path = "Flicker8k_Dataset/" + images[i]
+			image_path = settings.IMAGE_DIR + "/" + images[i]
 			image_data = tf.gfile.FastGFile(image_path, 'rb').read()
 			image_vector = sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0]
-			image_vector_norm = normalize(image_vector)
-			store_image_vector_to_db(images[i], image_vector_norm)
+			store_image_vector_to_db(images[i], image_vector)
 			print(str(i + 1) + "/" + num_images_string)
 
 
@@ -138,11 +139,12 @@ def maybe_download_and_extract():
 
 
 def fetch_all_imagepaths():
-	dirpath = settings.IMAGE_PATH
+	dirpath = settings.IMAGE_DIR
 	return [f for f in listdir(dirpath) if isfile(join(dirpath, f))]
 
 
 def main(_):
+	maybe_download_and_extract()
 	convert_images_to_vectors()
 
 
