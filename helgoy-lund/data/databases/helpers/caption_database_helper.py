@@ -14,7 +14,7 @@ def fetch_caption_vectors_for_image_name(image_name):
 
 
 def fetch_all_caption_vectors():
-	return db_wrapper.db_get_all_caption_vectors()
+	return db_wrapper.db_fetch_all_caption_vectors()
 
 
 def fetch_filename_caption_tuple(image_vector):

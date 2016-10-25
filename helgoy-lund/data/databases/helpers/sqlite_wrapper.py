@@ -24,6 +24,20 @@ def generate_db_connection():
 	return sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 
 
+""" TABLE: WORDS """
+
+
+def db_insert_word_vector(word_text, word_vector):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	cursor.execute("""INSERT INTO words VALUES(?, ?)""", (word_text, word_vector))
+	db.commit()
+
+def db_fetch_all_word_vectors():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	return cursor.execute("""SELECT word_text, word_vector FROM words""").fetchall()
+
 """ TABLE: IMAGES """
 
 
@@ -42,7 +56,7 @@ def db_get_image_vector(filename, default=None):
 	return result
 
 
-def db_all_images():
+def db_fetch_all_images():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
@@ -78,7 +92,7 @@ def db_get_caption_vectors(filename):
 	return result
 
 
-def db_get_all_caption_vectors():
+def db_fetch_all_caption_vectors():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT caption_vector FROM captions""").fetchall()
@@ -123,4 +137,5 @@ outer_db = generate_db_connection()
 c = outer_db.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS images (filename TEXT UNIQUE, image_vector array)''')
 c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_text TEXT, caption_vector array)''')
+c.execute('''CREATE TABLE IF NOT EXISTS words (word_text TEXT, word_vector array)''')
 outer_db.commit()
