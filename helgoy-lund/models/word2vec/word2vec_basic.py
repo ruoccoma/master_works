@@ -33,6 +33,7 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import settings
 
+from word_database_helper import save_caption_vector
 
 
 # Read the datasets into a list of strings.
@@ -111,7 +112,7 @@ def generate_batch(batch_size, num_skips, skip_window):
 batch, labels = generate_batch(batch_size=8, num_skips=2, skip_window=1)
 for i in range(8):
 	print(batch[i], reverse_dictionary[batch[i]],
-	      '->', labels[i, 0], reverse_dictionary[labels[i, 0]])
+		  '->', labels[i, 0], reverse_dictionary[labels[i, 0]])
 
 # Step 4: Build and train a skip-gram model.
 
@@ -146,7 +147,7 @@ with graph.as_default():
 		# Construct the variables for the NCE loss
 		nce_weights = tf.Variable(
 			tf.truncated_normal([vocabulary_size, embedding_size],
-			                    stddev=1.0 / math.sqrt(embedding_size)))
+								stddev=1.0 / math.sqrt(embedding_size)))
 		nce_biases = tf.Variable(tf.zeros([vocabulary_size]))
 
 	# Compute the average NCE loss for the batch.
@@ -154,7 +155,7 @@ with graph.as_default():
 	# time we evaluate the loss.
 	loss = tf.reduce_mean(
 		tf.nn.nce_loss(nce_weights, nce_biases, embed, train_labels,
-		               num_sampled, vocabulary_size))
+					   num_sampled, vocabulary_size))
 
 	# Construct the SGD optimizer using a learning rate of 1.0.
 	optimizer = tf.train.GradientDescentOptimizer(1.0).minimize(loss)
@@ -169,8 +170,8 @@ with graph.as_default():
 	init = tf.initialize_all_variables()
 
 # Step 5: Begin training.
-num_steps = 100001
-#num_steps = 1
+#num_steps = 100001
+num_steps = 1
 
 with tf.Session(graph=graph) as session:
 	# We must initialize all variables before we use them.
@@ -219,24 +220,19 @@ def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
 		x, y = low_dim_embs[i, :]
 		plt.scatter(x, y)
 		plt.annotate(label,
-		             xy=(x, y),
-		             xytext=(5, 2),
-		             textcoords='offset points',
-		             ha='right',
-		             va='bottom')
+					 xy=(x, y),
+					 xytext=(5, 2),
+					 textcoords='offset points',
+					 ha='right',
+					 va='bottom')
 
 	plt.savefig(filename)
 
 
 # Saving embedding space to file
 def save_model(labels, embeddings):
-	word_dict = {}
-
-	for key, data in zip(labels, embeddings):
-		word_dict[labels[key]] = data
-
-	pickle.dump(word_dict, open("embeddings/word_embeddings-" + str(settings.WORD_EMBEDDING_DIMENSION), "wb"))
-	print("Saved model to disk")
+	for word_text, word_vector in zip(labels, embeddings):
+		save_caption_vector(labels[word_text], word_vector)
 
 
 def main():
