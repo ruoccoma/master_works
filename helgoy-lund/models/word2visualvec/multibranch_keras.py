@@ -5,6 +5,9 @@ from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Merge, Reshape
 import numpy as np
 
+from keras.utils.visualize_util import plot
+
+
 from keras import callbacks
 remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
 
@@ -54,6 +57,7 @@ def train():
     merged_model.summary()
 
     merged_model.compile(optimizer=optimizer, loss=loss)
+    plot(merged_model, to_file='model.png')
     merged_model.fit([caption_vectors, image_vectors], similarities, batch_size=256, nb_epoch=3, callbacks=[remote])
 
     return merged_model
