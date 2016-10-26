@@ -2,15 +2,18 @@ from embeddings_helper import structure_and_store_embeddings
 from keras.models import Sequential
 from list_helpers import split_list, tf_l2norm
 from keras.engine import Input, Model
-from keras.layers import Dense, Lambda, Merge
+from keras.layers import Dense, Lambda, Merge, Reshape
 import numpy as np
+
+from keras import callbacks
+remote = callbacks.RemoteMonitor(root='http://localhost:9000')
 
 # hyperparams
 epochs = 30
 batch_size = 32
 validation_split = 0.2
 optimizer = "adadelta"
-loss = "categorical_crossentropy"
+loss = "cosine_proximity"
 
 
 def get_optimizer():
@@ -21,8 +24,11 @@ def get_loss():
     return loss
 
 def train():
-    caption_vectors, image_vectors = structure_and_store_embeddings(10)
+    caption_vectors, image_vectors = structure_and_store_embeddings(1000)
     similarities = np.ones(len(caption_vectors))
+
+    caption_vectors = np.asarray(caption_vectors)
+    image_vectors = np.asarray(image_vectors)
 
     caption_inputs = Input(shape=(300,))
     image_inputs = Input(shape=(2048,))
@@ -45,7 +51,9 @@ def train():
     merged_model.summary()
 
     merged_model.compile(optimizer=optimizer, loss=loss)
-    merged_model.fit([caption_vectors, image_vectors], similarities)
+    merged_model.fit([caption_vectors, image_vectors], similarities, batch_size=256, nb_epoch=5)
+
+    return merged_model
 
 
 def train_sequential():
@@ -65,8 +73,10 @@ def train_sequential():
     image_model = Sequential()
     image_model.add(Lambda(lambda x: abs(x)))
 
-    merge = Merge([caption_model, image_model], mode="cos")
-    merged_model = Model(input=[caption_inputs, image_inputs], output=[merge])
+    cos_distance = Merge([caption_model, image_model], mode="cos", dot_axes=1)
+    cos_distance = Reshape((1,))(cos_distance)
+    cos_similarity = Lambda(lambda x: 1-x)(cos_distance)
+    merged_model = Model(input=[caption_inputs, image_inputs], output=[cos_similarity])
 
     merged_model.compile(optimizer=optimizer, loss=loss)
-    merged_model.fit([caption_vectors, image_vectors], similarities)
+    merged_model.fit([caption_vectors, image_vectors], similarities, callbacks=[remote])
