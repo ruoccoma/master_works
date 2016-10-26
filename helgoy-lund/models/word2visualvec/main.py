@@ -27,7 +27,7 @@ def word2visualvec_main():
 		if SAVE_MODEL:
 			save_model_to_file(model, MODEL.__name__)
 
-	test_model(model)
+	# test_model(model)
 
 
 def save_model_to_file(model, name):
