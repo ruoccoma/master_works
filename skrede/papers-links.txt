@@ -1,0 +1,23 @@
+Here I list the titles and a link to the papers I am focusing on
+
+1)	Sesion-based Recommendations with Recurrent Neural Networks
+		https://arxiv.org/abs/1511.06939
+
+2)	Improved Recurrent Neural Networks for Session-based Recommendations
+		This paper is based on 1) and tries to improve on it
+		https://arxiv.org/abs/1606.08117
+
+3)	Next Basket Recommendation with Neural Networks
+		http://ceur-ws.org/Vol-1441/recsys2015_poster15.pdf
+
+4)	A Dynamic Recurrent Model for Next Basket Recommendation
+		http://dl.acm.org/citation.cfm?id=2914683
+
+5)	Multi-Rate Deep Learning for Temporal Recommendation
+		Suggests using multiple RNNs to capture long- and short-term user preferences
+		http://dl.acm.org/citation.cfm?id=2914726&dl=ACM&coll=DL&CFID=682434336&CFTOKEN=60778266
+
+6)	Context-aware Sequential Recommendation
+		Explores benefits of feeding context information into RNN, in addition to clicks. Time 
+		between clicks and place/time/etc..
+		https://arxiv.org/abs/1609.05787

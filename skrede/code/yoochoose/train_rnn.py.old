@@ -1,0 +1,101 @@
+# http://www.kdnuggets.com/2016/05/intro-recurrent-networks-tensorflow.html
+
+import tensorflow as tf
+from tensorflow.python.ops import rnn, rnn_cell
+import numpy as np
+
+base_path = '/home/ole/recSys-pro/yoochoose/'
+rnn_log = base_path+'rnn.log'
+training_set = base_path + 'rsc15_train_full_ole.txt'
+test_set = base_path + 'test-set.txt'
+
+num_hidden = 5      # Number of hidden 
+#num_layers = 1     # Number of RNN (e.g. GRU) layers
+max_length = 5      # Maximum number of clicks in a session
+n_classes = 3       # Size of representation of each click
+
+
+################# MODEL SETUP #################################################
+print " creating model..."
+# [Batch size, #timesteps, click representation size]
+x = tf.placeholder(tf.float32, [None, max_length, n_classes], name="input_x")
+y = tf.placeholder(tf.float32, [None, max_length, n_classes], name="target_y")
+# Vector with the session lengths for each session in a batch.
+session_length = tf.placeholder(tf.int32, [None], name="seq_len_of_input")
+output, state = rnn.dynamic_rnn(
+        rnn_cell.GRUCell(num_hidden),
+        x,
+        dtype=tf.float32,
+        sequence_length=session_length
+        )
+
+layer = {'weights':tf.Variable(tf.random_normal([num_hidden, n_classes])),
+        'biases':tf.Variable(tf.random_normal([n_classes]))}
+
+# Flatten to apply same weights to all time steps.
+output = tf.reshape(output, [-1, num_hidden])
+prediction = tf.matmul(output, layer['weights'])# + layer['biases'] TODO
+
+# Unflatten (?) back to original shape
+# skip this, since it they cancel each other out
+#prediction = tf.reshape(prediction, [-1, max_length, n_classes])
+#prediction = tf.reshape(prediction, [-1, n_classes])
+
+y_flat = tf.reshape(y, [-1, n_classes])
+# Reduce sum, since average divides by max_length, which is often wrong
+cost = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(prediction,y_flat))
+
+optimizer = tf.train.AdamOptimizer().minimize(cost)
+
+################## RUN TRAINING ###############################################
+init = tf.initialize_all_variables()
+with tf.Session() as sess:
+    print " initializing all variables..."
+    sess.run(init)
+    test_inn = np.array([[[0., 1., 0.],
+                        [0., 0., 1.],
+                        [1., 0., 0.],
+                        [0., 0., 0.],
+                        [0., 0., 0.]]])
+    test_target = np.array([[[0., 0., 1.],
+                        [1., 0., 0.],
+                        [0., 1., 0.],
+                        [0., 0., 0.],
+                        [0., 0., 0.]]])
+    print "output from GRU:"
+    print sess.run(output, feed_dict={x:test_inn, session_length:[3]})
+    print "output from feed forward:"
+    print sess.run(prediction, feed_dict={x:test_inn, session_length:[3]})
+    print "output from cost:"
+    print sess.run(cost, feed_dict={x:test_inn, session_length:[3], y:test_target})
+    print "output from optimizer:"
+    print sess.run([optimizer, cost], feed_dict={x:test_inn, session_length:[3], y:test_target})
+
+    print " running 10000 optimizations..."
+    for i in range(10000):
+        sess.run([optimizer, cost], feed_dict={x:test_inn, session_length:[3], y:test_target})
+
+
+    print " --------- Results -----------"
+    print "-- INPUT:"
+    print test_inn
+    print "-- TARGET:"
+    print test_target
+    print "output from GRU:"
+    print sess.run(output, feed_dict={x:test_inn, session_length:[3]})
+    print "output from feed forward:"
+    print sess.run(prediction, feed_dict={x:test_inn, session_length:[3]})
+    print "output from cost:"
+    print sess.run(cost, feed_dict={x:test_inn, session_length:[3], y:test_target})
+
+#    epoch = 1
+#    print "Ready to start first epoch..."
+#    while epoch < max_epochs:
+#        print "Running epoch #"+str(epoch)
+#        epoch_loss = 0
+#
+#
+#
+#        epoch += 1
+#
+#

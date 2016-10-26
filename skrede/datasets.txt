@@ -17,4 +17,3 @@ http://files.grouplens.org/datasets/
 	# The Movielens-1M dataset is used in 'Context-aware Sequential Recommendation'
 	#  it is a dataset for recommender systems.
 	http://files.grouplens.org/datasets/movielens/ml-1m.zip
-
