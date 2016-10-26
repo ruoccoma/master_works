@@ -76,8 +76,8 @@ def train_sequential():
     image_model = Sequential()
     image_model.add(Lambda(lambda x: abs(x)))
 
-    cos_distance = Merge([caption_model, image_model], mode="cos", dot_axes=1)
-
+    merge = Merge([caption_model, image_model], mode="cos")
+    merged_model = Model(input=[caption_inputs, image_inputs], output=[merge])
 
     merged_model.compile(optimizer=optimizer, loss=loss)
-    merged_model.fit([caption_vectors, image_vectors], similarities, callbacks=[remote])
+    merged_model.fit([caption_vectors, image_vectors], similarities)
