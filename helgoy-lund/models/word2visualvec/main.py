@@ -1,5 +1,6 @@
 from random import randint
 
+import multibranch_keras
 import numpy
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
@@ -13,7 +14,7 @@ import feedforward_keras
 # Settings
 SAVE_MODEL = True
 LOAD_MODEL = False
-MODELS = [feedforward_keras]
+MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
 MODEL_SUFFIX = "-normalized"
 
