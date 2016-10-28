@@ -16,26 +16,28 @@ SAVE_MODEL = True
 LOAD_MODEL = False
 MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-normalized"
+MODEL_SUFFIX = "-caption-model-10-epochs"
 
 
 def word2visualvec_main():
 	if LOAD_MODEL:
 		model = load_model(MODEL.__name__)
+		prediction_model = MODEL.generate_prediction_model(model)
 	else:
 		model = MODEL.train()
 		if SAVE_MODEL:
 			save_model_to_file(model, MODEL.__name__)
+		prediction_model = MODEL.generate_prediction_model(model)
 
-	# test_model(model)
+	test_model(prediction_model)
 
 
 def save_model_to_file(model, name):
 	name += MODEL_SUFFIX
 	# serialize model to JSON
-	model_json = model.to_json()
-	with open("stored_models/" + name + ".json", "w") as json_file:
-		json_file.write(model_json)
+	# model_json = model.to_json()
+	# with open("stored_models/" + name + ".json", "w") as json_file:
+	# 	json_file.write(model_json)
 	# serialize weights to HDF5
 	model.save_weights("stored_models/" + name + ".h5")
 	print("Saved model \"%s\" to disk" % name)
@@ -44,12 +46,17 @@ def save_model_to_file(model, name):
 def load_model(name):
 	name += MODEL_SUFFIX
 	# load json and create model
-	json_file = open("stored_models/" + name + '.json', 'r')
-	loaded_model_json = json_file.read()
-	json_file.close()
-	loaded_model = model_from_json(loaded_model_json)
+	# json_file = open("stored_models/" + name + '.json', 'r')
+	# loaded_model_json = json_file.read()
+	# json_file.close()
+	# loaded_model = model_from_json(loaded_model_json)
 	# load weights into new model
+
+	loaded_model = MODEL.get_model()
 	loaded_model.load_weights("stored_models/" + name + ".h5")
+
+	weights = loaded_model.get_weights()
+
 	print("Loaded model \"%s\" from disk" % name)
 
 	# evaluate loaded model on test datasets
@@ -115,7 +122,7 @@ def test_model(model):
 
 
 def fetch_test_captions_vectors():
-	data_x, data_y = structure_and_store_embeddings(1)
+	data_x, data_y = structure_and_store_embeddings(10)
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(data_x)

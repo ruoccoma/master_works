@@ -106,9 +106,9 @@ out
 gen
 /helgoy-lund/data/databases/sqlite/database.db
 /helgoy-lund/data/databases/sqlite/database-images.db
-/helgoy-lund/models/example-keras-image-caption/image_caption/coco.zip
-/helgoy-lund/models/example-keras-image-caption/image_caption/data/
-/helgoy-lund/models/example-keras-image-caption/
+/helgoy-lund/models/examples/example-keras-image-caption/image_caption/coco.zip
+/helgoy-lund/models/examples/example-keras-image-caption/image_caption/data/
+/helgoy-lund/models/examples/example-keras-image-caption/
 /helgoy-lund/data/embeddings/stored-embeddings/
 /helgoy-lund/models/word2visualvec/stored_models/
 /helgoy-lund/data/datasets/
