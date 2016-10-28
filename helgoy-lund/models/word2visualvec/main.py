@@ -1,19 +1,22 @@
 from random import randint
 
-import multibranch_keras
 import numpy
+import theano
+from sklearn.metrics import mean_squared_error
+
+import multibranch_keras
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
-from list_helpers import split_list, insert_and_remove_last
 from image_database_helper import fetch_all_image_vector_pairs
-from keras.models import model_from_json
-from sklearn.metrics import mean_squared_error
+from list_helpers import split_list, insert_and_remove_last
+
+theano.config.openmp = True
 
 # Import models
 import feedforward_keras
 # Settings
 SAVE_MODEL = True
-LOAD_MODEL = False
+LOAD_MODEL = True
 MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
 MODEL_SUFFIX = "-caption-model-10-epochs"
@@ -71,7 +74,7 @@ def compare_vectors(v1, v2):
 
 
 def test_model(model):
-	test_size = 2
+	test_size = 10
 	all_caption_vectors = fetch_test_captions_vectors()
 	numpy.random.shuffle(all_caption_vectors)
 	start = randint(0, len(all_caption_vectors) - test_size)
@@ -122,7 +125,7 @@ def test_model(model):
 
 
 def fetch_test_captions_vectors():
-	data_x, data_y = structure_and_store_embeddings(10)
+	data_x, data_y = structure_and_store_embeddings()
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(data_x)
