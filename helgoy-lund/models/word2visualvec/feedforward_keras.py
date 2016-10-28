@@ -6,7 +6,7 @@ from keras.layers import Dense, Lambda
 
 # hyperparams
 epochs = 30
-batch_size = 256
+batch_size = 128
 validation_split = 0.2
 optimizer = "adadelta"
 loss = "cosine_proximity"

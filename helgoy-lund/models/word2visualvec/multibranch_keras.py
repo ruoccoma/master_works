@@ -44,7 +44,7 @@ def contrastive_loss(labels, predict):
 
 # hyperparams
 epochs = 10
-batch_size = 256
+batch_size = 128
 validation_split = 0.2
 optimizer = "adam"
 loss = contrastive_loss
