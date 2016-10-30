@@ -4,6 +4,7 @@ import sys
 import numpy as np  # Make sure that numpy is imported
 
 from caption_database_helper import save_caption_vector
+from preprosessing import tokenize
 import settings
 
 def getWordVectors(filepath):
@@ -18,7 +19,8 @@ def getSentences(filepath):
 			for x in ((((line.split("#")[1])[1:]).strip()).split()):
 				if x != "." or x != ",":
 					sentence.append(x.lower())
-			sentences.append(sentence)
+			tokenized_sentence = tokenize(sentence)
+			sentences.append(tokenized_sentence)
 
 		word_vectors = getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION))
 		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), word_vectors, settings.WORD_EMBEDDING_DIMENSION)
