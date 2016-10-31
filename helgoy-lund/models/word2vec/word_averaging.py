@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import numpy as np  # Make sure that numpy is imported
 
 import settings
-from caption_database_helper import save_caption_vector
-from list_helpers import l2norm
+from caption_database_helper import save_caption_vector, save_caption_vector_list
+from list_helpers import l2norm, printProgress
 from word_database_helper import fetch_all_word_vectors, fetch_word_vector
 
 
@@ -37,13 +40,13 @@ def extract_sentences(lines):
 def store_caption_vector(filepath, caption_vector):
 	with open(filepath) as f:
 		lineNumber = 0
+		captions = []
 		for line in f.readlines():
 			image_name = line.split("#")[0]
 			caption_text = ((line.split("#")[1])[1:]).strip()
-			save_caption_vector(image_name, caption_text, caption_vector[lineNumber])
-			if lineNumber % 1000. == 0.:
-				print("Inserted %d of %d" % (lineNumber, len(caption_vector)))
+			captions.append((image_name, caption_text, caption_vector[lineNumber]))
 			lineNumber += 1
+		save_caption_vector_list(captions)
 
 
 def convert_sentence_to_vector(words, num_features, dictionary):
@@ -73,7 +76,7 @@ def convert_sentences(sentences, num_features):
 	# the average feature vector for each one and return a 2D numpy array
 	#
 	# Initialize a counter
-	counter = 0.
+	counter = 0
 	#
 	# Preallocate a 2D numpy array, for speed
 	len_sentences = len(sentences)
@@ -87,16 +90,14 @@ def convert_sentences(sentences, num_features):
 
 	# Loop through the reviews
 	for sentence in sentences:
-		#
-		# Print a status message every 1000th sentence
-		if counter % 1000. == 0.:
-			print("Review %d of %d" % (counter, len_sentences))
-		#
+		if counter % 1000 == 0:
+			printProgress(counter, len_sentences, prefix='Convert sentences:', suffix='Complete', barLength=50)
+
 		# Call the function (defined above) that makes average feature vectors
 		sentenceFeatureVecs[counter] = convert_sentence_to_vector(sentence, num_features, dictionary)
 		#
 		# Increment the counter
-		counter = counter + 1.
+		counter = counter + 1
 	return sentenceFeatureVecs
 
 
