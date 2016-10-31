@@ -42,7 +42,7 @@ def structure_and_store_embeddings(size=-1):
 
 def save_embeddings(dataset, size):
 	pickle_file = open(find_filepath(size), 'wb')
-	pickle.dump(dataset, pickle_file)
+	pickle.dump(dataset, pickle_file, protocol=2)
 	pickle_file.close()
 
 
