@@ -117,6 +117,14 @@ def db_insert_caption_vector(filename, caption_text, caption_vector):
 	db.commit()
 
 
+def db_insert_caption_vector_list(tuple_list):
+	db = generate_db_connection()
+
+	cursor = db.cursor()
+	cursor.executemany("""INSERT INTO captions VALUES (?,?,?)""", tuple_list)
+	db.commit()
+
+
 def db_get_caption_text(caption_vector):
 	db = generate_db_connection()
 	cursor = db.cursor()
