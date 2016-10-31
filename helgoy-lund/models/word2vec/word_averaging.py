@@ -4,11 +4,12 @@ import sys
 import numpy as np  # Make sure that numpy is imported
 
 from caption_database_helper import save_caption_vector
-from preprosessing import tokenize
+from preprocessing import preprocessing
+from caption_database_helper import fetch_all_caption_vectors, save_caption_vector
 import settings
 
 def getWordVectors(filepath):
-	return pickle.load(open(filepath, "rb"))
+	return fetch_all_caption_vectors()
 
 
 def getSentences(filepath):
@@ -19,8 +20,8 @@ def getSentences(filepath):
 			for x in ((((line.split("#")[1])[1:]).strip()).split()):
 				if x != "." or x != ",":
 					sentence.append(x.lower())
-			tokenized_sentence = tokenize(sentence)
-			sentences.append(tokenized_sentence)
+
+			sentences.append(sentence)
 
 		word_vectors = getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION))
 		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), word_vectors, settings.WORD_EMBEDDING_DIMENSION)
