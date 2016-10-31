@@ -4,8 +4,8 @@ import os.path
 import pickle
 import settings
 
-from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count
-from image_database_helper import fetch_all_image_names, fetch_image_vector
+from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count, fetch_all_filename_caption_vector_tuples
+from image_database_helper import fetch_all_image_names, fetch_image_vector, fetch_all_image_vector_pairs
 
 
 def structure_and_store_embeddings(size=-1):
@@ -22,11 +22,22 @@ def structure_and_store_embeddings(size=-1):
 
 		validate_database(num_images)
 
-		print("Generating datasets for %s images" % num_images)
+		image_name_image_vector_dict = {key: value for (key, value) in fetch_all_image_vector_pairs()}
+
+		image_name_caption_vector_dict = dict()
+
+		name_cap_vec_tuples = fetch_all_filename_caption_vector_tuples()
+		for (name, cap_vec) in name_cap_vec_tuples:
+			if name in image_name_caption_vector_dict:
+				image_name_caption_vector_dict[name].append(cap_vec)
+			else:
+				image_name_caption_vector_dict[name] = [cap_vec]
+
 		counter = 1
 		for image_name in all_image_names:
-			image_vector = fetch_image_vector(image_name)
-			for caption_vector in fetch_caption_vectors_for_image_name(image_name):
+			image_vector = image_name_image_vector_dict[image_name]
+			caption_vectors = image_name_caption_vector_dict[image_name]
+			for caption_vector in caption_vectors:
 				sorted_image_data.append(image_vector)
 				sorted_caption_vector_data.append(caption_vector)
 			if counter % 100 == 0:
@@ -72,3 +83,6 @@ def validate_database(num_images):
 def get_filename(size):
 	return "%sdataset-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
 
+
+if __name__ == "__main__":
+	structure_and_store_embeddings(99)
