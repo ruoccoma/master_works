@@ -112,9 +112,13 @@ def db_fetch_all_caption_vectors():
 def db_insert_caption_vector(filename, caption_text, caption_vector):
 	db = generate_db_connection()
 
-	cursor = db.cursor()
-	cursor.execute("""INSERT INTO captions VALUES (?,?,?)""", (filename, caption_text, caption_vector))
-	db.commit()
+	try:
+		cursor = db.cursor()
+		cursor.execute("""INSERT INTO captions VALUES (?,?,?)""", (filename, caption_text, caption_vector))
+		db.commit()
+	except sqlite3.ProgrammingError as e:
+		print(filename, caption_text)
+		print(e)
 
 
 def db_insert_caption_vector_list(tuple_list):
