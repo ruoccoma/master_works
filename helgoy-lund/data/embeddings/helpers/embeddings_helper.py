@@ -6,6 +6,7 @@ import settings
 
 from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count
 from image_database_helper import fetch_all_image_names, fetch_image_vector
+from list_helpers import printProgress
 
 
 def structure_and_store_embeddings(size=-1):
@@ -22,7 +23,6 @@ def structure_and_store_embeddings(size=-1):
 
 		validate_database(num_images)
 
-		print("Generating datasets for %s images" % num_images)
 		counter = 1
 		for image_name in all_image_names:
 			image_vector = fetch_image_vector(image_name)
@@ -30,7 +30,7 @@ def structure_and_store_embeddings(size=-1):
 				sorted_image_data.append(image_vector)
 				sorted_caption_vector_data.append(caption_vector)
 			if counter % 100 == 0:
-				print("%s/%s" % (counter, num_images))
+				printProgress(counter, num_images, prefix='Generating dataset:', suffix='Complete', barLength=50)
 			counter += 1
 		print("Finished generating %s training example" % len(sorted_caption_vector_data))
 		dataset = [sorted_caption_vector_data, sorted_image_data]
@@ -70,5 +70,5 @@ def validate_database(num_images):
 
 
 def get_filename(size):
-	return "%sdataset-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
+	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
 
