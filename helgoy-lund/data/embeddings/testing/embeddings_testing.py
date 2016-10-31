@@ -1,18 +1,19 @@
 from random import randint
 
 import numpy
-from PIL import Image
+
 from sklearn.metrics import mean_squared_error
 
 import settings
 from caption_database_helper import fetch_all_filename_caption_vector_tuples, fetch_filename_caption_tuple
-from image_database_helper import fetch_all_image_names, fetch_image_vector, fetch_all_image_vector_pairs
 from embeddings_helper import structure_and_store_embeddings
+from image_database_helper import fetch_all_image_names, fetch_image_vector, fetch_all_image_vector_pairs
+from image_helpers import show_image
 from list_helpers import split_list, insert_and_remove_last
 
 
 def fetch_test_captions_vectors():
-	data_x, _ = structure_and_store_embeddings(200)
+	data_x, _ = structure_and_store_embeddings(50)
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return test_x
@@ -74,8 +75,7 @@ def test_caption_vectors():
 		print("Most similar images(chosen using caption vectors):")
 		for i in range(len(best_caption_vector_mse_list)):
 			filename = best_caption_vector_name_list[i]
-			img = Image.open(settings.IMAGE_DIR + filename)
-			img.show()
+			show_image(settings.IMAGE_DIR + filename, filename)
 			print(i + 1, filename)
 		print("")
 
@@ -122,11 +122,10 @@ def test_image_vectors():
 		print("Most similar images(chosen using image vectors):")
 		for i in range(len(best_image_vector_mse_list)):
 			filename = best_image_vector_name_list[i]
-			img = Image.open(settings.IMAGE_DIR + filename)
-			img.show()
+			show_image(settings.IMAGE_DIR + filename, filename)
 			print(i + 1, filename)
 		print("")
 
 
-# test_caption_vectors()
-test_image_vectors()
+test_caption_vectors()
+# test_image_vectors()

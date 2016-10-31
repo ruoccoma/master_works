@@ -33,10 +33,20 @@ def db_insert_word_vector(word_text, word_vector):
 	cursor.execute("""INSERT INTO words VALUES(?, ?)""", (word_text, word_vector))
 	db.commit()
 
+
 def db_fetch_all_word_vectors():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	return cursor.execute("""SELECT word_text, word_vector FROM words""").fetchall()
+
+
+def db_fetch_word_vector(word, default=None):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT word_vector FROM words WHERE word_text = ?""", (word,)).fetchone()
+	if result is None:
+		return default
+	return result
 
 """ TABLE: IMAGES """
 
@@ -137,5 +147,5 @@ outer_db = generate_db_connection()
 c = outer_db.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS images (filename TEXT UNIQUE, image_vector array)''')
 c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_text TEXT, caption_vector array)''')
-c.execute('''CREATE TABLE IF NOT EXISTS words (word_text TEXT, word_vector array)''')
+c.execute('''CREATE TABLE IF NOT EXISTS words (word_text TEXT UNIQUE, word_vector array)''')
 outer_db.commit()

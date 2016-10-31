@@ -6,6 +6,7 @@ DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database.db"
 CNN_NAME = "inception"
 WORD_EMBEDDING_METHOD = "word2vec"
 IMAGE_DIR = ROOT_DIR + "/data/datasets/Flickr8k/images/"
+RES_DIR = ROOT_DIR + "/res/"
 
 # Word2Vec
 WORD_EMBEDDING_DIMENSION = 300
