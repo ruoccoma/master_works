@@ -13,6 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -27,24 +30,32 @@ import sys
 import numpy as np
 import six
 import tensorflow as tf
+import string
 
 # Plotting import
+from list_helpers import printProgress
+from text_preprocessing import preprocessing
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import settings
 
-from word_database_helper import save_caption_vector
-
+from word_database_helper import save_word_vector
 
 # Read the datasets into a list of strings.
 def read_data(filename):
+	index = 0
 	"""Extract the first file enclosed in a zip file as a list of words"""
 	with open(filename) as f:
 		data = []
-		for line in f.readlines():
-			for x in ((((line.split("#")[1])[1:]).strip()).split()):
-				if x != "." or x != ",":
-					data.append(x.lower())
+		readlines = f.readlines()
+		length = len(readlines)
+		for line in readlines:
+			index += 1
+			sentence = ((line.split("#")[1])[1:]).strip()
+			preprocessed_words = preprocessing(sentence, remove_stopwords=True, min_length=3)
+			for x in preprocessed_words:
+				data.append(x)
+			printProgress(index, length, prefix='Progress:', suffix='Complete', barLength=50)
 	return data
 
 
@@ -52,7 +63,7 @@ words = read_data(settings.WORD_FILEPATH)
 print('Data size', len(words))
 
 # Step 2: Build the dictionary and replace rare words with UNK token.
-vocabulary_size = 8915
+vocabulary_size = 19759
 
 
 def build_dataset(words):
@@ -232,7 +243,8 @@ def plot_with_labels(low_dim_embs, labels, filename='tsne.png'):
 # Saving embedding space to file
 def save_model(labels, embeddings):
 	for word_text, word_vector in zip(labels, embeddings):
-		save_caption_vector(labels[word_text], word_vector)
+		print(word_text)
+		save_word_vector(labels[word_text], word_vector)
 
 
 def main():
