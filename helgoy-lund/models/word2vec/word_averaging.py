@@ -1,18 +1,15 @@
-import pickle
-import sys
-
 import numpy as np  # Make sure that numpy is imported
 
-from caption_database_helper import save_caption_vector
-from preprocessing import preprocessing
-from caption_database_helper import fetch_all_caption_vectors, save_caption_vector
 import settings
+from caption_database_helper import save_caption_vector
+from word_database_helper import fetch_all_word_vectors, fetch_word_vector
 
-def getWordVectors(filepath):
-	return fetch_all_caption_vectors()
+
+def getWordVectors():
+	return fetch_all_word_vectors()
 
 
-def getSentences(filepath):
+def generate_caption_vectors(filepath):
 	with open(filepath) as f:
 		sentences = []
 		for line in f.readlines():
@@ -23,8 +20,7 @@ def getSentences(filepath):
 
 			sentences.append(sentence)
 
-		word_vectors = getWordVectors("%sword_embeddings-%s" % (settings.WORD_EMBEDDING_DIR, settings.WORD_EMBEDDING_DIMENSION))
-		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), word_vectors, settings.WORD_EMBEDDING_DIMENSION)
+		mean_vectors = getAvgFeatureVecs(np.asarray(sentences), settings.WORD_EMBEDDING_DIMENSION)
 
 	insertIntoDB(filepath, mean_vectors)
 
@@ -41,7 +37,7 @@ def insertIntoDB(filepath, mean_vectors):
 			lineNumber += 1
 
 
-def makeFeatureVec(words, model, num_features):
+def makeFeatureVec(words, num_features):
 	# Function to average all of the word vectors in a given
 	# paragraph
 	#
@@ -50,23 +46,20 @@ def makeFeatureVec(words, model, num_features):
 	#
 	nwords = 0.
 	#
-	# Index2word is a list that contains the names of the words in
-	# the model's vocabulary. Convert it to a set, for speed
-	index2word_set = set(model.keys())
-	#
 	# Loop over each word in the review and, if it is in the model's
 	# vocaublary, add its feature vector to the total
 	for word in words:
-		if word in index2word_set:
+		word_vector = fetch_word_vector(word, None)
+		if word is not None:
 			nwords = nwords + 1.
-			featureVec = np.add(featureVec, model[word])
+			featureVec = np.add(featureVec, word_vector)
 	#
 	# Divide the result by the number of words to get the average
 	featureVec = np.divide(featureVec, nwords)
 	return featureVec
 
 
-def getAvgFeatureVecs(sentences, model, num_features):
+def getAvgFeatureVecs(sentences, num_features):
 	# Given a set of sentences (each one a list of words), calculate
 	# the average feature vector for each one and return a 2D numpy array
 	#
@@ -85,11 +78,18 @@ def getAvgFeatureVecs(sentences, model, num_features):
 			print("Review %d of %d" % (counter, len_sentences))
 		#
 		# Call the function (defined above) that makes average feature vectors
-		sentenceFeatureVecs[counter] = makeFeatureVec(sentence, model, \
-		                                              num_features)
+		sentenceFeatureVecs[counter] = makeFeatureVec(sentence, num_features)
 		#
 		# Increment the counter
 		counter = counter + 1.
 	return sentenceFeatureVecs
 
-getSentences(settings.WORD_FILEPATH)
+
+def get_caption_vector(sentence):
+	words = [sentence.split()]
+	mean_vectors = getAvgFeatureVecs(np.asarray(words), settings.WORD_EMBEDDING_DIMENSION)
+	return mean_vectors[0]
+
+
+if __name__ == "__main__":
+	generate_caption_vectors(settings.WORD_FILEPATH)
