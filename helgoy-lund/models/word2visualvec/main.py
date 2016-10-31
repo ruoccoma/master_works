@@ -22,7 +22,7 @@ LOAD_MODEL = False
 PREDICT_NEW = False
 MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-caption-model-1-epochs"
+MODEL_SUFFIX = "-caption-model-%s-epochs" % MODEL.get_epochs()
 
 
 def word2visualvec_main():

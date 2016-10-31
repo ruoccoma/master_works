@@ -20,6 +20,8 @@ def get_optimizer():
 def get_loss():
 	return loss
 
+def get_epochs():
+    return epochs
 
 # hyperparams
 epochs = 10

@@ -19,6 +19,8 @@ def get_optimizer():
 def get_loss():
     return loss
 
+def get_epochs():
+    return epochs
 
 def train():
     data_x, data_y = structure_and_store_embeddings()

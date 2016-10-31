@@ -4,11 +4,9 @@ import os.path
 import pickle
 import settings
 
-from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count
-from image_database_helper import fetch_all_image_names, fetch_image_vector
 from list_helpers import printProgress
-from caption_database_helper import fetch_caption_vectors_for_image_name, fetch_caption_count, fetch_all_filename_caption_vector_tuples
-from image_database_helper import fetch_all_image_names, fetch_image_vector, fetch_all_image_vector_pairs
+from caption_database_helper import fetch_caption_count, fetch_all_filename_caption_vector_tuples
+from image_database_helper import fetch_all_image_names, fetch_all_image_vector_pairs
 
 
 def structure_and_store_embeddings(size=-1):
@@ -25,6 +23,7 @@ def structure_and_store_embeddings(size=-1):
 
 		validate_database(num_images)
 
+		print("Generating compatible dataset...")
 		image_name_image_vector_dict = {key: value for (key, value) in fetch_all_image_vector_pairs()}
 
 		image_name_caption_vector_dict = dict()
@@ -43,8 +42,6 @@ def structure_and_store_embeddings(size=-1):
 			for caption_vector in caption_vectors:
 				sorted_image_data.append(image_vector)
 				sorted_caption_vector_data.append(caption_vector)
-			if counter % 100 == 0:
-				printProgress(counter, num_images, prefix='Generating dataset:', suffix='Complete', barLength=50)
 			counter += 1
 		print("Finished generating %s training example" % len(sorted_caption_vector_data))
 		dataset = [sorted_caption_vector_data, sorted_image_data]
