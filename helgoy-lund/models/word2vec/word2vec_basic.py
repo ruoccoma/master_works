@@ -55,7 +55,7 @@ def read_data(filename):
 			preprocessed_words = preprocessing(sentence, remove_stopwords=True, min_length=3)
 			for x in preprocessed_words:
 				data.append(x)
-			printProgress(index, length, prefix='Progress:', suffix='Complete', barLength=50)
+			printProgress(index, length, prefix='Read data:', suffix='Complete', barLength=50)
 	return data
 
 

@@ -8,6 +8,7 @@ def save_caption_vector(image_name, caption_text, caption_vector):
 
 
 def save_caption_vector_list(tuple_list):
+	print("Storing captions in database...")
 	db_wrapper.db_insert_caption_vector_list(tuple_list)
 
 

@@ -19,12 +19,11 @@ theano.config.openmp = True
 # Import models
 import feedforward_keras
 # Settings
-SAVE_MODEL = True
 LOAD_MODEL = False
 PREDICT_NEW = False
 MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-merge-euclid-model-10-epochs"
+MODEL_SUFFIX = "-caption-model-%s-epochs" % MODEL.get_epochs()
 
 
 def word2visualvec_main():
@@ -33,8 +32,7 @@ def word2visualvec_main():
 		prediction_model = MODEL.generate_prediction_model(model)
 	else:
 		model = MODEL.train()
-		if SAVE_MODEL:
-			save_model_to_file(model, MODEL.__name__)
+		save_model_to_file(model, MODEL.__name__)
 		prediction_model = MODEL.generate_prediction_model(model)
 
 	if PREDICT_NEW:
