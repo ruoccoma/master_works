@@ -67,11 +67,11 @@ def create_base_network(input_dim):
 	'''Base network to be shared (eq. to feature extraction).
 	'''
 	seq = Sequential()
-	seq.add(Dense(128, input_shape=(input_dim,), activation='relu'))
+	seq.add(Dense(128, input_shape=(input_dim,), activation='relu', name="1-dense"))
 	seq.add(Dropout(0.1))
-	seq.add(Dense(128, activation='relu'))
+	seq.add(Dense(128, activation='relu', name="2-dense"))
 	seq.add(Dropout(0.1))
-	seq.add(Dense(128, activation='relu'))
+	seq.add(Dense(128, activation='relu', name="3-dense"))
 	return seq
 
 
@@ -118,16 +118,22 @@ model = Model(input=[input_a, input_b], output=distance)
 # train
 rms = RMSprop()
 model.compile(loss=contrastive_loss, optimizer=rms)
-plot(model, to_file='model.png', show_shapes=True)
-model.fit([tr_pairs[:, 0], tr_pairs[:, 1]], tr_y,
-          validation_data=([te_pairs[:, 0], te_pairs[:, 1]], te_y),
+plot(model, to_file='siamese.png', show_shapes=True, show_layer_names=True)
+training_left_side = tr_pairs[:, 0]
+training_right_side = tr_pairs[:, 1]
+
+testing_left_side = te_pairs[:, 0]
+testing_right_side = te_pairs[:, 1]
+
+model.fit([training_left_side, training_right_side], tr_y,
+          validation_data=([testing_left_side, testing_right_side], te_y),
           batch_size=128,
           nb_epoch=nb_epoch)
 
 # compute final accuracy on training and test sets
-pred = model.predict([tr_pairs[:, 0], tr_pairs[:, 1]])
+pred = model.predict([tr_pairs[:, 0], training_right_side])
 tr_acc = compute_accuracy(pred, tr_y)
-pred = model.predict([te_pairs[:, 0], te_pairs[:, 1]])
+pred = model.predict([testing_left_side, testing_right_side])
 te_acc = compute_accuracy(pred, te_y)
 
 print('* Accuracy on training set: %0.2f%%' % (100 * tr_acc))

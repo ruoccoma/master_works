@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error
 
 import multibranch_keras
 import settings
+import euclidian_distance_keras
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
 from image_database_helper import fetch_all_image_vector_pairs
@@ -19,11 +20,11 @@ theano.config.openmp = True
 import feedforward_keras
 # Settings
 SAVE_MODEL = True
-LOAD_MODEL = True
+LOAD_MODEL = False
 PREDICT_NEW = False
 MODELS = [multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-caption-model-10-epochs"
+MODEL_SUFFIX = "-merge-euclid-model-10-epochs"
 
 
 def word2visualvec_main():
