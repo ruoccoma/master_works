@@ -32,3 +32,17 @@ def fetch_caption_count():
 
 def fetch_all_filename_caption_vector_tuples():
 	return db_wrapper.db_all_filename_caption_vector_tuple()
+
+
+def fetch_all_caption_rows():
+	return db_wrapper.db_all_caption_rows()
+
+
+if __name__ == "__main__":
+	import math
+	for x in fetch_all_caption_rows():
+		x_ = x[1][0]
+		if math.isnan(x_):
+			print x[0], x[2]
+
+

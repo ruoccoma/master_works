@@ -89,10 +89,17 @@ def db_keys_captions():
 	return cursor.execute("""SELECT filename FROM captions""").fetchall()
 
 
+
 def db_all_filename_caption_vector_tuple():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	return cursor.execute("""SELECT filename, caption_vector FROM captions""").fetchall()
+
+
+def db_all_caption_rows():
+	db = generate_db_connection()
+	cursor = db.cursor()
+	return cursor.execute("""SELECT filename, caption_vector, caption_text FROM captions""").fetchall()
 
 
 def db_get_caption_vectors(filename):

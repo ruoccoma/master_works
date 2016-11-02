@@ -5,7 +5,7 @@ import numpy as np  # Make sure that numpy is imported
 
 import settings
 from caption_database_helper import save_caption_vector, save_caption_vector_list
-from list_helpers import l2norm, printProgress
+from image_helpers import printProgress
 from word_database_helper import fetch_all_word_vectors, fetch_word_vector
 
 
@@ -29,7 +29,7 @@ def extract_sentences(lines):
 	sentences = []
 	for line in lines:
 		sentence = []
-		for x in ((((line.split("#")[1])[1:]).strip()).split()):
+		for x in ((((line.split(".jpg#")[1])[1:]).strip()).split()):
 			if x != "." or x != ",":
 				sentence.append(x.lower())
 
@@ -98,6 +98,7 @@ def convert_sentences(sentences, num_features):
 		#
 		# Increment the counter
 		counter = counter + 1
+	print()
 	return sentenceFeatureVecs
 
 

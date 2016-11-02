@@ -13,21 +13,26 @@ from list_helpers import split_list, insert_and_remove_last
 
 
 def fetch_test_captions_vectors():
-	data_x, _ = structure_and_store_embeddings(50)
+	data_x, _, _ = structure_and_store_embeddings()
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return test_x
 
 
 def fetch_test_image_vectors():
-	_, data_y = structure_and_store_embeddings(200)
+	_, data_y, _ = structure_and_store_embeddings(200)
 	training_test_ratio = 0.8
 	_, test_y = split_list(data_y, training_test_ratio)
 	return test_y
 
 
 def compare_vectors(v1, v2):
-	return mean_squared_error(v1, v2)
+	try:
+		error = mean_squared_error(v1, v2)
+		return error
+	except Exception as e:
+		print("All nan!")
+		return -1
 
 
 def test_caption_vectors():
@@ -58,6 +63,8 @@ def test_caption_vectors():
 
 		for temp_image_name, temp_caption_vector in caption_vector_pairs:
 			temp_caption_vector_mse = compare_vectors(correct_caption_vector, temp_caption_vector)
+			if temp_caption_vector_mse == -1:
+				print(temp_image_name)
 			for index in range(len(best_caption_vector_list)):
 				if temp_caption_vector_mse < best_caption_vector_mse_list[index]:
 					best_caption_vector_mse_list = insert_and_remove_last(index, best_caption_vector_mse_list,

@@ -2,16 +2,14 @@ from random import randint
 
 import numpy
 import theano
-from sklearn.metrics import mean_squared_error
 
 import multibranch_keras
 import settings
 import euclidian_distance_keras
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
-from image_database_helper import fetch_all_image_vector_pairs
 from image_helpers import show_image
-from list_helpers import split_list, insert_and_remove_last
+from list_helpers import split_list, find_n_most_similar
 from word_averaging import create_caption_vector
 
 theano.config.openmp = True
@@ -21,9 +19,9 @@ import feedforward_keras
 # Settings
 LOAD_MODEL = False
 PREDICT_NEW = False
-MODELS = [multibranch_keras, feedforward_keras]
+MODELS = [euclidian_distance_keras, multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-caption-model-%s-epochs" % MODEL.get_epochs()
+MODEL_SUFFIX = "-euclidian-model-negative-%s-epochs" % MODEL.get_epochs()
 
 
 def word2visualvec_main():
@@ -58,10 +56,6 @@ def load_model(name):
 	# evaluate loaded model on test datasets
 	loaded_model.compile(optimizer=MODEL.get_optimizer(), loss=MODEL.get_loss())
 	return loaded_model
-
-
-def compare_vectors(v1, v2):
-	return mean_squared_error(v1, v2)
 
 
 def convert_query_to_vector(query):
@@ -132,36 +126,8 @@ def test_model(model):
 		show_image(settings.IMAGE_DIR + correct_image_filename, "QUERY: " + correct_image_caption)
 
 
-def find_n_most_similar(predicted_image_vector):
-	image_vector_pairs = fetch_all_image_vector_pairs()
-
-	first_image_vector = image_vector_pairs[0][1]
-	first_image_filename = image_vector_pairs[0][0]
-	first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)
-
-	best_image_vector_mse_list = [0 for i in range(5)]
-	best_image_vector_name_list = ["" for i in range(5)]
-	best_image_vector_list = [[] for i in range(5)]
-
-	best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
-	best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
-	best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
-
-	for temp_image_name, temp_image_vector in image_vector_pairs:
-		temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
-		for index in range(len(best_image_vector_list)):
-			if temp_image_mse < best_image_vector_mse_list[index]:
-				best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
-				                                                    temp_image_mse)
-				best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
-				                                                     temp_image_name)
-				best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
-				break
-	return best_image_vector_name_list
-
-
 def fetch_test_captions_vectors():
-	data_x, data_y = structure_and_store_embeddings()
+	data_x, _, _ = structure_and_store_embeddings()
 	training_test_ratio = 0.8
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(data_x)

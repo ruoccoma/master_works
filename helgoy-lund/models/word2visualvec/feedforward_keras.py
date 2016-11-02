@@ -23,7 +23,7 @@ def get_epochs():
     return epochs
 
 def train():
-    data_x, data_y = structure_and_store_embeddings()
+    data_x, data_y, _ = structure_and_store_embeddings()
 
     training_test_ratio = 1
 
