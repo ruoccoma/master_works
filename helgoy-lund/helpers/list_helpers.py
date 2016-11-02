@@ -70,3 +70,44 @@ def find_n_most_similar(predicted_image_vector, image_vector_pairs_dictionary, n
 				#best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
 				break
 	return best_image_vector_name_list
+
+
+def gemerate_sorted_similarity(image_vector_tuple):
+	image_filname, image_vector, image_vector_pairs = image_vector_tuple
+
+	first_image_vector = image_vector_pairs[0][1]
+	first_image_filename = image_vector_pairs[0][0]
+	first_image_mse = compare_vectors(image_vector, first_image_vector)
+
+	total_images_length = len(image_vector_pairs)
+
+	best_image_vector_mse_list = [0 for i in range(total_images_length)]
+	best_image_vector_name_list = ["" for i in range(total_images_length)]
+
+	best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
+	best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
+
+	for temp_image_name, temp_image_vector in image_vector_pairs:
+		temp_image_mse = compare_vectors(image_vector, temp_image_vector)
+		for index in range(total_images_length):
+			should_insert = temp_image_mse > best_image_vector_mse_list[index]
+			if should_insert:
+				best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
+																	temp_image_mse)
+				best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
+																	 temp_image_name)
+				break
+
+
+def make_similarity_dict():
+	image_vector_pairs = fetch_all_image_vector_pairs()[:10]
+
+	similarity_dict = dict()
+
+	for image_filname, image_vector in image_vector_pairs:
+		similarity_dict[image_filname] = gemerate_sorted_similarity((image_filname, image_vector, image_vector_pairs))
+
+	return similarity_dict
+
+if __name__ == "__main__":
+	make_similarity_dict()
