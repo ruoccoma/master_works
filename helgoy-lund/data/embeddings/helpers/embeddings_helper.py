@@ -116,4 +116,21 @@ def get_filename(size):
 
 
 if __name__ == "__main__":
-	structure_and_store_embeddings(10)
+	from image_database_helper import fetch_filename_from_image_vector
+	from caption_database_helper import fetch_filenames_from_cation_vector, fetch_filename_caption_tuple
+
+	dataset = structure_and_store_embeddings(5)
+	caption_vectors = dataset[0]
+	img_vecs = dataset[1]
+	sims = dataset[2]
+	print("%s \t %s \t %s \t %s" % (
+		"filename from cap", "filename from img", "similarity",
+		"text caption"))
+	for i in range(len(caption_vectors)):
+		cap_vec = caption_vectors[i]
+		img_vec = img_vecs[i]
+		sim = sims[i]
+
+		print("%s \t %s \t %s \t %s" % (
+			fetch_filenames_from_cation_vector(cap_vec), fetch_filename_from_image_vector(img_vec), sim,
+			fetch_filename_caption_tuple(cap_vec)[1]))

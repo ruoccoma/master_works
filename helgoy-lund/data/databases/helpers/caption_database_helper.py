@@ -38,6 +38,10 @@ def fetch_all_caption_rows():
 	return db_wrapper.db_all_caption_rows()
 
 
+def fetch_filenames_from_cation_vector(caption_vector):
+	return db_wrapper.db_get_filenames_from_caption_vector(caption_vector)
+
+
 if __name__ == "__main__":
 	import math
 	for x in fetch_all_caption_rows():

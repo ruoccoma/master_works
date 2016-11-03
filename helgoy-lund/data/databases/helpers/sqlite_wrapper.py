@@ -80,6 +80,14 @@ def db_insert_image_vector(filename, image_vector):
 	db.commit()
 
 
+def db_get_filename_from_image_vector(image_vector):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT filename FROM images WHERE image_vector = ?""",
+	                        (image_vector,)).fetchone()
+	return result
+
+
 """ TABLE: CAPTIONS """
 
 
@@ -141,6 +149,14 @@ def db_get_caption_text(caption_vector):
 	cursor = db.cursor()
 	result = cursor.execute("""SELECT caption_text FROM captions WHERE caption_vector = ?""",
 	                        (caption_vector,)).fetchone()
+	return result
+
+
+def db_get_filenames_from_caption_vector(caption_vector):
+	db = generate_db_connection()
+	cursor = db.cursor()
+	result = cursor.execute("""SELECT filename FROM captions WHERE caption_vector = ?""",
+	                        (caption_vector,)).fetchall()
 	return result
 
 
