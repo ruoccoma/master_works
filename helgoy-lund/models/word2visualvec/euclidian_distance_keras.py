@@ -52,7 +52,7 @@ loss = contrastive_loss
 
 
 def train():
-	caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
+	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(10)
 
 	caption_vectors = np.asarray(caption_vectors)
 	image_vectors = np.asarray(image_vectors)

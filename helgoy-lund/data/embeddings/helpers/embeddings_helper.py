@@ -2,14 +2,11 @@
 
 import os.path
 import pickle
-from random import randint
 
 import settings
-
 from caption_database_helper import fetch_caption_count, fetch_all_filename_caption_vector_tuples
 from image_database_helper import fetch_all_image_names, fetch_all_image_vector_pairs
-from image_helpers import show_image, printProgress
-from list_helpers import find_n_most_similar
+from image_helpers import printProgress
 
 
 def structure_and_store_embeddings(size=-1):
@@ -50,9 +47,17 @@ def create_dictionaries(size):
 	return all_image_names, image_name_caption_vector_dict
 
 
+def get_similarity_dictionary():
+	pickle_file = open(settings.ROOT_DIR + "helpers/similarity-dict.p", 'rb')
+	dataset = pickle.load(pickle_file)
+	pickle_file.close()
+	return dataset
+
+
 def get_examples(all_image_names, image_name_caption_vector_dict, positive=True):
 	sorted_caption_vector_data = []
 	sorted_image_data = []
+	similiarity_dict = get_similarity_dictionary()
 	image_name_image_vector_dict = {key: value for (key, value) in fetch_all_image_vector_pairs()}
 	all_image_names_total = len(all_image_names)
 	for i in range(all_image_names_total):
@@ -61,16 +66,12 @@ def get_examples(all_image_names, image_name_caption_vector_dict, positive=True)
 		if positive:
 			caption_vectors = image_name_caption_vector_dict[image_name]
 		else:
-			chose_dissimilar_from_size = 10
-			dissimilar_image_name = find_n_most_similar(image_vector, image_name_image_vector_dict, chose_dissimilar_from_size, False)[randint(0, chose_dissimilar_from_size - 1)]
+			dissimilar_image_name = similiarity_dict[image_name][0][0]
 			caption_vectors = image_name_caption_vector_dict[dissimilar_image_name]
-			#show_image(settings.IMAGE_DIR + image_name, "Image: ", image_name)
-			#show_image(settings.IMAGE_DIR + dissimilar_image_name, "Dissimilar: ", dissimilar_image_name)
-			#print("Most different: ", find_n_most_similar(image_name_image_vector_dict[dissimilar_image_name], 1, False)[0])
 		for caption_vector in caption_vectors:
 			sorted_image_data.append(image_vector)
 			sorted_caption_vector_data.append(caption_vector)
-		printProgress(i, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
+		printProgress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
 
 	return sorted_caption_vector_data, sorted_image_data, [1 if positive else 0 for x in range(len(sorted_caption_vector_data))]
 
@@ -105,6 +106,8 @@ def validate_database(num_images):
 
 
 def get_filename(size):
+	if size == -1:
+		size = "all"
 	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
 
 

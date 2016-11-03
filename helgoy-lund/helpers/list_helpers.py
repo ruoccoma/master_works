@@ -45,34 +45,30 @@ def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
 
 
-def find_n_most_similar(predicted_image_vector, image_vector_pairs_dictionary, n=5, most_similar=True):
-	first_key = image_vector_pairs_dictionary.iterkeys().next()
-	first_image_vector = image_vector_pairs_dictionary[first_key]
-	first_image_filename = first_key
+def find_n_most_similar(predicted_image_vector):
+	image_vector_pairs = fetch_all_image_vector_pairs()
+
+	first_image_vector = image_vector_pairs[0][1]
+	first_image_filename = image_vector_pairs[0][0]
 	first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)
 
-	best_image_vector_mse_list = [0 for i in range(n)]
-	best_image_vector_name_list = ["" for i in range(n)]
-	# best_image_vector_list = [[] for i in range(n)]
+	best_image_vector_mse_list = [0 for i in range(5)]
+	best_image_vector_name_list = ["" for i in range(5)]
+	best_image_vector_list = [[] for i in range(5)]
 
 	best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
 	best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
-	# best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
+	best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
 
-	for temp_image_name in image_vector_pairs_dictionary.iterkeys():
-		temp_image_vector = image_vector_pairs_dictionary[temp_image_name]
+	for temp_image_name, temp_image_vector in image_vector_pairs:
 		temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
-		for index in range(n):
-			if most_similar:
-				should_insert = temp_image_mse < best_image_vector_mse_list[index]
-			else:
-				should_insert = temp_image_mse > best_image_vector_mse_list[index]
-			if should_insert:
+		for index in range(len(best_image_vector_list)):
+			if temp_image_mse < best_image_vector_mse_list[index]:
 				best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
-																	temp_image_mse)
+				                                                    temp_image_mse)
 				best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
-																	 temp_image_name)
-				# best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
+				                                                     temp_image_name)
+				best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
 				break
 	return best_image_vector_name_list
 
