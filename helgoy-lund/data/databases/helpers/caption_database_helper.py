@@ -43,6 +43,6 @@ if __name__ == "__main__":
 	for x in fetch_all_caption_rows():
 		x_ = x[1][0]
 		if math.isnan(x_):
-			print x[0], x[2]
+			print(x[0], x[2])
 
 
