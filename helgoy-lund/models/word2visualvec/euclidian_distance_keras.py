@@ -44,7 +44,7 @@ def eucl_dist_output_shape(shapes):
 
 
 # hyperparams
-epochs = 50
+epochs = 30
 batch_size = 128
 validation_split = 0.2
 optimizer = "adam"
@@ -52,7 +52,7 @@ loss = contrastive_loss
 
 
 def train():
-	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(10)
+	caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 	caption_vectors = np.asarray(caption_vectors)
 	image_vectors = np.asarray(image_vectors)
@@ -61,11 +61,11 @@ def train():
 
 	merged_model.compile(optimizer=optimizer, loss=loss)
 
-	plot(merged_model, to_file='merged-euclid-model.png')
+	plot(merged_model, 'merged-euclid-model.png')
 	merged_model.fit([caption_vectors, image_vectors], similarities, batch_size=batch_size, nb_epoch=epochs,
 	                 callbacks=[remote],
 					 shuffle=True,
-	                 validation_split=0.2)
+	                 validation_split=validation_split)
 
 	return merged_model
 

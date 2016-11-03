@@ -17,13 +17,17 @@ def structure_and_store_embeddings(size=-1):
 		all_image_names, image_name_caption_vector_dict = create_dictionaries(size)
 		print("Generating positive training data")
 		pos_sorted_caption_vector_data, pos_sorted_image_data, pos_similarity = get_examples(all_image_names, image_name_caption_vector_dict)
-		print("\nGenerating negative training data")
-		neg_sorted_caption_vector_data, neg_sorted_image_data, neg_similarity = get_examples(all_image_names, image_name_caption_vector_dict, False)
-		image_caption = pos_sorted_caption_vector_data + neg_sorted_caption_vector_data
-		image_data = pos_sorted_image_data + neg_sorted_image_data
-		similarity = pos_similarity + neg_similarity
-		dataset = [image_caption, image_data, similarity]
+		image_caption = pos_sorted_caption_vector_data
+		image_data = pos_sorted_image_data
+		similarity = pos_similarity
+		if settings.CREATE_NEGATIVE_EXAMPLES:
+			print("\nGenerating negative training data")
+			neg_sorted_caption_vector_data, neg_sorted_image_data, neg_similarity = get_examples(all_image_names, image_name_caption_vector_dict, False)
+			image_caption += neg_sorted_caption_vector_data
+			image_data += neg_sorted_image_data
+			similarity += neg_similarity
 
+		dataset = [image_caption, image_data, similarity]
 		print("Finished generating %s training example" % len(image_caption))
 		save_embeddings(dataset, size)
 
@@ -91,7 +95,7 @@ def embedding_exists(size):
 
 
 def load_embeddings(size):
-	print("Loaded compatible dataset from local storage")
+	print("Loaded compatible dataset from local storage: %s" % get_filename(size))
 	pickle_file = open(find_filepath(size), 'rb')
 	dataset = pickle.load(pickle_file)
 	pickle_file.close()

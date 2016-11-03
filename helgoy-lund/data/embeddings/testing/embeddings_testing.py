@@ -134,5 +134,5 @@ def test_image_vectors():
 		print("")
 
 
-test_caption_vectors()
-# test_image_vectors()
+# test_caption_vectors()
+test_image_vectors()

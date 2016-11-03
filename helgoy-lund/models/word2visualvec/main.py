@@ -21,7 +21,8 @@ LOAD_MODEL = False
 PREDICT_NEW = False
 MODELS = [euclidian_distance_keras, multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
-MODEL_SUFFIX = "-euclidian-model-negative-%s-epochs" % MODEL.get_epochs()
+NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
+MODEL_SUFFIX = "-euclidian-model-%s-%s-epochs" % (NEG_TAG, MODEL.get_epochs())
 
 
 def word2visualvec_main():
