@@ -44,7 +44,7 @@ def eucl_dist_output_shape(shapes):
 
 
 # hyperparams
-epochs = 30
+epochs = 50
 batch_size = 128
 validation_split = 0.2
 optimizer = "adam"
@@ -89,6 +89,8 @@ def get_caption_model():
 	caption_model = Dense(500, activation='relu')(caption_model)
 	caption_model = Dropout(0.2)(caption_model)
 	caption_model = Dense(800, activation='relu')(caption_model)
+	caption_model = Dropout(0.2)(caption_model)
+	caption_model = Dense(1024, activation='relu')(caption_model)
 	caption_model = Dropout(0.2)(caption_model)
 	caption_model = Dense(2048, activation='relu')(caption_model)
 	return caption_inputs, caption_model

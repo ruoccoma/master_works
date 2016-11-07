@@ -81,7 +81,7 @@ def convert_sentences(sentences, num_features):
 	# Preallocate a 2D numpy array, for speed
 	len_sentences = len(sentences)
 	sentenceFeatureVecs = np.zeros((len_sentences, num_features), dtype="float32")
-	#
+
 
 	word_vectors = fetch_all_word_vectors()
 	print("Building word-vec dict")

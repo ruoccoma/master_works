@@ -13,17 +13,18 @@ sys.path.append(ROOT_DIR)
 import settings
 import euclidian_distance_keras
 import multibranch_keras
+from image_database_helper import fetch_image_vector
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image
-from list_helpers import split_list, find_n_most_similar
+from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 
 # Import models
 import feedforward_keras
 
 # Settings
-LOAD_MODEL = False
+LOAD_MODEL = True
 PREDICT_NEW = False
 MODELS = [euclidian_distance_keras, multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
@@ -92,7 +93,7 @@ def predict(model):
 
 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
 
-		best_image_vector_name_list = find_n_most_similar(predicted_image_vector)
+		best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
 		print("Result for %s:" % captions[i])
 		for i in range(len(best_image_vector_name_list)):
 			filename = best_image_vector_name_list[i]
@@ -103,32 +104,36 @@ def predict(model):
 
 def test_model(model):
 	test_size = 1
-	all_caption_vectors = fetch_test_captions_vectors()
-	numpy.random.shuffle(all_caption_vectors)
-	start = randint(0, len(all_caption_vectors) - test_size)
-	samples = all_caption_vectors[start:start + test_size]
+	test_caption_vectors = fetch_test_captions_vectors()
+	numpy.random.shuffle(test_caption_vectors)
+	start = randint(0, len(test_caption_vectors) - test_size)
+	caption_vector_samples = test_caption_vectors[start:start + test_size]
 	print("\nRESULTS")
-	for i in range(len(samples)):
-		correct_caption_vector_list = samples[i:i + 1]
-		correct_caption_vector = correct_caption_vector_list[0]
+	for i in range(len(caption_vector_samples)):
+		caption_vector_list = caption_vector_samples[i:i + 1]
+		caption_vector = caption_vector_list[0]
 
-		correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(
-			correct_caption_vector)
+		correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(caption_vector)
+		correct_image_vector = fetch_image_vector(correct_image_filename)
 
-		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
+		predicted_image_vector = model.predict(caption_vector_list)[0]
 
-		best_image_vector_name_list = find_n_most_similar(predicted_image_vector)
+		best_image_name_list, best_image_vector_list = find_n_most_similar_images(predicted_image_vector)
+
+		mse_predicted_correct = compare_vectors(correct_image_vector, predicted_image_vector)
 
 		print("")
 		print("Correct caption:\t", correct_image_caption)
-		print("")
 		print("Correct filename:\t", correct_image_filename)
+		print("MSE pred vs. cor:\t", mse_predicted_correct)
 		print("")
 		print("Result:")
-		for i in range(len(best_image_vector_name_list)):
-			filename = best_image_vector_name_list[i]
+		for i in range(len(best_image_name_list)):
+			filename = best_image_name_list[i]
 			show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
-			print(i + 1, filename)
+			mse_pred = compare_vectors(predicted_image_vector, best_image_vector_list[i])
+			mse_correct = compare_vectors(correct_image_vector, best_image_vector_list[i])
+			print("%s - %s\t Image-vec MSE Pred: %s Correct: %s" % (i + 1, filename, mse_pred, mse_correct))
 		print("")
 		show_image(settings.IMAGE_DIR + correct_image_filename, "QUERY: " + correct_image_caption)
 

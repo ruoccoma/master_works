@@ -66,7 +66,7 @@ def db_get_image_vector(filename, default=None):
 	return result
 
 
-def db_all_images_caption_pairs():
+def db_all_filename_img_vec_pairs():
 	db = generate_db_connection()
 	cursor = db.cursor()
 	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()

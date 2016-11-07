@@ -45,7 +45,7 @@ def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
 
 
-def find_n_most_similar(predicted_image_vector):
+def find_n_most_similar_images(predicted_image_vector):
 	image_vector_pairs = fetch_all_image_vector_pairs()
 
 	first_image_vector = image_vector_pairs[0][1]
@@ -70,7 +70,7 @@ def find_n_most_similar(predicted_image_vector):
 				                                                     temp_image_name)
 				best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
 				break
-	return best_image_vector_name_list
+	return best_image_vector_name_list, best_image_vector_list
 
 
 def generate_sorted_similarity(image_vector_tuple):
