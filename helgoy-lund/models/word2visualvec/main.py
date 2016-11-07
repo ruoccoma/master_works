@@ -1,21 +1,27 @@
 from random import randint
 
 import numpy
-import theano
 
-import multibranch_keras
+# Add all project modules to sys.path
+import os
+import sys
+
+# Get root dir (parent of parent of main.py)
+ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
+sys.path.append(ROOT_DIR)
+
 import settings
 import euclidian_distance_keras
+import multibranch_keras
 from caption_database_helper import fetch_filename_caption_tuple
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image
 from list_helpers import split_list, find_n_most_similar
 from word_averaging import create_caption_vector
 
-theano.config.openmp = True
-
 # Import models
 import feedforward_keras
+
 # Settings
 LOAD_MODEL = False
 PREDICT_NEW = False

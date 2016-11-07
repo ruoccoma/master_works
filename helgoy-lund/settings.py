@@ -1,11 +1,25 @@
 import os
+import sys
+
+
+def add_modules_to_sys_path(root_dir):
+	sys.path.append(root_dir + "data/databases/helpers")
+	sys.path.append(root_dir + "data/embeddings/helpers")
+	sys.path.append(root_dir + "data/embeddings/plotting")
+	sys.path.append(root_dir + "data/embeddings/testing")
+	sys.path.append(root_dir + "helpers")
+	sys.path.append(root_dir + "models/word2vec")
+	sys.path.append(root_dir + "models/word2visualvec")
 
 ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
+
+add_modules_to_sys_path(ROOT_DIR)
+
 DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database.db"
 
 CNN_NAME = "inception"
 WORD_EMBEDDING_METHOD = "word2vec"
-DATASET = "Flickr30k"
+DATASET = "Flickr8k"
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
 CREATE_NEGATIVE_EXAMPLES = False
