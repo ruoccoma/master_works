@@ -24,7 +24,7 @@ from word_averaging import create_caption_vector
 import feedforward_keras
 
 # Settings
-LOAD_MODEL = True
+LOAD_MODEL = False
 PREDICT_NEW = False
 MODELS = [euclidian_distance_keras, multibranch_keras, feedforward_keras]
 MODEL = MODELS[0]
