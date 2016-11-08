@@ -6,11 +6,12 @@ from keras.layers import Merge
 from keras.utils.visualize_util import plot
 from keras import backend as K
 
-
+from custom_callback import WriteToFileCallback
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import theano_l2norm, tf_l2norm
 
 remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
+custom_callback = WriteToFileCallback("training-details.txt")
 
 
 def get_optimizer():
@@ -59,7 +60,7 @@ loss = hinge_onehot
 
 
 def train():
-	caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
+	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(500)
 
 	caption_vectors = np.asarray(caption_vectors)
 	image_vectors = np.asarray(image_vectors)
@@ -70,7 +71,7 @@ def train():
 
 	plot(merged_model, 'merged-euclid-model.png')
 	merged_model.fit([caption_vectors, image_vectors], similarities, batch_size=batch_size, nb_epoch=epochs,
-	                 callbacks=[remote],
+	                 callbacks=[remote, custom_callback],
 					 shuffle=True,
 	                 validation_split=validation_split)
 
