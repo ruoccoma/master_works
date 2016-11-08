@@ -5,10 +5,8 @@ import os
 import sys
 
 # Get root dir (parent of parent of main.py)
-ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(os.path.join(__file__, os.pardir), os.pardir), os.pardir)))) + "/"
+ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(__file__, os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
-print(ROOT_DIR)
-
 import settings
 
 import math
