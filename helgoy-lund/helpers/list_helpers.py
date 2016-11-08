@@ -1,5 +1,15 @@
 from __future__ import division
 
+# Add all project modules to sys.path
+import os
+import sys
+
+# Get root dir (parent of parent of main.py)
+ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
+sys.path.append(ROOT_DIR)
+
+import settings
+
 import math
 import pickle
 from random import randint
