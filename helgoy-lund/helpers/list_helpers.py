@@ -103,7 +103,7 @@ def generate_sorted_similarity(image_vector_tuple):
 
 	for temp_image_name, temp_image_vector in image_vector_pairs[1:]:
 		temp_image_mse = compare_vectors(image_vector, temp_image_vector)
-		for index in range(total_images_length):
+		for index in range(size):
 			should_insert = temp_image_mse > best_image_vector_tuple_list[index][1]
 			if should_insert:
 				best_image_vector_tuple_list = insert_and_remove_last(index, best_image_vector_tuple_list,
