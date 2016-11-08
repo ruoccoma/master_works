@@ -19,7 +19,7 @@ DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database.db"
 
 CNN_NAME = "inception"
 WORD_EMBEDDING_METHOD = "word2vec"
-DATASET = "Flickr8k"
+DATASET = "Flickr30k"
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
 CREATE_NEGATIVE_EXAMPLES = False
