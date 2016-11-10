@@ -6,6 +6,7 @@ import os
 import sys
 import time
 from random import randint
+import datetime
 
 import numpy
 # Get root dir (parent of parent of main.py)
@@ -32,6 +33,8 @@ NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
 def word2visualvec_main():
+	current_time = datetime.datetime.time(datetime.datetime.now())
+	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 		file.write(ARCHITECTURE.get_name() + "\n")
@@ -53,7 +56,7 @@ def word2visualvec_main():
 			time_end = time.time()
 			# test_model(ARCHITECTURE.prediction_model)
 			file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-			file.write("RESULTS: (Evaluating time: %s)\n" % s((time_end - time_start) / 60.0))
+			file.write("RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0))
 			file.write("r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg))
 			file.close()
 
@@ -150,6 +153,7 @@ def totuple(a):
 	except TypeError:
 		return a
 
+
 def evaluate(model):
 	r1 = []
 	r5 = []
@@ -162,7 +166,8 @@ def evaluate(model):
 	for i in range(total_filname_caption_vector):
 		filename, cap_vec = filename_vector_tuples[i]
 		filename_caption_vector_dictionary[totuple(cap_vec)] = filename
-		printProgress(i, total_filname_caption_vector, prefix="Converting to dictionary")
+		printProgress(i, total_filname_caption_vector, prefix="Converting to dictionary", barLength=50)
+	print("\n")
 
 	caption_vectors = fetch_test_captions_vectors()
 	predicted_image_vectors = model.predict(caption_vectors)
