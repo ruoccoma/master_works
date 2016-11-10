@@ -1,14 +1,13 @@
 import numpy as np
+from keras import backend as K
 from keras import callbacks
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout
-from keras.layers import Merge
 from keras.utils.visualize_util import plot
-from keras import backend as K
 
 from custom_callback import WriteToFileCallback
 from embeddings_helper import structure_and_store_embeddings
-from list_helpers import theano_l2norm, tf_l2norm
+from list_helpers import tf_l2norm
 
 remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
 custom_callback = WriteToFileCallback("training-details.txt")
@@ -46,14 +45,14 @@ def eucl_dist_output_shape(shapes):
 
 # hyperparams
 epochs = 50
-batch_size = 128
+batch_size = 256
 validation_split = 0.2
 optimizer = "adam"
 loss = contrastive_loss
 
 
 def train():
-	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(500)
+	caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 	caption_vectors = np.asarray(caption_vectors)
 	image_vectors = np.asarray(image_vectors)

@@ -5,10 +5,10 @@ from keras.layers import Dense, Lambda
 from keras.layers import Merge
 from keras.models import Sequential
 from keras.utils.visualize_util import plot
+from loss_functions import tensorflow_contrastive_loss
 
 from embeddings_helper import structure_and_store_embeddings
-from list_helpers import tf_l2norm, theano_l2norm
-from loss_functions import tensorflow_contrastive_loss
+from list_helpers import tf_l2norm
 
 remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
 
