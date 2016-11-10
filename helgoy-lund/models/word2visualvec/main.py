@@ -181,7 +181,7 @@ def evaluate(model):
 		predicted_image_vector = predicted_image_vectors[i]
 		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
 
-	processes = int(mp.cpu_count() * 0.8)
+	processes = int(mp.cpu_count())
 	print("Running on %s processes" % processes)
 	pool = mp.Pool(processes=processes)
 	print("Starting pool...")
