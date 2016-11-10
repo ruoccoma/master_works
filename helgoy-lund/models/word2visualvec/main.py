@@ -47,6 +47,7 @@ def word2visualvec_main():
 		if PREDICT_NEW:
 			predict(ARCHITECTURE.prediction_model)
 		else:
+			print("Starting evaluation of model...")
 			time_start = time.time()
 			r1_avg, r5_avg, r10_avg, r20_avg = evaluate(ARCHITECTURE.prediction_model)
 			time_end = time.time()
@@ -149,7 +150,6 @@ def totuple(a):
 	except TypeError:
 		return a
 
-
 def evaluate(model):
 	r1 = []
 	r5 = []
@@ -177,7 +177,7 @@ def evaluate(model):
 		predicted_image_vector = predicted_image_vectors[i]
 		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
 
-	processes = os.cpu_count() - 2
+	processes = mp.cpu_count() - 2
 	print("Running on %s processes" % processes)
 	pool = mp.Pool(processes=processes)
 	print("Starting pool...")
