@@ -156,7 +156,6 @@ def evaluate(model):
 	r10 = []
 	r20 = []
 	size = 20
-
 	filename_vector_tuples = fetch_all_filename_caption_vector_tuples()
 	filename_caption_vector_dictionary = dict()
 	total_filname_caption_vector = len(filename_vector_tuples)
@@ -177,7 +176,7 @@ def evaluate(model):
 		predicted_image_vector = predicted_image_vectors[i]
 		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
 
-	processes = mp.cpu_count() - 2
+	processes = int(mp.cpu_count() * 0.8)
 	print("Running on %s processes" % processes)
 	pool = mp.Pool(processes=processes)
 	print("Starting pool...")
