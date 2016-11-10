@@ -10,12 +10,12 @@ from random import randint
 import numpy
 # Get root dir (parent of parent of main.py)
 
-from euclidian_distance_architecture import EuclidanDistanceArchitecture
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 
 import settings
+from euclidian_distance_architecture import EuclidanDistanceArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
