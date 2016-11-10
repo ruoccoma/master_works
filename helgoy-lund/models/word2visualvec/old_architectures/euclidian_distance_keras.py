@@ -33,6 +33,13 @@ def contrastive_loss(y_true, y_pred):
 	return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
 
+def hinge_onehot(y_true, y_pred):
+	y_true = y_true*2 - 1
+	y_pred = y_pred*2 - 1
+
+	return K.mean(K.maximum(1. - y_true * y_pred, 0.), axis=-1)
+
+
 def euclidean_distance(vects):
 	x, y = vects
 	return K.sqrt(K.sum(K.square(x - y), axis=1, keepdims=True))
@@ -45,14 +52,14 @@ def eucl_dist_output_shape(shapes):
 
 # hyperparams
 epochs = 50
-batch_size = 256
+batch_size = 128
 validation_split = 0.2
 optimizer = "adam"
 loss = contrastive_loss
 
 
 def train():
-	caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
+	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(500)
 
 	caption_vectors = np.asarray(caption_vectors)
 	image_vectors = np.asarray(image_vectors)
