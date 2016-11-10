@@ -33,7 +33,7 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 	             batch_size=128,
 	             validation_split=0.2,
 	             optimizer="adam"):
-		super().__init__()
+		super(self.__class__, self).__init__()
 		self.epochs = epochs
 		self.batch_size = batch_size
 		self.validation_split = validation_split
