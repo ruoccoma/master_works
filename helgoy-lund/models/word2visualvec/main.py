@@ -177,7 +177,9 @@ def evaluate(model):
 		predicted_image_vector = predicted_image_vectors[i]
 		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
 
-	pool = mp.Pool()
+	processes = os.cpu_count() - 2
+	print("Running on %s processes" % processes)
+	pool = mp.Pool(processes=processes)
 	print("Starting pool...")
 	result = pool.map_async(find_n_most_similar_images_fast, pool_formated_list)
 	pool.close()  # No more work
