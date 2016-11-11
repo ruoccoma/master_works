@@ -1,14 +1,15 @@
 
 
 # Add all project modules to sys.path
+import datetime
 import multiprocessing as mp
 import os
 import sys
 import time
 from random import randint
-import datetime
 
 import numpy
+
 # Get root dir (parent of parent of main.py)
 
 
@@ -16,7 +17,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, 
 sys.path.append(ROOT_DIR)
 
 import settings
-from euclidian_distance_architecture import EuclidanDistanceArchitecture
+from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
@@ -26,9 +27,8 @@ from word_averaging import create_caption_vector
 # Import models
 
 # Settings
-LOAD_MODEL = True
 PREDICT_NEW = False
-ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=50, batch_size=512)]
+ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=75, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -36,10 +36,11 @@ def word2visualvec_main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
+		print("\nRUNNING NEW ARCHITECTURE: %s\n" % ARCHITECTURE.get_name())
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 		file.write(ARCHITECTURE.get_name() + "\n")
 		file.close()
-		if LOAD_MODEL:
+		if is_saved(ARCHITECTURE):
 			load_model(ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
 		else:
@@ -54,17 +55,32 @@ def word2visualvec_main():
 			time_start = time.time()
 			r1_avg, r5_avg, r10_avg, r20_avg = evaluate(ARCHITECTURE.prediction_model)
 			time_end = time.time()
+
 			# test_model(ARCHITECTURE.prediction_model)
+
+			result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+			recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
+
 			file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-			file.write("RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0))
-			file.write("r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg))
+			file.write(result_header)
+			file.write(recall_results)
 			file.close()
+
+			print(result_header)
+			print(recall_results)
+		print("\n")
 
 
 def save_model_to_file(model, architecture):
 	name = architecture.get_name()
 	model.save_weights("stored_models/" + name + ".h5")
 	print("Saved model \"%s\" to disk" % name)
+
+
+def is_saved(arc):
+	if os.path.isfile("stored_models/" + arc.get_name() + ".h5"):
+		return True
+	return False
 
 
 def load_model(arc):
@@ -165,8 +181,9 @@ def evaluate(model):
 	total_filname_caption_vector = len(filename_vector_tuples)
 	for i in range(total_filname_caption_vector):
 		filename, cap_vec = filename_vector_tuples[i]
-		filename_caption_vector_dictionary[totuple(cap_vec)] = filename
-		printProgress(i, total_filname_caption_vector, prefix="Preprocessing training data", barLength=50)
+		tuple_key = totuple(cap_vec)
+		filename_caption_vector_dictionary[tuple_key] = filename
+		printProgress(i + 1, total_filname_caption_vector, prefix="Preprocessing training data", barLength=50)
 	print("\n")
 
 	caption_vectors = fetch_test_captions_vectors()
@@ -177,7 +194,8 @@ def evaluate(model):
 	len_caption_vectors = len(caption_vectors)
 	for i in range(len_caption_vectors):
 		caption_vector = caption_vectors[i]
-		correct_image_filename = filename_caption_vector_dictionary[totuple(caption_vector)]
+		tuple_key = totuple(caption_vector)
+		correct_image_filename = filename_caption_vector_dictionary[tuple_key]
 		predicted_image_vector = predicted_image_vectors[i]
 		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
 
@@ -186,7 +204,7 @@ def evaluate(model):
 	pool = mp.Pool(processes=processes)
 	print("Starting evaluation pool...")
 	result = pool.map_async(find_n_most_similar_images_fast, pool_formated_list)
-	pool.close()  # No more work
+	pool.close()
 
 	while not result.ready():
 		new_chunks = result._number_left
@@ -207,7 +225,7 @@ def evaluate(model):
 					r5.append(1)
 				if top_image_index == 0:
 					r1.append(1)
-		printProgress(i, total_results, prefix="Calculating recall")
+		printProgress(i + 1, total_results, prefix="Calculating recall")
 
 	r1_avg = sum(r1) / len_caption_vectors
 	r5_avg = sum(r5) / len_caption_vectors
