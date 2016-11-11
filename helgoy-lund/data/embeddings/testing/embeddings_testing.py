@@ -27,12 +27,7 @@ def fetch_test_image_vectors():
 
 
 def compare_vectors(v1, v2):
-	try:
-		error = mean_squared_error(v1, v2)
-		return error
-	except Exception as e:
-		print("All nan!")
-		return -1
+	return mean_squared_error(v1, v2)
 
 
 def test_caption_vectors():

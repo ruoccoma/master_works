@@ -10,6 +10,8 @@ def add_modules_to_sys_path(root_dir):
 	sys.path.append(root_dir + "helpers")
 	sys.path.append(root_dir + "models/word2vec")
 	sys.path.append(root_dir + "models/word2visualvec")
+	sys.path.append(root_dir + "models/word2visualvec/old_architectures")
+	sys.path.append(root_dir + "models/word2visualvec/results")
 
 ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
 
@@ -33,4 +35,6 @@ WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr30k/flickr30k/results_20130124.t
 STORED_EMBEDDINGS_DIR = ROOT_DIR + "data/embeddings/stored-embeddings/"
 NEG_TAG = "neg" if CREATE_NEGATIVE_EXAMPLES else ""
 STORED_EMBEDDINGS_PREFIX = "%s%s-%s-%s-%s" % (WORD_EMBEDDING_DIMENSION, WORD_EMBEDDING_METHOD, CNN_NAME, DATASET, NEG_TAG)
+
+RESULT_TEXTFILE_PATH = ROOT_DIR + "models/word2visualvec/results/results.txt"
 
