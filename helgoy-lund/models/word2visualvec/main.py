@@ -166,7 +166,7 @@ def evaluate(model):
 	for i in range(total_filname_caption_vector):
 		filename, cap_vec = filename_vector_tuples[i]
 		filename_caption_vector_dictionary[totuple(cap_vec)] = filename
-		printProgress(i, total_filname_caption_vector, prefix="Converting to dictionary", barLength=50)
+		printProgress(i, total_filname_caption_vector, prefix="Preprocessing training data", barLength=50)
 	print("\n")
 
 	caption_vectors = fetch_test_captions_vectors()
@@ -184,13 +184,13 @@ def evaluate(model):
 	processes = int(mp.cpu_count())
 	print("Running on %s processes" % processes)
 	pool = mp.Pool(processes=processes)
-	print("Starting pool...")
+	print("Starting evaluation pool...")
 	result = pool.map_async(find_n_most_similar_images_fast, pool_formated_list)
 	pool.close()  # No more work
 
 	while not result.ready():
 		new_chunks = result._number_left
-		print("Chunks left %s" % new_chunks)
+		print("Chunks left until evaluation is done: %s" % new_chunks)
 		time.sleep(10)
 
 	name_name_lists = result.get()
@@ -207,7 +207,7 @@ def evaluate(model):
 					r5.append(1)
 				if top_image_index == 0:
 					r1.append(1)
-		printProgress(i, total_results, prefix="Checking recall")
+		printProgress(i, total_results, prefix="Calculating recall")
 
 	r1_avg = sum(r1) / len_caption_vectors
 	r5_avg = sum(r5) / len_caption_vectors
