@@ -33,7 +33,7 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 	             batch_size=128,
 	             validation_split=0.2,
 	             optimizer="adam"):
-		super(self.__class__, self).__init__()
+		super(EuclidanDistanceArchitecture, self).__init__()
 		self.epochs = epochs
 		self.batch_size = batch_size
 		self.validation_split = validation_split
@@ -101,6 +101,29 @@ class ShallowEuclidDist(EuclidanDistanceArchitecture):
 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+
+class SuperDeepEuclidianDist(EuclidanDistanceArchitecture):
+
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(400, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(600, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(1500, activation='relu')(caption_model)
 		caption_model = Dropout(0.2)(caption_model)
 		caption_model = Dense(2048, activation='relu')(caption_model)
 		return caption_inputs, caption_model
