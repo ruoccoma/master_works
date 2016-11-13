@@ -1,5 +1,39 @@
 from __future__ import division
 
+def print_all_baslines_precomputed():
+    print  " --------------------- Baselines ------------------------------"
+    print "| accuracy of random guessing should be about: 0.00506072874494 |"
+    print "| accuracy of top-k baseline: 0.0414164610852                   |"
+    print "| accuracy of k-nn baseline: 0.200278134474 | k=20              |"
+    print " ---------------------------------------------------------------"
+
+def print_all_baselines():
+    print "###### BASELINES ##########"
+    print_baseline_random()
+    print_baseline_top_k()
+    print_baseline_knn(k, train_set, test_set)
+    print "###########################"
+
+
+def print_baseline_random():
+    accuracy = 20/n_classes
+    print "| accuracy of random guessing should be about: "+str(accuracy)
+
+def print_baseline_top_k():
+    # the top-k movies are found by preprocessing.py, and can be found in the preprocess.log
+    top_k_movies = [1264, 1616, 526, 1196, 2395, 109, 2761, 607, 1197, 1579, 592, 1269, 2570, 588, 2027, 479, 1209, 1195, 259, 2857]
+
+    correct_pred = 0
+    count = 0
+    for session in test_data:
+        for movie in session[1:]:
+            if movie in top_k_movies:
+                correct_pred += 1
+            count += 1
+    
+    accuracy = correct_pred/count
+    print "| accuracy of top-k baseline: " + str(accuracy)
+
 # Use a map to store which sessions each item appears in
 # Use this to calculate knn
 def print_baseline_knn(k, train_set, test_set):

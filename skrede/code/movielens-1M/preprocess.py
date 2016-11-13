@@ -13,6 +13,8 @@ n_movies = 3952
 max_length = 20
 n_top_movies = 20
 
+# TODO: - Remove items that only appear once etc.
+#       - 
 def preprocess_data(in_file, train_file, test_file):
 
     movie_statistics = [0]*3952

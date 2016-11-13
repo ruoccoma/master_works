@@ -21,3 +21,9 @@ Here I list the titles and a link to the papers I am focusing on
 		Explores benefits of feeding context information into RNN, in addition to clicks. Time 
 		between clicks and place/time/etc..
 		https://arxiv.org/abs/1609.05787
+
+7)	Modelling Contextual Information in Session-Aware Recommender Systems with Neural Networks
+		http://dl.acm.org/citation.cfm?id=2959162
+
+8)	Parallel Recurrent Neural Network Architectures for Feature-rich Session-based Recommendations
+		http://dl.acm.org/citation.cfm?id=2959167&dl=ACM&coll=DL&CFID=682434336&CFTOKEN=60778266
