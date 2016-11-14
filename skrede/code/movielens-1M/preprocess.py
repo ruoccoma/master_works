@@ -10,11 +10,10 @@ buffer_size = 20000000
 n_movies = 3952
 
 # most are below 900
-max_length = 20
-n_top_movies = 20
+max_length = 10
+n_top_movies = 10
 
-# TODO: - Remove items that only appear once etc.
-#       - 
+
 def preprocess_data(in_file, train_file, test_file):
 
     movie_statistics = [0]*3952
@@ -25,76 +24,90 @@ def preprocess_data(in_file, train_file, test_file):
 
     # Read all data first
     with open(in_file, buffering=buffer_size) as in_f:
-    	for line in in_f:
+        for line in in_f:
             line = line.split('::')
-	    line = map(int, line)
-
+            line = map(int, line)
+            
             # -1 to convert to 0-indexing
-	    user_id   = line[0]-1
-	    movie_id  = line[1]-1
-	    rating    = line[2]-1
-	    timestamp = line[3]
+            user_id   = line[0]-1
+            movie_id  = line[1]-1
+            rating    = line[2]-1
+            timestamp = line[3]
 
             if user_id not in data:
-		data[user_id] = []
+                data[user_id] = []
 
             data[user_id].append([movie_id, rating, timestamp])
 
             movie_statistics[movie_id] += 1
 
-	# Sort the user-clicks by time. Only sorts per user.
-	for key in data.keys():
-		data[key] = sorted(data[key], key=lambda x: x[2])
+    # Sort the user-clicks by time. Only sorts per user.
+    for key in data.keys():
+        data[key] = sorted(data[key], key=lambda x: x[2])
 
+    # Only keep movie ratings with good enough support. 
+    # (MovieID should appear at least 5 times)
+    # I also only keep the movie_id info from here on
+    filtered_data = []
+    for key in data.keys():
+        session = data[key]
+        new_session = []
 
-	# Clip the long sessions
-        new_sessions = []
-	for key in data.keys():
-		user_ratings = data[key]
-		if max_length<len(user_ratings):
-			data[key] = user_ratings[:max_length]
-                        rest = user_ratings[max_length:]
-                        while max_length < len(rest):
-                            tmp = rest[:max_length]
-                            rest = rest[max_length:]
-                            new_sessions.append(tmp)
-                        if 1 < len(rest):
-                            new_sessions.append(rest)
+        for rating_info in session:
+            movie_id = rating_info[0]
+            movie_id_support = movie_statistics[movie_id]
 
-        for new_sess in new_sessions:
-            data[len(data.keys())] = new_sess
+            # Only keep movies with enough support
+            if 5 < movie_id_support:
+                new_session.append(movie_id)
 
+        # Only keep sessions that are long enough        
+        if max_length <= len(new_session):
+            filtered_data.append(new_session)
 
-        training_split = int(0.8*len(data.keys()))
-	
-	with open(train_file, 'w') as out_f:
-		for key in range(0, training_split):
-			line = ""
-			for rating in data[key]:
-				line += str(rating[0]) + " "
-			out_f.write(line.rstrip()+'\n')
+    # Free up RAM by removing old data
+    data = filtered_data
+    filtered_data = None
 
-	with open(test_file, 'w') as out_f:
-		for key in range(training_split, len(data.keys())):
-			line = ""
-			for rating in data[key]:
-				line += str(rating[0]) + " "
-			out_f.write(line.rstrip()+'\n')
-	
+    # Create multiple sessions out of each session.
+    # E.g. [1, 3, 7, 2, 4] -> {[1, 3, 7], [3, 7, 2], [7, 2, 4]} if max_length == 3
+    processed_sessions = []
+    for session in data:
+        length = len(session)
+        num_new_sessions = length - max_length + 1
+        for i in range(num_new_sessions):
+            new_session = session[i:i+max_length]
+            processed_sessions.append(new_session)
+
+    data = processed_sessions
+
+    training_split = int(0.8*len(data))
+    
+    with open(train_file, 'w') as out_f:
+        for session in range(0, training_split):
+            line = ""
+            for movie_id in data[session]:
+                line += str(movie_id) + " "
+            out_f.write(line.rstrip()+'\n')
+
+    with open(test_file, 'w') as out_f:
+        for session in range(training_split, len(data)):
+            line = ""
+            for movie_id in data[session]:
+                line += str(movie_id) + " "
+            out_f.write(line.rstrip()+'\n')
+    
         # Find top k movies
         top_k_movies = sorted(range(len(movie_statistics)), key=lambda i: movie_statistics[i])[-n_top_movies:]
-			
-	# log some info abut the processing (useful to check correctness)
-	with open(preprocess_log, 'a') as log:
-	    log.write("\n ----------------- \n")
-	    #log.write("longest session: "+str(longest_session)+"\n")
-	    #log.write("number of sessions: "+str(num_sessions)+"\n")
-	    log.write("training_sessions: "+str(training_split-1)+"\n")
-	    log.write("test_sessions: "+str(len(data.keys())-training_split+1)+"\n")
-            log.write("training_split: "+str(training_split)+"\n")
-            log.write("max_length (session): "+str(max_length)+"\n")
-            log.write("top_k_movies: "+str(top_k_movies)+"\n")
-	
+            
+    # log some info abut the processing (useful to check correctness)
+    with open(preprocess_log, 'w') as log:    
+        log.write("max_length (session): "+str(max_length)+"\n")
+        log.write("training_split: "+str(training_split)+"\n")
+        log.write("training_sessions: "+str(training_split-1)+"\n")
+        log.write("test_sessions: "+str(len(data)-training_split+1)+"\n")
+        log.write("top_k_movies: "+str(top_k_movies)+"\n")
+    
 
 
 preprocess_data(data_set, "1M-train.dat", "1M-test.dat")
