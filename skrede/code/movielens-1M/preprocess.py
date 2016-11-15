@@ -14,12 +14,13 @@ max_length = 10
 n_top_movies = 10
 
 
-def preprocess_data(in_file, train_file, test_file):
+def preprocess_data(in_file, train_file, test_file, train_knn_file):
 
     movie_statistics = [0]*3952
     
     train_file = base_path + train_file
     test_file = base_path + test_file
+    train_knn_file = base_path + train_knn_file
     data = {}
 
     # Read all data first
@@ -69,46 +70,92 @@ def preprocess_data(in_file, train_file, test_file):
     data = filtered_data
     filtered_data = None
 
+    # Check how many movie_ids we are left with
+    remaining_movie_ids = {}
+    for session in data:
+        for movie_id in session:
+            if movie_id not in remaining_movie_ids:
+                remaining_movie_ids[movie_id] = len(remaining_movie_ids.keys())
+    
+    # Replace the original movie_ids with lower values so we don't use higher values than
+    #  necessary
+    for session_index in range(len(data)):
+        session = data[session_index]
+        for movie_index in range(len(session)):
+            session[movie_index] = remaining_movie_ids[session[movie_index]]
+
+    n_movies = len(remaining_movie_ids.keys())
+
+    training_split = int(0.8*len(data))
+
+    training_data = data[:training_split]
+    test_data = data[training_split:]
+
+    movie_statistics = [0]*n_movies
+    for session in training_data:
+        for movie_id in session:
+            movie_statistics[movie_id] += 1
+
+    # Find top k movies
+    top_k_movies = sorted(range(len(movie_statistics)), key=lambda i: movie_statistics[i])[-n_top_movies:]
+
+    # Store the current training set as is for the k-nn baseline to use
+    with open(train_knn_file, 'w') as out_f:
+        for session in training_data:
+            line = ""
+            for movie_id in session:
+                line += str(movie_id) + " "
+            out_f.write(line.rstrip()+'\n')
+            
     # Create multiple sessions out of each session.
     # E.g. [1, 3, 7, 2, 4] -> {[1, 3, 7], [3, 7, 2], [7, 2, 4]} if max_length == 3
     processed_sessions = []
-    for session in data:
+    for session in training_data:
         length = len(session)
         num_new_sessions = length - max_length + 1
         for i in range(num_new_sessions):
             new_session = session[i:i+max_length]
             processed_sessions.append(new_session)
 
-    data = processed_sessions
+    training_data = processed_sessions
 
-    training_split = int(0.8*len(data))
+    # Cut the test sessions to shorter sessions also
+    processed_sessions = []
+    for session in test_data:
+        session
+        while max_length < len(session):
+            tmp = session[:max_length]
+            processed_sessions.append(tmp)
+            session = session[max_length:]
+        if 1 < len(session):
+            processed_sessions.append(session)
+
+    test_data = processed_sessions
     
     with open(train_file, 'w') as out_f:
-        for session in range(0, training_split):
+        for session in training_data:
             line = ""
-            for movie_id in data[session]:
+            for movie_id in session:
                 line += str(movie_id) + " "
             out_f.write(line.rstrip()+'\n')
 
     with open(test_file, 'w') as out_f:
-        for session in range(training_split, len(data)):
+        for session in test_data:
             line = ""
-            for movie_id in data[session]:
+            for movie_id in session:
                 line += str(movie_id) + " "
             out_f.write(line.rstrip()+'\n')
-    
-        # Find top k movies
-        top_k_movies = sorted(range(len(movie_statistics)), key=lambda i: movie_statistics[i])[-n_top_movies:]
             
     # log some info abut the processing (useful to check correctness)
     with open(preprocess_log, 'w') as log:    
-        log.write("max_length (session): "+str(max_length)+"\n")
-        log.write("training_split: "+str(training_split)+"\n")
-        log.write("training_sessions: "+str(training_split-1)+"\n")
-        log.write("test_sessions: "+str(len(data)-training_split+1)+"\n")
-        log.write("top_k_movies: "+str(top_k_movies)+"\n")
+        log.write("max_length (session):"+str(max_length)+"\n")
+        log.write("num movies:"+str(n_movies)+"\n")
+        log.write("training_split:"+str(training_split)+"\n")
+        log.write("training_sessions:"+str(len(training_data))+"\n")
+        log.write("test_sessions:"+str(len(test_data))+"\n")
+        log.write("top_k_movies:"+str(top_k_movies)+"\n")
     
 
 
-preprocess_data(data_set, "1M-train.dat", "1M-test.dat")
+preprocess_data(data_set, "1M-train.dat", "1M-test.dat", "1M-train-knn.dat")
 

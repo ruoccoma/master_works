@@ -2,27 +2,24 @@ from __future__ import division
 
 def print_all_baslines_precomputed():
     print  " --------------------- Baselines ------------------------------"
-    print "| accuracy of random guessing should be about: 0.00506072874494 |"
-    print "| accuracy of top-k baseline: 0.0414164610852                   |"
-    print "| accuracy of k-nn baseline: 0.200278134474 | k=20              |"
+    print "| accuracy of random guessing should be about: 0.00296120817293 |"
+    print "| accuracy of top-k baseline: 0.0283920615634                   |"
+    print "| accuracy of k-nn baseline: 0.0592200428166 | k=10             |"
     print " ---------------------------------------------------------------"
 
-def print_all_baselines():
+def print_all_baselines(k, n_classes, test_set, top_k, knn_training_data):
     print "###### BASELINES ##########"
-    print_baseline_random()
-    print_baseline_top_k()
-    print_baseline_knn(k, train_set, test_set)
+    print_baseline_random(k, n_classes)
+    print_baseline_top_k(top_k, test_set)
+    print_baseline_knn(k, knn_training_data, test_set)
     print "###########################"
 
 
-def print_baseline_random():
-    accuracy = 20/n_classes
+def print_baseline_random(k, n_classes):
+    accuracy = k/n_classes
     print "| accuracy of random guessing should be about: "+str(accuracy)
 
-def print_baseline_top_k():
-    # the top-k movies are found by preprocessing.py, and can be found in the preprocess.log
-    top_k_movies = [1264, 1616, 526, 1196, 2395, 109, 2761, 607, 1197, 1579, 592, 1269, 2570, 588, 2027, 479, 1209, 1195, 259, 2857]
-
+def print_baseline_top_k(top_k_movies, test_data):
     correct_pred = 0
     count = 0
     for session in test_data:

@@ -8,25 +8,27 @@ import numpy as np
 import time
 
 base_path = '/home/ole/recSys-pro/movielens-1M/'
-rnn_log = base_path+'rnn.log'
 training_data_file = base_path + '1M-train.dat'
 test_data_file = base_path + '1M-test.dat'
+knn_data_file = base_path + '1M-train-knn.dat'
+preprocess_log = base_path + 'preprocess.log'
 
-# num_hidden: number of hidden units in the RNN layer
-num_hidden = 100
-batch_size = 100
+num_hidden = 100    # number of hidden units in the RNN layer
+batch_size = 200
 max_epochs = 50
 # number of epochs between each test run
-test_frequency = 2
+test_frequency = 1
 
-n_classes = 3952    # Size of representation of each click
-max_length = 20     # Maximum number of clicks in a session
+# Load some values about the dataset
+max_length, n_classes, top_k = load_meta_values(preprocess_log)
+print "max_length = "+str(max_length)+" | n_classes = " + str(n_classes)
 
 dataset_manager = DatasetManager(training_data_file, test_data_file, n_classes, max_length, batch_size)
 
 # Prints precomputed baslines. Use print_all_baselines() to recalculate
+#knn_training_set = load_knn_training_set(knn_data_file)
+#print_all_baselines(max_length, n_classes, dataset_manager.get_test_set(), top_k, knn_training_set)
 print_all_baslines_precomputed()
-
 
 # [Batch size, #timesteps (minus 1 since each click has the next one as target), click representation size]
 x = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="InputX")
@@ -34,7 +36,8 @@ y = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="TargetY")
 # Vector with the session lengths for each session in a batch.
 session_length = tf.placeholder(tf.int32, [None], name="SeqLenOfInput")
 output, state = rnn.dynamic_rnn(
-        rnn_cell.GRUCell(num_hidden),
+        #rnn_cell.GRUCell(num_hidden),
+        rnn_cell.GRUCell(n_classes),
         x,
         dtype=tf.float32,
         sequence_length=session_length
@@ -44,8 +47,9 @@ layer = {'weights':tf.Variable(tf.random_normal([num_hidden, n_classes])),
         'biases':tf.Variable(tf.random_normal([n_classes]))}
 
 # Flatten to apply same weights to all time steps.
-output = tf.reshape(output, [-1, num_hidden])
-prediction = tf.matmul(output, layer['weights'])# + layer['biases'] TODO
+#output = tf.reshape(output, [-1, num_hidden])
+#prediction = tf.matmul(output, layer['weights'])# + layer['biases'] TODO
+prediction = tf.reshape(output, [-1, n_classes])
 
 y_flat = tf.reshape(y, [-1, n_classes])
 
@@ -74,6 +78,7 @@ with tf.Session() as sess:
         # Split the epoch in batches
         num_training_batches = dataset_manager.get_number_of_training_batches()
         for training_batch_number in range(num_training_batches):
+            print str(training_batch_number)+"/"+str(num_training_batches)
             batch_x, batch_y, sess_len = dataset_manager.get_next_training_batch()
 
             # Calculate loss and optimize the weights

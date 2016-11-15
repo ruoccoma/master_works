@@ -1,5 +1,30 @@
 import time
 import numpy as np
+import ast
+
+def load_knn_training_set(data_file):
+    print " loading data set:" + data_file
+
+    # Measure how long time it takes to load the entire data file
+    start = time.time()
+
+    # Store the sessions in a list
+    data = []
+
+    # Read the data line by line
+    with open(data_file, 'r') as f:
+        for line in f:
+
+            # Convert the line to a list of item/movie/click-IDs
+            line = line.split(' ')
+            line = map(int, line)
+            data.append(line)
+
+    runtime = time.time() - start
+
+    print "   data loaded in " + str(runtime) + "s"
+
+    return data
 
 def load_data_set(data_file):
 	print " loading data set:" + data_file
@@ -63,3 +88,17 @@ def create_1_HOT_vectors(n):
 	print "   1-HOT vectors created in " + str(runtime) + "s"
 
 	return one_hots, dummy_vector
+
+def load_meta_values(log_file):
+    data = []
+    with open(log_file) as in_f:
+        for line in in_f:
+            line = line.split(':')
+            value = line[-1]
+            data.append(value)
+
+    max_length = int(data[0])
+    n_movies = int(data[1])
+    top_k_movies = ast.literal_eval(data[5])
+
+    return max_length, n_movies, top_k_movies

@@ -120,3 +120,9 @@ class DatasetManager:
             session_x[real_session_length+i] = self.dummy_vector
 
         return session_x, session_y, real_session_length
+
+    def get_test_set(self):
+        return self.test_data
+
+    def get_training_set(self):
+        return self.training_data
