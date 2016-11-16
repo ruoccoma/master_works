@@ -23,16 +23,16 @@ from caption_database_helper import fetch_filename_caption_tuple, fetch_all_file
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
-from models.word_embedding.word_averaging import create_caption_vector
+from word_averaging import create_caption_vector
 # Import models
 
 # Settings
 PREDICT_NEW = False
-ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=75, batch_size=256)]
+ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=100, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
-def word2visualvec_main():
+def train():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
@@ -47,28 +47,41 @@ def word2visualvec_main():
 			ARCHITECTURE.train()
 			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
-
-		if PREDICT_NEW:
-			predict(ARCHITECTURE.prediction_model)
-		else:
-			print("Starting evaluation of model...")
-			time_start = time.time()
-			r1_avg, r5_avg, r10_avg, r20_avg = evaluate(ARCHITECTURE.prediction_model)
-			time_end = time.time()
-
-			# test_model(ARCHITECTURE.prediction_model)
-
-			result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-			recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
-
-			file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-			file.write(result_header)
-			file.write(recall_results)
-			file.close()
-
-			print(result_header)
-			print(recall_results)
 		print("\n")
+
+
+def evaluate():
+	current_time = datetime.datetime.time(datetime.datetime.now())
+	print("Current time: %s" % current_time)
+	for ARCHITECTURE in ARCHITECTURES:
+		if is_saved(ARCHITECTURE):
+			load_model(ARCHITECTURE)
+			ARCHITECTURE.generate_prediction_model()
+
+			if PREDICT_NEW:
+				predict(ARCHITECTURE.prediction_model)
+			else:
+				print("Starting evaluation of model...")
+				time_start = time.time()
+				r1_avg, r5_avg, r10_avg, r20_avg = evaluate_model(ARCHITECTURE.prediction_model)
+				time_end = time.time()
+
+				# test_model(ARCHITECTURE.prediction_model)
+
+				result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+				recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
+
+				file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+				file.write(result_header)
+				file.write(recall_results)
+				file.close()
+
+				print(result_header)
+				print(recall_results)
+			print("\n")
+		else:
+			print("Architecture not trained")
+			print(ARCHITECTURE.get_name())
 
 
 def save_model_to_file(model, architecture):
@@ -170,7 +183,7 @@ def totuple(a):
 		return a
 
 
-def evaluate(model):
+def evaluate_model(model):
 	r1 = []
 	r5 = []
 	r10 = []
@@ -241,5 +254,8 @@ def fetch_test_captions_vectors():
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(test_x)
 
+if len(sys.argv) > 1 and sys.argv[1] == "eval":
+	evaluate()
+else:
+	train()
 
-word2visualvec_main()

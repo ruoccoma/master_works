@@ -35,7 +35,8 @@ RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
 CREATE_NEGATIVE_EXAMPLES = False
 
-DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database" + IMAGE_EMBEDDING_METHOD + WORD_EMBEDDING_METHOD + DATASET + ".db"
+DB_SUFFIX = "%s-%s-%s" % (IMAGE_EMBEDDING_METHOD, WORD_EMBEDDING_METHOD, DATASET)
+DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database-%s.db" % DB_SUFFIX
 
 # Word2Vec
 WORD_EMBEDDING_DIMENSION = 300
@@ -45,7 +46,7 @@ WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr30k/flickr30k/results_20130124.t
 # Stored embeddings
 STORED_EMBEDDINGS_DIR = ROOT_DIR + "data/embeddings/stored-embeddings/"
 NEG_TAG = "neg" if CREATE_NEGATIVE_EXAMPLES else ""
-STORED_EMBEDDINGS_PREFIX = "%s%s-%s-%s-%s" % (WORD_EMBEDDING_DIMENSION, WORD_EMBEDDING_METHOD, IMAGE_EMBEDDING_METHOD, DATASET, NEG_TAG)
+STORED_EMBEDDINGS_NAME = "%s-%s" % (DB_SUFFIX, NEG_TAG)
 
 RESULT_TEXTFILE_PATH = ROOT_DIR + "models/word2visualvec/results/results.txt"
 

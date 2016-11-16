@@ -112,7 +112,7 @@ def validate_database(num_images):
 def get_filename(size):
 	if size == -1:
 		size = "all"
-	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
+	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_NAME, size)
 
 
 if __name__ == "__main__":

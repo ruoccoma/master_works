@@ -37,7 +37,7 @@ class AbstractWord2VisualVecArchitecture:
 		return type(self).__name__
 
 	def get_name(self):
-		return self.get_architecture_name() + "-" + self.get_parameter_string() + "-" + settings.DATASET
+		return self.get_architecture_name() + "-" + self.get_parameter_string() + "-" + settings.DB_SUFFIX
 
 	@abstractmethod
 	def generate_prediction_model(self):
