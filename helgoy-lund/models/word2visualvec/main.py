@@ -23,7 +23,7 @@ from caption_database_helper import fetch_filename_caption_tuple, fetch_all_file
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
-from word_averaging import create_caption_vector
+from models.word_embedding.word_averaging import create_caption_vector
 # Import models
 
 # Settings
