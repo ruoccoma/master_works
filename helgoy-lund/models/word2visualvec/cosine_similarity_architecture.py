@@ -1,7 +1,7 @@
 import numpy as np
 from keras import backend as K
 from keras.engine import Input, Model
-from keras.layers import Dense, Lambda, Dropout
+from keras.layers import Dense, Lambda, Dropout, merge
 #from keras.utils.visualize_util import plot
 
 from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
@@ -65,7 +65,7 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 
 		caption_inputs, caption_model = self.get_caption_model()
 
-		distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
+		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 	@staticmethod
@@ -75,11 +75,11 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
 		caption_model = Dense(500, activation='relu')(caption_model)
 		caption_model = Dropout(0.2)(caption_model)
-		caption_model = Dense(800, activation='relu')(caption_model)
-		caption_model = Dropout(0.2)(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
 		caption_model = Dropout(0.2)(caption_model)
 		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
 		return caption_inputs, caption_model
 
 	def generate_prediction_model(self):

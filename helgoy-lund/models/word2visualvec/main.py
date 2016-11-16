@@ -18,17 +18,19 @@ sys.path.append(ROOT_DIR)
 
 import settings
 from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
+from cosine_similarity_architecture import CosineSimilarityArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
 from word_averaging import create_caption_vector
+from keras.engine import Model
 # Import models
 
 # Settings
 PREDICT_NEW = False
-ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=100, batch_size=256)]
+ARCHITECTURES = [CosineSimilarityArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -255,6 +257,25 @@ def fetch_test_captions_vectors():
 	return numpy.asarray(test_x)
 
 def debug():
+	for ARCHITECTURE in ARCHITECTURES:
+		print("Debugging")
+		if is_saved(ARCHITECTURE):
+			load_model(ARCHITECTURE)
+			ARCHITECTURE.generate_prediction_model()
+			base_model = ARCHITECTURE.model
+			model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
+
+			test_caption_vector = fetch_test_captions_vectors()[10:12]
+			for i in range(len(test_caption_vector)):
+				correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
+				correct_image_vector = fetch_image_vector(correct_image_filename)
+				caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+				image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+				#print(model.summary())
+				print
+				print
+				print(model.predict([caption_vector, image_vector])[0][0])
+
 
 
 if len(sys.argv) > 1 and sys.argv[1] == "eval":
