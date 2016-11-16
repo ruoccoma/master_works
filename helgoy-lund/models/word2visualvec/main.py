@@ -254,8 +254,13 @@ def fetch_test_captions_vectors():
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(test_x)
 
+def debug():
+
+
 if len(sys.argv) > 1 and sys.argv[1] == "eval":
 	evaluate()
+elif len(sys.argv) > 1 and sys.argv[1] == "debug":
+	debug()
 else:
 	train()
 
