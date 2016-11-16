@@ -2,7 +2,7 @@ import numpy as np
 from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout
-from keras.utils.visualize_util import plot
+#from keras.utils.visualize_util import plot
 
 from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
 from embeddings_helper import structure_and_store_embeddings
@@ -50,7 +50,7 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 
 		self.model.compile(optimizer=self.optimizer, loss=self.loss)
 
-		plot(self.model, 'results/%s.png' % self.get_name())
+		#plot(self.model, 'results/%s.png' % self.get_name())
 		self.model.fit([caption_vectors, image_vectors],
 		               similarities,
 		               batch_size=self.batch_size,
