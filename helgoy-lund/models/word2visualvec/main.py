@@ -17,8 +17,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, 
 sys.path.append(ROOT_DIR)
 
 import settings
-from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
-from cosine_similarity_architecture import CosineSimilarityArchitecture
+from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture, NoDropoutFiveLayerCosineSimilarityArchitecture, TwoLayerCosineSimilarityArchitecture, NoDropoutTwoLayerCosineSimilarityArchitecture, OneLayerCosineSimilarityArchitecture, NoDropoutOneLayerCosineSimilarityArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
@@ -30,7 +29,12 @@ from keras.engine import Model
 
 # Settings
 PREDICT_NEW = True
-ARCHITECTURES = [CosineSimilarityArchitecture(epochs=50, batch_size=256)]
+ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
+				 NoDropoutFiveLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
+				 TwoLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
+				 NoDropoutTwoLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
+				 OneLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
+				 NoDropoutOneLayerCosineSimilarityArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 

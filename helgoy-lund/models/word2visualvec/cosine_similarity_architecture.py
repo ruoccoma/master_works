@@ -89,3 +89,74 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_model.compile(optimizer=self.optimizer, loss=self.loss)
 
 		self.prediction_model = caption_model
+
+class FiveLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class NoDropoutFiveLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class OneLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		return caption_inputs, caption_model
+
+class NoDropoutOneLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class TwoLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Dropout(0.2)(caption_model)
+		return caption_inputs, caption_model
+
+class NoDropoutTwoLayerCosineSimilarityArchitecture(CosineSimilarityArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
