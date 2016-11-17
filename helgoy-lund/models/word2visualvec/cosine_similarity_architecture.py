@@ -68,8 +68,8 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 
 		caption_inputs, caption_model = self.get_caption_model()
 
-		distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
-		#distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
+		# distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
+		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 	@staticmethod
