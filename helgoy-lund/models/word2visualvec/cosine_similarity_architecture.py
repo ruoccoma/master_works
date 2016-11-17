@@ -18,18 +18,6 @@ def contrastive_loss(y_true, y_pred):
 	return K.mean(y_true * K.square(y_pred) + (1 - y_true) * K.square(K.maximum(margin - y_pred, 0)))
 
 
-def cosine_similarity(vects):
-	x, y = vects
-	x = K.l2_normalize(x, axis=1)
-	y = K.l2_normalize(y, axis=1)
-	return tf.matmul(x, tf.transpose(y, [1, 0]))
-
-
-def cos_sim_output_shape(shapes):
-	shape1, shape2 = shapes
-	return shape1[0], 1
-
-
 class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 	def __init__(self,
 	             epochs=50,
@@ -68,8 +56,10 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 
 		caption_inputs, caption_model = self.get_caption_model()
 
-		# distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
-		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
+		norm_image_model = Lambda(lambda x: K.l2_normalize(x, axis=1))
+		norm_caption_model = Lambda(lambda x: K.l2_normalize(x, axis=1))
+
+		distance = merge([norm_caption_model, norm_image_model], mode='cos', name="Cosine_layer")
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 	@staticmethod
