@@ -18,21 +18,23 @@ sys.path.append(ROOT_DIR)
 
 import settings
 from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
+from cosine_similarity_architecture import CosineSimilarityArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
 from word_averaging import create_caption_vector
+from keras.engine import Model
 # Import models
 
 # Settings
 PREDICT_NEW = False
-ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=75, batch_size=256)]
+ARCHITECTURES = [CosineSimilarityArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
-def word2visualvec_main():
+def train():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
@@ -47,28 +49,41 @@ def word2visualvec_main():
 			ARCHITECTURE.train()
 			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
-
-		if PREDICT_NEW:
-			predict(ARCHITECTURE.prediction_model)
-		else:
-			print("Starting evaluation of model...")
-			time_start = time.time()
-			r1_avg, r5_avg, r10_avg, r20_avg = evaluate(ARCHITECTURE.prediction_model)
-			time_end = time.time()
-
-			# test_model(ARCHITECTURE.prediction_model)
-
-			result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-			recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
-
-			file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-			file.write(result_header)
-			file.write(recall_results)
-			file.close()
-
-			print(result_header)
-			print(recall_results)
 		print("\n")
+
+
+def evaluate():
+	current_time = datetime.datetime.time(datetime.datetime.now())
+	print("Current time: %s" % current_time)
+	for ARCHITECTURE in ARCHITECTURES:
+		if is_saved(ARCHITECTURE):
+			load_model(ARCHITECTURE)
+			ARCHITECTURE.generate_prediction_model()
+
+			if PREDICT_NEW:
+				predict(ARCHITECTURE.prediction_model)
+			else:
+				print("Starting evaluation of model...")
+				time_start = time.time()
+				r1_avg, r5_avg, r10_avg, r20_avg = evaluate_model(ARCHITECTURE.prediction_model)
+				time_end = time.time()
+
+				# test_model(ARCHITECTURE.prediction_model)
+
+				result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+				recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
+
+				file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+				file.write(result_header)
+				file.write(recall_results)
+				file.close()
+
+				print(result_header)
+				print(recall_results)
+			print("\n")
+		else:
+			print("Architecture not trained")
+			print(ARCHITECTURE.get_name())
 
 
 def save_model_to_file(model, architecture):
@@ -170,7 +185,7 @@ def totuple(a):
 		return a
 
 
-def evaluate(model):
+def evaluate_model(model):
 	r1 = []
 	r5 = []
 	r10 = []
@@ -241,5 +256,33 @@ def fetch_test_captions_vectors():
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(test_x)
 
+def debug():
+	for ARCHITECTURE in ARCHITECTURES:
+		print("Debugging")
+		if is_saved(ARCHITECTURE):
+			load_model(ARCHITECTURE)
+			ARCHITECTURE.generate_prediction_model()
+			model = ARCHITECTURE.model
+			#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
 
-word2visualvec_main()
+			test_caption_vector = fetch_test_captions_vectors()[10:20]
+			for i in range(len(test_caption_vector)):
+				correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
+				correct_image_vector = fetch_image_vector(correct_image_filename)
+				#caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+				#image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+				caption_vector = numpy.asarray(test_caption_vector[i:i+1])
+				image_vector = numpy.asarray([correct_image_vector])
+				#print(model.summary())
+				print
+				print(correct_image_filename, model.predict([caption_vector, image_vector])[0][0])
+
+
+
+if len(sys.argv) > 1 and sys.argv[1] == "eval":
+	evaluate()
+elif len(sys.argv) > 1 and sys.argv[1] == "debug":
+	debug()
+else:
+	train()
+

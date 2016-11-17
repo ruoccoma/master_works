@@ -77,7 +77,7 @@ def get_examples(all_image_names, image_name_caption_vector_dict, positive=True)
 			sorted_caption_vector_data.append(caption_vector)
 		printProgress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
 
-	return sorted_caption_vector_data, sorted_image_data, [0 if positive else 99999 for x in range(len(sorted_caption_vector_data))]
+	return sorted_caption_vector_data, sorted_image_data, [1.0 if positive else -1.0 for x in range(len(sorted_caption_vector_data))]
 
 
 def save_embeddings(dataset, size):
@@ -112,7 +112,7 @@ def validate_database(num_images):
 def get_filename(size):
 	if size == -1:
 		size = "all"
-	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
+	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_NAME, size)
 
 
 if __name__ == "__main__":

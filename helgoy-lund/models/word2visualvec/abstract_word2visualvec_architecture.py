@@ -12,6 +12,7 @@ class AbstractWord2VisualVecArchitecture:
 
 	remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
 	custom_callback = WriteToFileCallback(settings.RESULT_TEXTFILE_PATH)
+	early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=5)
 
 	def __init__(self,
 	             epochs=50,
@@ -25,7 +26,7 @@ class AbstractWord2VisualVecArchitecture:
 		self.validation_split = validation_split
 		self.optimizer = optimizer
 		self.loss = loss
-		self.callbacks = [self.remote, self.custom_callback]
+		self.callbacks = [self.custom_callback, self.early_stopping]
 		self.model = None
 		self.prediction_model = None
 
@@ -37,7 +38,7 @@ class AbstractWord2VisualVecArchitecture:
 		return type(self).__name__
 
 	def get_name(self):
-		return self.get_architecture_name() + "-" + self.get_parameter_string() + "-" + settings.DATASET
+		return self.get_architecture_name() + "-" + self.get_parameter_string() + "-" + settings.DB_SUFFIX
 
 	@abstractmethod
 	def generate_prediction_model(self):
