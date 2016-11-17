@@ -25,7 +25,7 @@ class AbstractWord2VisualVecArchitecture:
 		self.validation_split = validation_split
 		self.optimizer = optimizer
 		self.loss = loss
-		self.callbacks = [self.remote, self.custom_callback]
+		self.callbacks = [self.custom_callback]
 		self.model = None
 		self.prediction_model = None
 
