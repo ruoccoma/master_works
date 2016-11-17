@@ -15,6 +15,7 @@ from random import randint
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import mean_squared_error
+import sklearn.metrics.pairwise
 from theano import tensor
 
 
@@ -55,6 +56,12 @@ def l2norm(array):
 
 def compare_vectors(v1, v2):
 	return mean_squared_error(v1, v2)
+
+
+def cosine_similiary(v1, v2):
+	v1 = v1.reshape(1, -1)
+	v2 = v2.reshape(1, -1)
+	return sklearn.metrics.pairwise.cosine_similarity(v1, v2)
 
 
 def find_n_most_similar_images(predicted_image_vector, n=5):
@@ -116,13 +123,13 @@ def generate_sorted_similarity(image_vector_tuple):
 
 	total_size = len(image_vector_pairs)
 	# Numver of random images to compare
-	size = 100
+	size = 1000
 	start = randint(0, total_size - size * 2)
 	image_vector_pairs = image_vector_pairs[start:start + size]
 
 	first_image_vector = image_vector_pairs[0][1]
 	first_image_filename = image_vector_pairs[0][0]
-	first_image_mse = compare_vectors(image_vector, first_image_vector)
+	first_image_mse = cosine_similiary(image_vector, first_image_vector)
 
 	best_image_vector_tuple_list = [("", 0) for i in range(size)]
 
@@ -130,17 +137,15 @@ def generate_sorted_similarity(image_vector_tuple):
 	                                                      (first_image_filename, first_image_mse))
 
 	for temp_image_name, temp_image_vector in image_vector_pairs[1:]:
-		temp_image_mse = compare_vectors(image_vector, temp_image_vector)
+		temp_image_mse = cosine_similiary(image_vector, temp_image_vector)
 		for index in range(size):
-			should_insert = temp_image_mse > best_image_vector_tuple_list[index][1]
+			should_insert = temp_image_mse < best_image_vector_tuple_list[index][1]
 			if should_insert:
 				best_image_vector_tuple_list = insert_and_remove_last(index, best_image_vector_tuple_list,
 				                                                      (temp_image_name, temp_image_mse))
 				break
 
-	return (image_filname, best_image_vector_tuple_list)
-
-
+	return image_filname, best_image_vector_tuple_list
 
 
 def make_similarity_dict():
@@ -153,7 +158,7 @@ def make_similarity_dict():
 
 	print("Starting pool...")
 	result = pool.map_async(generate_sorted_similarity, pool_formated_list)
-	pool.close()  # No more work
+	pool.close()
 
 	while not result.ready():
 		new_chunks = result._number_left
@@ -166,10 +171,11 @@ def make_similarity_dict():
 
 if __name__ == "__main__":
 	SAVE_NEW = True
+	name = "similarity-dict.p"
 	if SAVE_NEW:
 		a = make_similarity_dict()
 		try:
-			pickle_file = open("similarity-dict.p", 'wb')
+			pickle_file = open(name, 'wb')
 			pickle.dump(a, pickle_file, protocol=2)
 			pickle_file.close()
 			print("Saved dictionary to file.")
@@ -177,6 +183,10 @@ if __name__ == "__main__":
 			print(a)
 			print(e)
 	else:
-		pickle_file = open("similarity-dict.p", 'rb')
+		pickle_file = open(name, 'rb')
+		print("loaded", name)
 		dataset = pickle.load(pickle_file)
 		pickle_file.close()
+		key, value = dataset.popitem()
+		print(key)
+		print(value)
