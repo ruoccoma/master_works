@@ -3,6 +3,7 @@ from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, merge
 #from keras.utils.visualize_util import plot
+import tensorflow as tf
 
 from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
 from embeddings_helper import structure_and_store_embeddings
@@ -19,7 +20,9 @@ def contrastive_loss(y_true, y_pred):
 
 def cosine_similarity(vects):
 	x, y = vects
-	return K.sqrt(K.sum(K.square(x - y), axis=1, keepdims=True))
+	x = K.l2_normalize(x, axis=1)
+	y = K.l2_normalize(y, axis=1)
+	return tf.matmul(x, tf.transpose(y, [1, 0]))
 
 
 def cos_sim_output_shape(shapes):
@@ -65,7 +68,8 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 
 		caption_inputs, caption_model = self.get_caption_model()
 
-		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
+		distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
+		#distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 	@staticmethod

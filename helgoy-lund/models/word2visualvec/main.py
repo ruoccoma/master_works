@@ -262,19 +262,20 @@ def debug():
 		if is_saved(ARCHITECTURE):
 			load_model(ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
-			base_model = ARCHITECTURE.model
-			model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
+			model = ARCHITECTURE.model
+			#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
 
-			test_caption_vector = fetch_test_captions_vectors()[10:12]
+			test_caption_vector = fetch_test_captions_vectors()[10:20]
 			for i in range(len(test_caption_vector)):
 				correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
 				correct_image_vector = fetch_image_vector(correct_image_filename)
-				caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
-				image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+				#caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+				#image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+				caption_vector = numpy.asarray(test_caption_vector[i:i+1])
+				image_vector = numpy.asarray([correct_image_vector])
 				#print(model.summary())
 				print
-				print
-				print(model.predict([caption_vector, image_vector])[0][0])
+				print(correct_image_filename, model.predict([caption_vector, image_vector])[0][0])
 
 
 
