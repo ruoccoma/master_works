@@ -17,6 +17,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, 
 sys.path.append(ROOT_DIR)
 
 import settings
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture, NoDropoutFiveLayerCosineSimilarityArchitecture, TwoLayerCosineSimilarityArchitecture, NoDropoutTwoLayerCosineSimilarityArchitecture, OneLayerCosineSimilarityArchitecture, NoDropoutOneLayerCosineSimilarityArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
@@ -29,12 +30,7 @@ from keras.engine import Model
 
 # Settings
 PREDICT_NEW = True
-ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
-				 NoDropoutFiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
-				 TwoLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
-				 NoDropoutTwoLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
-				 OneLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
-				 NoDropoutOneLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
+ARCHITECTURES = [ContrastiveLossArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -53,6 +49,7 @@ def train():
 			ARCHITECTURE.train()
 			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
+		ARCHITECTURE = None
 		print("\n")
 
 

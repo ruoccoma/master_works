@@ -77,7 +77,7 @@ def get_examples(all_image_names, image_name_caption_vector_dict, positive=True)
 			sorted_caption_vector_data.append(caption_vector)
 		printProgress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
 
-	return sorted_caption_vector_data, sorted_image_data, [1.0 if positive else -1.0 for x in range(len(sorted_caption_vector_data))]
+	return sorted_caption_vector_data, sorted_image_data, [1.0 if positive else 0.0 for x in range(len(sorted_caption_vector_data))]
 
 
 def save_embeddings(dataset, size):
