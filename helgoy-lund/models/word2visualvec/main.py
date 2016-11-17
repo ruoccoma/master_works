@@ -29,12 +29,12 @@ from keras.engine import Model
 
 # Settings
 PREDICT_NEW = True
-ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
-				 NoDropoutFiveLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
-				 TwoLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
-				 NoDropoutTwoLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
-				 OneLayerCosineSimilarityArchitecture(epochs=50, batch_size=256),
-				 NoDropoutOneLayerCosineSimilarityArchitecture(epochs=50, batch_size=256)]
+ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
+				 NoDropoutFiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
+				 TwoLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
+				 NoDropoutTwoLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
+				 OneLayerCosineSimilarityArchitecture(epochs=100, batch_size=256),
+				 NoDropoutOneLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -298,4 +298,3 @@ elif len(sys.argv) > 1 and sys.argv[1] == "debug":
 	debug()
 else:
 	train()
-
