@@ -37,6 +37,8 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_vectors = np.asarray(caption_vectors)
 		image_vectors = np.asarray(image_vectors)
 
+
+
 		self.generate_model()
 
 		self.model.compile(optimizer=self.optimizer, loss=self.loss)
@@ -75,6 +77,8 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_model = Dropout(0.2)(caption_model)
 		caption_model = Dense(4096, activation='relu')(caption_model)
 		return caption_inputs, caption_model
+
+
 
 	def generate_prediction_model(self):
 		weights = self.model.get_weights()
