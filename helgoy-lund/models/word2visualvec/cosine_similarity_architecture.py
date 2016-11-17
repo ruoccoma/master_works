@@ -1,6 +1,7 @@
 import numpy as np
 from keras import backend as K
 from keras.engine import Input, Model
+from keras.engine import Merge
 from keras.layers import Dense, Lambda, Dropout, merge
 #from keras.utils.visualize_util import plot
 import tensorflow as tf
@@ -69,7 +70,7 @@ class CosineSimilarityArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_inputs, caption_model = self.get_caption_model()
 
 		# distance = Lambda(cosine_similarity, output_shape=cos_sim_output_shape)([caption_model, image_model])
-		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer")
+		distance = merge([caption_model, image_model], mode='cos', name="Cosine_layer", output_shape=lambda x: x[0])
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 	@staticmethod
