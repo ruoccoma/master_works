@@ -23,7 +23,7 @@ from caption_database_helper import fetch_filename_caption_tuple, fetch_all_file
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors
-# from word_averaging import create_caption_vector
+from word_averaging import create_caption_vector
 from clustering import kmeans_clustering, compare_to_cluster, get_member_ids_dict
 
 # Import models
@@ -34,58 +34,84 @@ ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=25
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
-def train():
+def main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
-		print("\nRUNNING NEW ARCHITECTURE: %s\n" % ARCHITECTURE.get_name())
+		if len(sys.argv) > 1 and sys.argv[1] == "eval":
+			evaluate(ARCHITECTURE)
+		elif len(sys.argv) > 1 and sys.argv[1] == "debug":
+			debug(ARCHITECTURE)
+		elif len(sys.argv) > 1 and sys.argv[1] == "caption_query":
+			caption_query(ARCHITECTURE)
+		elif len(sys.argv) > 1 and sys.argv[1] == "sample_image_query":
+			sample_image_query(ARCHITECTURE)
+		else:
+			train(ARCHITECTURE)
+
+
+def train(architecture):
+	print("\nRUNNING NEW ARCHITECTURE: %s\n" % architecture.get_name())
+	file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	file.write(architecture.get_name() + "\n")
+	file.close()
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+	else:
+		architecture.train()
+		save_model_to_file(architecture.model, architecture)
+		architecture.generate_prediction_model()
+	architecture = None
+	print("\n")
+
+
+def evaluate(architecture):
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+
+		print("Starting evaluation of model...")
+		time_start = time.time()
+		r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(architecture.prediction_model)
+		time_end = time.time()
+
+		# test_model(ARCHITECTURE.prediction_model)
+
+		result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-		file.write(ARCHITECTURE.get_name() + "\n")
+		file.write(result_header)
+		file.write(recall_results)
 		file.close()
-		if is_saved(ARCHITECTURE):
-			load_model(ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
-		else:
-			ARCHITECTURE.train()
-			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
-		ARCHITECTURE = None
+
+		print(result_header)
+		print(recall_results)
 		print("\n")
+	else:
+		print("Architecture not trained")
+		print(architecture.get_name())
 
 
-def evaluate():
-	current_time = datetime.datetime.time(datetime.datetime.now())
-	print("Current time: %s" % current_time)
-	for ARCHITECTURE in ARCHITECTURES:
-		if is_saved(ARCHITECTURE):
-			load_model(ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
+def caption_query(architecture):
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		predict(architecture.prediction_model)
+	else:
+		print("Architecture not trained")
+		print(architecture.get_name())
 
-			if PREDICT_NEW:
-				#predict(ARCHITECTURE.prediction_model)
-				test_model(ARCHITECTURE.prediction_model)
-			else:
-				print("Starting evaluation of model...")
-				time_start = time.time()
-				r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(ARCHITECTURE.prediction_model)
-				time_end = time.time()
 
-				# test_model(ARCHITECTURE.prediction_model)
-
-				result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-				recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
-
-				file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-				file.write(result_header)
-				file.write(recall_results)
-				file.close()
-
-				print(result_header)
-				print(recall_results)
-			print("\n")
-		else:
-			print("Architecture not trained")
-			print(ARCHITECTURE.get_name())
+def sample_image_query(architecture):
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		test_model(architecture.prediction_model)
+	else:
+		print("Architecture not trained")
+		print(architecture.get_name())
 
 
 def save_model_to_file(model, architecture):
@@ -108,40 +134,40 @@ def load_model(arc):
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
 
-# def convert_query_to_vector(query):
-# 	return numpy.asarray(create_caption_vector(query))
+def convert_query_to_vector(query):
+	return numpy.asarray(create_caption_vector(query))
 
 
-# def convert_captions_to_vectors(queries):
-# 	vectors = []
-# 	for query in queries:
-# 		vector = convert_query_to_vector(query)
-# 		vectors.append(vector)
-# 	return numpy.asarray(vectors)
+def convert_captions_to_vectors(queries):
+	vectors = []
+	for query in queries:
+		vector = convert_query_to_vector(query)
+		vectors.append(vector)
+	return numpy.asarray(vectors)
 
 
-# def predict(model):
-# 	captions = []
-# 	user_provided_caption = " "
-# 	while 1:
-# 		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
-# 		if user_provided_caption == "":
-# 			break
-# 		else:
-# 			captions.append(user_provided_caption)
-# 	samples = convert_captions_to_vectors(captions)
-# 	for i in range(len(samples)):
-# 		correct_caption_vector_list = samples[i:i + 1]
-#
-# 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
-#
-# 		best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
-# 		print("Result for %s:" % captions[i])
-# 		for i in range(len(best_image_vector_name_list)):
-# 			filename = best_image_vector_name_list[i]
-# 			show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
-# 			print(i + 1, filename)
-# 		print("")
+def predict(model):
+	captions = []
+	user_provided_caption = " "
+	while 1:
+		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
+		if user_provided_caption == "":
+			break
+		else:
+			captions.append(user_provided_caption)
+	samples = convert_captions_to_vectors(captions)
+	for i in range(len(samples)):
+		correct_caption_vector_list = samples[i:i + 1]
+
+		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
+
+		best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
+		print("Result for %s:" % captions[i])
+		for i in range(len(best_image_vector_name_list)):
+			filename = best_image_vector_name_list[i]
+			show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
+			print(i + 1, filename)
+		print("")
 
 
 def test_model(model):
@@ -261,39 +287,33 @@ def fetch_test_captions_vectors():
 	return numpy.asarray(test_x)
 
 
-def debug():
-	for ARCHITECTURE in ARCHITECTURES:
-		print("Debugging")
-		if is_saved(ARCHITECTURE):
-			load_model(ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
-			model = ARCHITECTURE.model
-			#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
-			min = 1
-			max = 0
-			test_caption_vector = fetch_test_captions_vectors()[:1000]
-			for i in range(len(test_caption_vector)):
-				correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
-				correct_image_vector = fetch_image_vector(correct_image_filename)
-				#caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
-				#image_vector = numpy.reshape(correct_image_vector, (1, 4096))
-				caption_vector = numpy.asarray(test_caption_vector[i:i+1])
-				image_vector = numpy.asarray([correct_image_vector])
-				#print(model.summary())
+def debug(ARCHITECTURE):
+	print("Debugging")
+	if is_saved(ARCHITECTURE):
+		load_model(ARCHITECTURE)
+		ARCHITECTURE.generate_prediction_model()
+		model = ARCHITECTURE.model
+		#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
+		min = 1
+		max = 0
+		test_caption_vector = fetch_test_captions_vectors()[:1000]
+		for i in range(len(test_caption_vector)):
+			correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
+			correct_image_vector = fetch_image_vector(correct_image_filename)
+			#caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+			#image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+			caption_vector = numpy.asarray(test_caption_vector[i:i+1])
+			image_vector = numpy.asarray([correct_image_vector])
+			#print(model.summary())
 
-				cos = model.predict([caption_vector, image_vector])[0][0]
-				if cos > max:
-					max = cos
-				if cos < min:
-					min = cos
+			cos = model.predict([caption_vector, image_vector])[0][0]
+			if cos > max:
+				max = cos
+			if cos < min:
+				min = cos
 
-			print("Min cos: ", min)
-			print("Max cos: ", max)
+		print("Min cos: ", min)
+		print("Max cos: ", max)
 
 
-if len(sys.argv) > 1 and sys.argv[1] == "eval":
-	evaluate()
-elif len(sys.argv) > 1 and sys.argv[1] == "debug":
-	debug()
-else:
-	train()
+main()
