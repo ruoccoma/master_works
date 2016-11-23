@@ -3,11 +3,12 @@ import pickle
 
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.metrics.pairwise import cosine_similarity
+from helpers.image_helpers import printProgress
 
 
-def kmeans_clustering(vectors):
+def kmeans_clustering(vectors, n_clusters=1000):
 	print("Creating cluster...")
-	cluster = MiniBatchKMeans(n_clusters=100, random_state=0, init_size=3000)
+	cluster = MiniBatchKMeans(n_clusters=n_clusters, random_state=0, init_size=3000)
 	# cluster = DBSCAN(metric=cosine_similarity)
 	cluster.fit(vectors)
 	# f = open("image_vector_cluster.pickle", "wb")
@@ -16,15 +17,12 @@ def kmeans_clustering(vectors):
 	return cluster
 
 
-def compare_to_cluster(vector, image_cluster, k, all_image_filenames, all_image_vectors):
-	predicted_cluster_id = image_cluster.predict(vector)
+def compare_to_cluster(vector, image_cluster, k, members_dict):
+	predicted_cluster_id = image_cluster.predict(vector)[0]
+	members_list = members_dict[predicted_cluster_id]
+	cluster_member_filenames = [x[0] for x in members_list]
+	cluster_member_vectors = [x[1] for x in members_list]
 
-	cluster_member_filenames = []
-	cluster_member_vectors = []
-	for i in range(len(image_cluster.labels_)):
-		if predicted_cluster_id == image_cluster.labels_[i]:
-			cluster_member_filenames.append(all_image_filenames[i])
-			cluster_member_vectors.append(all_image_vectors[i])
 	similarities = []
 	# print("Cluster size: ", len(cluster_member_filenames))
 	for i in range(len(cluster_member_filenames)):
@@ -35,8 +33,24 @@ def compare_to_cluster(vector, image_cluster, k, all_image_filenames, all_image_
 	k_similarities = similarities[:k]
 	for index in range(len(k_similarities)):
 		filname_similarity_tuple = k_similarities[index]
-		most_similar_filenames.append(filname_similarity_tuple[0])
-	return most_similar_filenames, predicted_cluster_id[0]
+		most_similar_filenames[index] = filname_similarity_tuple[0]
+	return most_similar_filenames, predicted_cluster_id
+
+
+def get_member_ids_dict(all_image_filenames, all_image_vectors, cluster):
+	member_ids_dict = dict()
+	ids = cluster.labels_
+	tot = len(all_image_filenames)
+	for i in range(tot):
+		id = ids[i]
+		if id in member_ids_dict:
+			member_list = member_ids_dict[id]
+			member_list.append((all_image_filenames[i], all_image_vectors[i]))
+			member_ids_dict[id] = member_list
+		else:
+			member_ids_dict[id] = [(all_image_filenames[i], all_image_vectors[i])]
+		printProgress(i, tot, prefix="Create members dictionary")
+	return member_ids_dict
 
 
 def get_dict_cluster_sizes(cluster):
@@ -55,7 +69,8 @@ if __name__ == "__main__":
 	images = fetch_all_image_vector_pairs()
 	filenames = [x[0] for x in images]
 	image_vectors = [x[1] for x in images]
-	cluster = kmeans_clustering(image_vectors)
+	cluster = kmeans_clustering(image_vectors, n_clusters=100)
+	members_dict = get_member_ids_dict(filenames, image_vectors, cluster)
 	cluster_dict = get_dict_cluster_sizes(cluster)
 	max_cluster_size = 0
 	print("No clusters: ", len(cluster_dict))
@@ -65,5 +80,5 @@ if __name__ == "__main__":
 			max_cluster_size = cluster_dict[i]
 	print("Largest cluster: ", max_cluster_size)
 	print("Query: ", filenames[0])
-	most_similar = compare_to_cluster([image_vectors[0]], cluster, 5, filenames, image_vectors)
+	most_similar = compare_to_cluster([image_vectors[0]], cluster, 5, members_dict)
 	print("Most similar: ", most_similar)
