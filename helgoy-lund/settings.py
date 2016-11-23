@@ -23,13 +23,13 @@ ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
 add_modules_to_sys_path(ROOT_DIR)
 
 # vgg | inception
-IMAGE_EMBEDDING_METHOD = "vgg"
+IMAGE_EMBEDDING_METHOD = "inception"
 
 # word2vec | glove
 WORD_EMBEDDING_METHOD = "word2vec"
 
 # Flickr8k | Flickr30k
-DATASET = "Flickr30k"
+DATASET = "Flickr8k"
 
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
