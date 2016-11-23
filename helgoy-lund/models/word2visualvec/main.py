@@ -149,6 +149,7 @@ def predict(model):
 	captions = []
 	user_provided_caption = " "
 	while 1:
+		# TODO input not working in python 2
 		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
 		if user_provided_caption == "":
 			break
