@@ -33,7 +33,7 @@ DATASET = "Flickr30k"
 
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
-CREATE_NEGATIVE_EXAMPLES = True
+CREATE_NEGATIVE_EXAMPLES = False
 
 DB_SUFFIX = "%s-%s-%s" % (IMAGE_EMBEDDING_METHOD, WORD_EMBEDDING_METHOD, DATASET)
 DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database-%s.db" % DB_SUFFIX

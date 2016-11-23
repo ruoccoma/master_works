@@ -31,9 +31,11 @@ def compare_to_cluster(vector, image_cluster, k, all_image_filenames, all_image_
 		similarity = cosine_similarity(vector, [cluster_member_vectors[i]])
 		similarities.append((cluster_member_filenames[i], similarity))
 	similarities.sort(key=lambda s: s[1], reverse=True)
-	most_similar_filenames = []
-	for tuple in similarities[:k]:
-		most_similar_filenames.append(tuple[0])
+	most_similar_filenames = ["" for x in range(k)]
+	k_similarities = similarities[:k]
+	for index in range(len(k_similarities)):
+		filname_similarity_tuple = k_similarities[index]
+		most_similar_filenames.append(filname_similarity_tuple[0])
 	return most_similar_filenames, predicted_cluster_id
 
 
