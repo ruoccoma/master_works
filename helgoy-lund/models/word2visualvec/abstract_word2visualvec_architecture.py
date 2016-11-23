@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABCMeta
 
+import keras.backend.tensorflow_backend as ker
 from keras import callbacks
 
 from custom_callback import WriteToFileCallback
@@ -29,6 +30,10 @@ class AbstractWord2VisualVecArchitecture:
 		self.callbacks = [self.custom_callback, self.early_stopping]
 		self.model = None
 		self.prediction_model = None
+
+		config1 = ker.tf.ConfigProto()
+		config1.gpu_options.allow_growth = True
+		ker.set_session(ker.tf.Session(config=config1))
 
 	@abstractmethod
 	def train(self):

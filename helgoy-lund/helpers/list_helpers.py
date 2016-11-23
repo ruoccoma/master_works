@@ -123,7 +123,7 @@ def generate_sorted_similarity(image_vector_tuple):
 
 	total_size = len(image_vector_pairs)
 	# Numver of random images to compare
-	size = 1000
+	size = 100
 	start = randint(0, total_size - size * 2)
 	image_vector_pairs = image_vector_pairs[start:start + size]
 

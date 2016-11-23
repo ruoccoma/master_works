@@ -17,8 +17,8 @@ ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, 
 sys.path.append(ROOT_DIR)
 
 import settings
-from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
-from cosine_similarity_architecture import CosineSimilarityArchitecture
+from contrastive_loss_architecture import ContrastiveLossArchitecture
+from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture, NoDropoutFiveLayerCosineSimilarityArchitecture, TwoLayerCosineSimilarityArchitecture, NoDropoutTwoLayerCosineSimilarityArchitecture, OneLayerCosineSimilarityArchitecture, NoDropoutOneLayerCosineSimilarityArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
@@ -29,8 +29,8 @@ from keras.engine import Model
 # Import models
 
 # Settings
-PREDICT_NEW = False
-ARCHITECTURES = [CosineSimilarityArchitecture(epochs=50, batch_size=256)]
+PREDICT_NEW = True
+ARCHITECTURES = [ContrastiveLossArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -49,6 +49,7 @@ def train():
 			ARCHITECTURE.train()
 			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
 			ARCHITECTURE.generate_prediction_model()
+		ARCHITECTURE = None
 		print("\n")
 
 
@@ -61,7 +62,8 @@ def evaluate():
 			ARCHITECTURE.generate_prediction_model()
 
 			if PREDICT_NEW:
-				predict(ARCHITECTURE.prediction_model)
+				#predict(ARCHITECTURE.prediction_model)
+				test_model(ARCHITECTURE.prediction_model)
 			else:
 				print("Starting evaluation of model...")
 				time_start = time.time()
@@ -264,8 +266,9 @@ def debug():
 			ARCHITECTURE.generate_prediction_model()
 			model = ARCHITECTURE.model
 			#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
-
-			test_caption_vector = fetch_test_captions_vectors()[10:20]
+			min = 1
+			max = 0
+			test_caption_vector = fetch_test_captions_vectors()[:1000]
 			for i in range(len(test_caption_vector)):
 				correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
 				correct_image_vector = fetch_image_vector(correct_image_filename)
@@ -274,8 +277,15 @@ def debug():
 				caption_vector = numpy.asarray(test_caption_vector[i:i+1])
 				image_vector = numpy.asarray([correct_image_vector])
 				#print(model.summary())
-				print
-				print(correct_image_filename, model.predict([caption_vector, image_vector])[0][0])
+
+				cos = model.predict([caption_vector, image_vector])[0][0]
+				if cos > max:
+					max = cos
+				if cos < min:
+					min = cos
+
+			print("Min cos: ", min)
+			print("Max cos: ", max)
 
 
 
@@ -285,4 +295,3 @@ elif len(sys.argv) > 1 and sys.argv[1] == "debug":
 	debug()
 else:
 	train()
-
