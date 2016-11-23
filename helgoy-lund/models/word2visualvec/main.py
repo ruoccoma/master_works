@@ -2,7 +2,6 @@
 
 # Add all project modules to sys.path
 import datetime
-import multiprocessing as mp
 import os
 import sys
 import time
@@ -17,20 +16,21 @@ ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, 
 sys.path.append(ROOT_DIR)
 
 import settings
-from contrastive_loss_architecture import ContrastiveLossArchitecture
-from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture, NoDropoutFiveLayerCosineSimilarityArchitecture, TwoLayerCosineSimilarityArchitecture, NoDropoutTwoLayerCosineSimilarityArchitecture, OneLayerCosineSimilarityArchitecture, NoDropoutOneLayerCosineSimilarityArchitecture
+from cosine_similarity_architecture import CosineSimilarityArchitecture
+from euclidian_distance_architecture import EuclidanDistanceArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
-from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
-from word_averaging import create_caption_vector
-from keras.engine import Model
+from list_helpers import split_list, find_n_most_similar_images, compare_vectors
+# from word_averaging import create_caption_vector
+from clustering import kmeans_clustering, compare_to_cluster
+
 # Import models
 
 # Settings
 PREDICT_NEW = True
-ARCHITECTURES = [ContrastiveLossArchitecture(epochs=50, batch_size=256)]
+ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=50, batch_size=512)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -67,13 +67,13 @@ def evaluate():
 			else:
 				print("Starting evaluation of model...")
 				time_start = time.time()
-				r1_avg, r5_avg, r10_avg, r20_avg = evaluate_model(ARCHITECTURE.prediction_model)
+				r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(ARCHITECTURE.prediction_model)
 				time_end = time.time()
 
 				# test_model(ARCHITECTURE.prediction_model)
 
 				result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-				recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
+				recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 				file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 				file.write(result_header)
@@ -108,40 +108,40 @@ def load_model(arc):
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
 
-def convert_query_to_vector(query):
-	return numpy.asarray(create_caption_vector(query))
+# def convert_query_to_vector(query):
+# 	return numpy.asarray(create_caption_vector(query))
 
 
-def convert_captions_to_vectors(queries):
-	vectors = []
-	for query in queries:
-		vector = convert_query_to_vector(query)
-		vectors.append(vector)
-	return numpy.asarray(vectors)
+# def convert_captions_to_vectors(queries):
+# 	vectors = []
+# 	for query in queries:
+# 		vector = convert_query_to_vector(query)
+# 		vectors.append(vector)
+# 	return numpy.asarray(vectors)
 
 
-def predict(model):
-	captions = []
-	user_provided_caption = " "
-	while 1:
-		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
-		if user_provided_caption == "":
-			break
-		else:
-			captions.append(user_provided_caption)
-	samples = convert_captions_to_vectors(captions)
-	for i in range(len(samples)):
-		correct_caption_vector_list = samples[i:i + 1]
-
-		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
-
-		best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
-		print("Result for %s:" % captions[i])
-		for i in range(len(best_image_vector_name_list)):
-			filename = best_image_vector_name_list[i]
-			show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
-			print(i + 1, filename)
-		print("")
+# def predict(model):
+# 	captions = []
+# 	user_provided_caption = " "
+# 	while 1:
+# 		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
+# 		if user_provided_caption == "":
+# 			break
+# 		else:
+# 			captions.append(user_provided_caption)
+# 	samples = convert_captions_to_vectors(captions)
+# 	for i in range(len(samples)):
+# 		correct_caption_vector_list = samples[i:i + 1]
+#
+# 		predicted_image_vector = model.predict(correct_caption_vector_list)[0]
+#
+# 		best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
+# 		print("Result for %s:" % captions[i])
+# 		for i in range(len(best_image_vector_name_list)):
+# 			filename = best_image_vector_name_list[i]
+# 			show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
+# 			print(i + 1, filename)
+# 		print("")
 
 
 def test_model(model):
@@ -188,6 +188,71 @@ def totuple(a):
 
 
 def evaluate_model(model):
+	r1 = []
+	r5 = []
+	r10 = []
+	r20 = []
+	r100 = []
+	r1000 = []
+	size = 1000
+
+	filename_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
+	caption_vector_filename_dictionary = dict()
+	total_filname_caption_vector = len(filename_caption_vector_tuples)
+	for i in range(total_filname_caption_vector):
+		filename, cap_vec = filename_caption_vector_tuples[i]
+		tuple_key = totuple(cap_vec)
+		caption_vector_filename_dictionary[tuple_key] = filename
+		printProgress(i + 1, total_filname_caption_vector, prefix="Building cap vec -> filename dict", barLength=50)
+	print("\n")
+
+	test_caption_vectors = fetch_test_captions_vectors()
+
+	predicted_image_vectors = model.predict(test_caption_vectors)
+
+	filename_caption_vector_tuples = fetch_all_image_vector_pairs()
+	filenames = [x[0] for x in filename_caption_vector_tuples]
+	image_vectors = [x[1] for x in filename_caption_vector_tuples]
+
+	cluster = kmeans_clustering(image_vectors)
+
+	# test_filenames = filenames[int(len(filenames)*0.8):]
+	# test_caption_vectors = image_vectors[int(len(filenames)*0.8):]
+
+	# predicted_image_vectors = model.predict(numpy.asarray(test_caption_vectors))
+	len_test_caption_vectors = len(test_caption_vectors)
+
+	total_results = len(test_caption_vectors)
+	for i in range(total_results):
+		most_similar, cluster_id = compare_to_cluster([predicted_image_vectors[i]], cluster, 1000, filenames, image_vectors)
+		for top_image_index in range(size):
+			test_caption_vector = test_caption_vectors[i]
+			filename = caption_vector_filename_dictionary[totuple(test_caption_vector)]
+			if filename == most_similar[top_image_index]:
+				if top_image_index < 1000:
+					r1000.append(1)
+				if top_image_index < 100:
+					r100.append(1)
+				if top_image_index < 20:
+					r20.append(1)
+				if top_image_index < 10:
+					r10.append(1)
+				if top_image_index < 5:
+					r5.append(1)
+				if top_image_index == 0:
+					r1.append(1)
+		printProgress(i + 1, total_results, prefix="Calculating recall", suffix=str(cluster_id))
+
+	r1_avg = sum(r1) / len_test_caption_vectors
+	r5_avg = sum(r5) / len_test_caption_vectors
+	r10_avg = sum(r10) / len_test_caption_vectors
+	r20_avg = sum(r20) / len_test_caption_vectors
+	r100_avg = sum(r100) / len_test_caption_vectors
+	r1000_avg = sum(r1000) / len_test_caption_vectors
+	return r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg
+
+
+def old_evaluate_model(model):
 	r1 = []
 	r5 = []
 	r10 = []
@@ -258,6 +323,7 @@ def fetch_test_captions_vectors():
 	_, test_x = split_list(data_x, training_test_ratio)
 	return numpy.asarray(test_x)
 
+
 def debug():
 	for ARCHITECTURE in ARCHITECTURES:
 		print("Debugging")
@@ -286,7 +352,6 @@ def debug():
 
 			print("Min cos: ", min)
 			print("Max cos: ", max)
-
 
 
 if len(sys.argv) > 1 and sys.argv[1] == "eval":

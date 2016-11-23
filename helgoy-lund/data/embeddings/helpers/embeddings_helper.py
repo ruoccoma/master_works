@@ -61,7 +61,9 @@ def get_similarity_dictionary():
 def get_examples(all_image_names, image_name_caption_vector_dict, positive=True):
 	sorted_caption_vector_data = []
 	sorted_image_data = []
-	similiarity_dict = get_similarity_dictionary()
+	similiarity_dict = dict()
+	if not positive:
+		similiarity_dict = get_similarity_dictionary()
 	image_name_image_vector_dict = {key: value for (key, value) in fetch_all_image_vector_pairs()}
 	all_image_names_total = len(all_image_names)
 	for i in range(all_image_names_total):
