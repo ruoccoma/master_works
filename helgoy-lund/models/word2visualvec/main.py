@@ -29,7 +29,6 @@ from clustering import kmeans_clustering, compare_to_cluster, get_member_ids_dic
 # Import models
 
 # Settings
-PREDICT_NEW = False
 ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
