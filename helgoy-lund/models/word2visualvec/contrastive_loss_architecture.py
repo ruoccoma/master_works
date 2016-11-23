@@ -12,6 +12,8 @@ from list_helpers import tf_l2norm
 
 def contrastive_loss(y_true, y_pred):
 	x, y = tf.split(1, 2, y_pred)
+	print(tf.shape(x))
+	print(tf.shape(y))
 	d = tf.reduce_sum(tf.square(x - y), 1)
 	d_sqrt = tf.sqrt(d)
 
@@ -39,8 +41,6 @@ class ContrastiveLossArchitecture(AbstractWord2VisualVecArchitecture):
 
 		caption_vectors = np.asarray(caption_vectors)
 		image_vectors = np.asarray(image_vectors)
-
-
 
 		self.generate_model()
 
