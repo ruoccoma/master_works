@@ -25,12 +25,13 @@ from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
 from word_averaging import create_caption_vector
+from clustering import kmeans_clustering, compare_to_cluster
 from keras.engine import Model
 # Import models
 
 # Settings
 PREDICT_NEW = True
-ARCHITECTURES = [ContrastiveLossArchitecture(epochs=50, batch_size=256)]
+ARCHITECTURES = [CosineSimilarityArchitecture(epochs=50, batch_size=256)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -192,48 +193,34 @@ def evaluate_model(model):
 	r5 = []
 	r10 = []
 	r20 = []
-	size = 20
-	filename_vector_tuples = fetch_all_filename_caption_vector_tuples()
-	filename_caption_vector_dictionary = dict()
-	total_filname_caption_vector = len(filename_vector_tuples)
-	for i in range(total_filname_caption_vector):
-		filename, cap_vec = filename_vector_tuples[i]
-		tuple_key = totuple(cap_vec)
-		filename_caption_vector_dictionary[tuple_key] = filename
-		printProgress(i + 1, total_filname_caption_vector, prefix="Preprocessing training data", barLength=50)
-	print("\n")
+	r100 = []
+	r1000 = []
+	size = 1000
 
-	caption_vectors = fetch_test_captions_vectors()
-	predicted_image_vectors = model.predict(caption_vectors)
+	filename_caption_vector_tuples = fetch_all_image_vector_pairs()
 
-	filename_image_vector_pairs = fetch_all_image_vector_pairs()
-	pool_formated_list = []
-	len_caption_vectors = len(caption_vectors)
-	for i in range(len_caption_vectors):
-		caption_vector = caption_vectors[i]
-		tuple_key = totuple(caption_vector)
-		correct_image_filename = filename_caption_vector_dictionary[tuple_key]
-		predicted_image_vector = predicted_image_vectors[i]
-		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
+	filenames = [x[0] for x in filename_caption_vector_tuples]
+	image_vectors = [x[1] for x in filename_caption_vector_tuples]
 
-	processes = int(mp.cpu_count())
-	print("Running on %s processes" % processes)
-	pool = mp.Pool(processes=processes)
-	print("Starting evaluation pool...")
-	result = pool.map_async(find_n_most_similar_images_fast, pool_formated_list)
-	pool.close()
 
-	while not result.ready():
-		new_chunks = result._number_left
-		print("Chunks left until evaluation is done: %s" % new_chunks)
-		time.sleep(10)
+	cluster = kmeans_clustering(image_vectors)
 
-	name_name_lists = result.get()
-	total_results = len(name_name_lists)
+	test_filenames = filenames[int(len(filenames)*0.8):]
+	test_caption_vectors = image_vectors[int(len(filenames)*0.8):]
+
+	predicted_image_vectors = model.predict(test_caption_vectors)
+	len_test_caption_vectors = len(test_caption_vectors)
+
+
+	total_results = len(test_caption_vectors)
 	for i in range(total_results):
-		name, name_list = name_name_lists[i]
+		most_similar, _ = compare_to_cluster([predicted_image_vectors[i]], cluster, 1000, filenames, image_vectors)
 		for top_image_index in range(size):
-			if name == name_list[top_image_index]:
+			if test_filenames[i] == most_similar[top_image_index]:
+				if top_image_index < 1000:
+					r20.append(1)
+				if top_image_index < 100:
+					r20.append(1)
 				if top_image_index < 20:
 					r20.append(1)
 				if top_image_index < 10:
@@ -244,12 +231,15 @@ def evaluate_model(model):
 					r1.append(1)
 		printProgress(i + 1, total_results, prefix="Calculating recall")
 
-	r1_avg = sum(r1) / len_caption_vectors
-	r5_avg = sum(r5) / len_caption_vectors
-	r10_avg = sum(r10) / len_caption_vectors
-	r20_avg = sum(r20) / len_caption_vectors
+	r1_avg = sum(r1) / len_test_caption_vectors
+	r5_avg = sum(r5) / len_test_caption_vectors
+	r10_avg = sum(r10) / len_test_caption_vectors
+	r20_avg = sum(r20) / len_test_caption_vectors
+	r100_avg = sum(r100) / len_test_caption_vectors
+	r1000_avg = sum(r1000) / len_test_caption_vectors
+	return r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg
 
-	return r1_avg, r5_avg, r10_avg, r20_avg
+
 
 
 def fetch_test_captions_vectors():
