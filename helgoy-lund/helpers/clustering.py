@@ -25,9 +25,13 @@ def compare_to_cluster(vector, image_cluster, k, members_dict):
 
 	similarities = []
 	# print("Cluster size: ", len(cluster_member_filenames))
+	# for i in range(len(cluster_member_filenames)):
+	# 	similarity = cosine_similarity(vector, [cluster_member_vectors[i]])
+	# 	similarities.append((cluster_member_filenames[i], similarity))
+	cosine_similarities = cosine_similarity(vector, cluster_member_vectors)[0]
 	for i in range(len(cluster_member_filenames)):
-		similarity = cosine_similarity(vector, [cluster_member_vectors[i]])
-		similarities.append((cluster_member_filenames[i], similarity))
+		similarities.append((cluster_member_filenames[i], cosine_similarities[i]))
+
 	similarities.sort(key=lambda s: s[1], reverse=True)
 	most_similar_filenames = ["" for x in range(k)]
 	k_similarities = similarities[:k]
