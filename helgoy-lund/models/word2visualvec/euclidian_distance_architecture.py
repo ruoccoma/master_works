@@ -60,7 +60,7 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 		               validation_split=self.validation_split)
 
 	def generate_model(self):
-		image_inputs = Input(shape=(2048,), name="Image_input")
+		image_inputs = Input(shape=(4096,), name="Image_input")
 		image_model = Lambda(lambda x: abs(x), name="Image Abs")(image_inputs)
 
 		caption_inputs, caption_model = self.get_caption_model()
