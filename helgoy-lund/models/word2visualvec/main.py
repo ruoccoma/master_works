@@ -79,7 +79,7 @@ def evaluate(architecture):
 		# test_model(ARCHITECTURE.prediction_model)
 
 		result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+		recall_results = "r1:%sr5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 		file.write(result_header)
@@ -223,40 +223,49 @@ def evaluate_model(model):
 	r1000 = []
 	size = 1000
 
-	tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
-	tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
-
 	print("Fetching caption vectors...")
 	te_ca_caption_vectors = fetch_test_captions_vectors()
 
 	print("Predicting image vectors...")
 	predicted_image_vectors = model.predict(te_ca_caption_vectors)
 
+	print("Fetching image vectors...")
 	tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
 	tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
 	tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
+
+	print("Fetching caption-vector vectors...")
+	tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
+
+	tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
 
 	print("Creating cosine similarity matrix...")
 	similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
 
 	all_similarities = []
 	predicted_images_size = len(predicted_image_vectors)
-	image_vectors_size = len(tr_im_image_vectors[0])
-	for predict_index in range(predicted_images_size):
+	total_image_size = len(tr_im_image_vectors)
+	for predicted_image_index in range(predicted_images_size):
 		similarities = []
-		for i in range(image_vectors_size):
-			similarities.append((tr_im_filenames[i], similarity_matrix[predict_index][i]))
+		for i in range(total_image_size):
+			tr_filename = tr_im_filenames[i]
+			similarities.append((tr_filename, similarity_matrix[predicted_image_index][i]))
 		similarities.sort(key=lambda s: s[1], reverse=True)
 
-		test_caption_vector = totuple(te_ca_caption_vectors[predict_index])
-		test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector]
-		all_similarities.append((test_filename, similarities))
-		printProgress(predict_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
+		test_caption_vector = te_ca_caption_vectors[predicted_image_index]
 
+		test_caption_vector_key = totuple(test_caption_vector)
+
+		test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
+		all_similarities.append((test_filename, similarities))
+		printProgress(predicted_image_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
 	count = 0
 	for test_caption_filename_tuple in all_similarities:
 		for top_image_index in range(size):
-			if test_caption_filename_tuple[0] == test_caption_filename_tuple[1][top_image_index][0]:
+			filename = test_caption_filename_tuple[0]
+			similarities = test_caption_filename_tuple[1]
+			comparison_filename = similarities[top_image_index][0]
+			if filename == comparison_filename:
 				if top_image_index < 1000:
 					r1000.append(1)
 				if top_image_index < 100:
@@ -288,9 +297,8 @@ def build_caption_vector_filename_dict(filename_caption_vector_tuples):
 		filename, cap_vec = filename_caption_vector_tuples[i]
 		tuple_key = totuple(cap_vec)
 		caption_vector_filename_dictionary[tuple_key] = filename
-		if i % 1000 == 0:
+		if i % 1000 == 0 or i > total_filname_caption_vector - 5:
 			printProgress(i + 1, total_filname_caption_vector, prefix="Building cap vec -> filename dict", barLength=50)
-	print("\n")
 	return caption_vector_filename_dictionary
 
 
