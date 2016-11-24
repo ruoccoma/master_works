@@ -31,6 +31,7 @@ from clustering import kmeans_clustering, compare_to_cluster, get_member_ids_dic
 
 # Settings
 ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
+# ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=50, batch_size=128)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -79,7 +80,7 @@ def evaluate(architecture):
 		# test_model(ARCHITECTURE.prediction_model)
 
 		result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-		recall_results = "r1:%sr5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 		file.write(result_header)
@@ -253,19 +254,12 @@ def evaluate_model(model):
 		similarities.sort(key=lambda s: s[1], reverse=True)
 
 		test_caption_vector = te_ca_caption_vectors[predicted_image_index]
-
 		test_caption_vector_key = totuple(test_caption_vector)
-
 		test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
-		all_similarities.append((test_filename, similarities))
-		printProgress(predicted_image_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
-	count = 0
-	for test_caption_filename_tuple in all_similarities:
+
 		for top_image_index in range(size):
-			filename = test_caption_filename_tuple[0]
-			similarities = test_caption_filename_tuple[1]
 			comparison_filename = similarities[top_image_index][0]
-			if filename == comparison_filename:
+			if test_filename == comparison_filename:
 				if top_image_index < 1000:
 					r1000.append(1)
 				if top_image_index < 100:
@@ -278,8 +272,30 @@ def evaluate_model(model):
 					r5.append(1)
 				if top_image_index == 0:
 					r1.append(1)
-		count += 1
-		printProgress(count, predicted_images_size, prefix="Calculating recall")
+
+		printProgress(predicted_image_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
+	#
+	# count = 0
+	# for test_caption_filename_tuple in all_similarities:
+	# 	for top_image_index in range(size):
+	# 		filename = test_caption_filename_tuple[0]
+	# 		similarities = test_caption_filename_tuple[1]
+	# 		comparison_filename = similarities[top_image_index][0]
+	# 		if filename == comparison_filename:
+	# 			if top_image_index < 1000:
+	# 				r1000.append(1)
+	# 			if top_image_index < 100:
+	# 				r100.append(1)
+	# 			if top_image_index < 20:
+	# 				r20.append(1)
+	# 			if top_image_index < 10:
+	# 				r10.append(1)
+	# 			if top_image_index < 5:
+	# 				r5.append(1)
+	# 			if top_image_index == 0:
+	# 				r1.append(1)
+	# 	count += 1
+	# 	printProgress(count, predicted_images_size, prefix="Calculating recall")
 
 	r1_avg = sum(r1) / predicted_images_size
 	r5_avg = sum(r5) / predicted_images_size
