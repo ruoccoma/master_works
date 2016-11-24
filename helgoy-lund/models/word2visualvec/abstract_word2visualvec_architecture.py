@@ -13,7 +13,7 @@ class AbstractWord2VisualVecArchitecture:
 
 	remote = callbacks.RemoteMonitor(root='http://127.0.0.1:9000')
 	custom_callback = WriteToFileCallback(settings.RESULT_TEXTFILE_PATH)
-	early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=5)
+	early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=3)
 
 	def __init__(self,
 	             epochs=50,
