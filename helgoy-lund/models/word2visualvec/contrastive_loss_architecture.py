@@ -1,8 +1,8 @@
 import numpy as np
 from keras import backend as K
 from keras.engine import Input, Model
-from keras.layers import Dense, Lambda, Dropout, merge
-#from keras.utils.visualize_util import plot
+from keras.layers import Dense, Lambda, merge
+# from keras.utils.visualize_util import plot
 import tensorflow as tf
 
 from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
@@ -46,7 +46,7 @@ class ContrastiveLossArchitecture(AbstractWord2VisualVecArchitecture):
 
 		self.model.compile(optimizer=self.optimizer, loss=self.loss)
 		self.model.summary()
-		#plot(self.model, 'results/%s.png' % self.get_name())
+		# plot(self.model, 'results/%s.png' % self.get_name())
 		self.model.fit([caption_vectors, image_vectors],
 		               similarities,
 		               batch_size=self.batch_size,
@@ -74,15 +74,10 @@ class ContrastiveLossArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
 		caption_model = Dense(500, activation='relu')(caption_model)
-		caption_model = Dropout(0.2)(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dropout(0.2)(caption_model)
-		caption_model = Dense(2048, activation='relu')(caption_model)
-		caption_model = Dropout(0.2)(caption_model)
 		caption_model = Dense(4096, activation='relu')(caption_model)
 		return caption_inputs, caption_model
-
-
 
 	def generate_prediction_model(self):
 		weights = self.model.get_weights()

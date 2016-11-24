@@ -1,12 +1,10 @@
-
-# Add all project modules to sys.path
 import datetime
 import os
 import sys
 import time
 from random import randint
-import numpy
 
+import numpy
 from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
@@ -17,18 +15,19 @@ import settings
 import io_helper
 io_helper.create_missing_folders()
 
-from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
+from cosine_similarity_architecture import CosineSimilarityArchitecture
 from euclidian_distance_architecture import EuclidanDistanceArchitecture
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
-from clustering import kmeans_clustering, compare_to_cluster, get_member_ids_dict
 
-ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
-# ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=50, batch_size=128)]
+ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=100, batch_size=128),
+                 CosineSimilarityArchitecture(epochs=100, batch_size=128),
+                 ContrastiveLossArchitecture(epochs=100, batch_size=128)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
@@ -36,32 +35,25 @@ def main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
-		if len(sys.argv) > 1 and sys.argv[1] == "eval":
+		print("Chosen architecture %s" % ARCHITECTURE.get_name())
+		train(ARCHITECTURE)
+		if "eval" in sys.argv:
 			evaluate(ARCHITECTURE)
-		elif len(sys.argv) > 1 and sys.argv[1] == "debug":
+		if "debug" in sys.argv:
 			debug(ARCHITECTURE)
-		elif len(sys.argv) > 1 and sys.argv[1] == "caption_query":
+		if "caption_query" in sys.argv:
 			caption_query(ARCHITECTURE)
-		elif len(sys.argv) > 1 and sys.argv[1] == "sample_image_query":
+		if "sample_image_query" in sys.argv:
 			sample_image_query(ARCHITECTURE)
-		else:
-			train(ARCHITECTURE)
 
 
 def train(architecture):
-	print("\nRUNNING NEW ARCHITECTURE: %s\n" % architecture.get_name())
-	file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-	file.write(architecture.get_name() + "\n")
-	file.close()
 	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
+		print("Architecture already trained")
 	else:
+		print("Training architecture...")
 		architecture.train()
 		save_model_to_file(architecture.model, architecture)
-		architecture.generate_prediction_model()
-	architecture = None
-	print("\n")
 
 
 def evaluate(architecture):
@@ -128,7 +120,6 @@ def is_saved(arc):
 def load_model(arc):
 	arc.generate_model()
 	name = arc.get_name()
-	print("Loading model \"%s\" from disk..." % name)
 	arc.model.load_weights("stored_models/" + name + ".h5")
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
@@ -214,26 +205,15 @@ def totuple(a):
 
 
 def evaluate_model(model):
-	r1 = []
-	r5 = []
-	r10 = []
-	r20 = []
-	r100 = []
-	r1000 = []
-	size = 1000
+	r1, r5, r10, r20, r100, r1000 = [], [], [], [], [], []
 
-	print("Fetching caption vectors...")
 	te_ca_caption_vectors = fetch_test_captions_vectors()
-
-	print("Predicting image vectors...")
 	predicted_image_vectors = model.predict(te_ca_caption_vectors)
 
-	print("Fetching image vectors...")
 	tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
 	tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
 	tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
 
-	print("Fetching caption-vector vectors...")
 	tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
 
 	tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
@@ -241,7 +221,6 @@ def evaluate_model(model):
 	print("Creating cosine similarity matrix...")
 	similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
 
-	all_similarities = []
 	predicted_images_size = len(predicted_image_vectors)
 	total_image_size = len(tr_im_image_vectors)
 	for predicted_image_index in range(predicted_images_size):
@@ -255,7 +234,7 @@ def evaluate_model(model):
 		test_caption_vector_key = totuple(test_caption_vector)
 		test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
 
-		for top_image_index in range(size):
+		for top_image_index in range(1000):
 			comparison_filename = similarities[top_image_index][0]
 			if test_filename == comparison_filename:
 				if top_image_index < 1000:
@@ -272,28 +251,6 @@ def evaluate_model(model):
 					r1.append(1)
 
 		printProgress(predicted_image_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
-	#
-	# count = 0
-	# for test_caption_filename_tuple in all_similarities:
-	# 	for top_image_index in range(size):
-	# 		filename = test_caption_filename_tuple[0]
-	# 		similarities = test_caption_filename_tuple[1]
-	# 		comparison_filename = similarities[top_image_index][0]
-	# 		if filename == comparison_filename:
-	# 			if top_image_index < 1000:
-	# 				r1000.append(1)
-	# 			if top_image_index < 100:
-	# 				r100.append(1)
-	# 			if top_image_index < 20:
-	# 				r20.append(1)
-	# 			if top_image_index < 10:
-	# 				r10.append(1)
-	# 			if top_image_index < 5:
-	# 				r5.append(1)
-	# 			if top_image_index == 0:
-	# 				r1.append(1)
-	# 	count += 1
-	# 	printProgress(count, predicted_images_size, prefix="Calculating recall")
 
 	r1_avg = sum(r1) / predicted_images_size
 	r5_avg = sum(r5) / predicted_images_size
