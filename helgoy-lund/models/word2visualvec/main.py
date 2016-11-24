@@ -1,35 +1,32 @@
 
-
 # Add all project modules to sys.path
 import datetime
 import os
 import sys
 import time
 from random import randint
-
 import numpy
 
-# Get root dir (parent of parent of main.py)
 from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 
 import settings
+
+import io_helper
+io_helper.create_missing_folders()
+
 from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
 from euclidian_distance_architecture import EuclidanDistanceArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
-from io_helper import load_pickle_file, save_pickle_file, check_pickle_file
 from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 from clustering import kmeans_clustering, compare_to_cluster, get_member_ids_dict
 
-# Import models
-
-# Settings
 ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
 # ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=50, batch_size=128)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
@@ -80,7 +77,8 @@ def evaluate(architecture):
 		# test_model(ARCHITECTURE.prediction_model)
 
 		result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
+		(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 		file.write(result_header)
@@ -331,18 +329,18 @@ def debug(ARCHITECTURE):
 		load_model(ARCHITECTURE)
 		ARCHITECTURE.generate_prediction_model()
 		model = ARCHITECTURE.model
-		#model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
+		# model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
 		min = 1
 		max = 0
 		test_caption_vector = fetch_test_captions_vectors()[:1000]
 		for i in range(len(test_caption_vector)):
 			correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
 			correct_image_vector = fetch_image_vector(correct_image_filename)
-			#caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
-			#image_vector = numpy.reshape(correct_image_vector, (1, 4096))
-			caption_vector = numpy.asarray(test_caption_vector[i:i+1])
+			# caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+			# image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+			caption_vector = numpy.asarray(test_caption_vector[i:i + 1])
 			image_vector = numpy.asarray([correct_image_vector])
-			#print(model.summary())
+			# print(model.summary())
 
 			cos = model.predict([caption_vector, image_vector])[0][0]
 			if cos > max:
