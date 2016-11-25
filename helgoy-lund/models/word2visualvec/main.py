@@ -222,7 +222,7 @@ def evaluate_model(model):
 	r100 = []
 	r1000 = []
 
-	te_ca_caption_vectors = fetch_test_captions_vectors()[:1000]
+	te_ca_caption_vectors = fetch_test_captions_vectors()
 	predicted_image_vectors = model.predict(te_ca_caption_vectors)
 
 	tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
