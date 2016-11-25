@@ -15,7 +15,7 @@ import settings
 import io_helper
 io_helper.create_missing_folders()
 
-from cosine_similarity_architecture import CosineSimilarityArchitecture
+from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
 from euclidian_distance_architecture import EuclidanDistanceArchitecture
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
@@ -25,9 +25,10 @@ from image_helpers import show_image, printProgress
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 
-ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=100, batch_size=128),
-                 CosineSimilarityArchitecture(epochs=100, batch_size=128),
-                 ContrastiveLossArchitecture(epochs=100, batch_size=128)]
+ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
+# ARCHITECTURES = [EuclidanDistanceArchitecture(epochs=100, batch_size=128),
+#                  CosineSimilarityArchitecture(epochs=100, batch_size=128),
+#                  ContrastiveLossArchitecture(epochs=100, batch_size=128)]
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
