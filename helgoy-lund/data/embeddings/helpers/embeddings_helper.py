@@ -6,7 +6,7 @@ import pickle
 import settings
 from caption_database_helper import fetch_caption_count, fetch_all_filename_caption_vector_tuples
 from image_database_helper import fetch_all_image_names, fetch_all_image_vector_pairs
-from image_helpers import printProgress
+from list_helpers import print_progress
 from io_helper import load_pickle_file, save_pickle_file, check_pickle_file
 
 
@@ -78,7 +78,7 @@ def get_examples(all_image_names, image_name_caption_vector_dict, positive=True)
 		for caption_vector in caption_vectors:
 			sorted_image_data.append(image_vector)
 			sorted_caption_vector_data.append(caption_vector)
-		printProgress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
+		print_progress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
 
 	return sorted_caption_vector_data, sorted_image_data, [1.0 if positive else -1.0 for x in range(len(sorted_caption_vector_data))]
 

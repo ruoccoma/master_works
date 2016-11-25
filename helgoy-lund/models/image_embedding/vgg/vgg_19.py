@@ -5,8 +5,7 @@ from keras.models import Model
 import numpy as np
 from os import listdir
 from os.path import isfile, join
-from image_helpers import printProgress
-from list_helpers import l2norm
+from list_helpers import l2norm, print_progress
 from image_database_helper import store_image_vector_to_db
 import settings
 
@@ -39,7 +38,7 @@ def run_vgg():
 		image_vector = predict(vgg, image_path)[0]
 		norm_image_vector = np.asarray(l2norm(image_vector))
 		store_image_vector_to_db(image_paths[i], norm_image_vector)
-		printProgress(i, num_images)
+		print_progress(i, num_images)
 
 if __name__ == "__main__":
 	run_vgg()

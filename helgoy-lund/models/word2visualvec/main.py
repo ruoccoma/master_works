@@ -21,8 +21,8 @@ from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
-from image_helpers import show_image, printProgress
-from list_helpers import split_list, find_n_most_similar_images, compare_vectors
+from image_helpers import show_image
+from list_helpers import split_list, find_n_most_similar_images, compare_vectors, print_progress
 from word_averaging import create_caption_vector
 
 ARCHITECTURES = [FiveLayerCosineSimilarityArchitecture(epochs=100, batch_size=256)]
@@ -207,7 +207,12 @@ def totuple(a):
 
 
 def evaluate_model(model):
-	r1, r5, r10, r20, r100, r1000 = [], [], [], [], [], []
+	r1 = []
+	r5 = []
+	r10 = []
+	r20 = []
+	r100 = []
+	r1000 = []
 
 	te_ca_caption_vectors = fetch_test_captions_vectors()
 	predicted_image_vectors = model.predict(te_ca_caption_vectors)
@@ -222,7 +227,6 @@ def evaluate_model(model):
 
 	print("Creating cosine similarity matrix...")
 	similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
-
 	predicted_images_size = len(predicted_image_vectors)
 	total_image_size = len(tr_im_image_vectors)
 	for predicted_image_index in range(predicted_images_size):
@@ -240,19 +244,19 @@ def evaluate_model(model):
 			comparison_filename = similarities[top_image_index][0]
 			if test_filename == comparison_filename:
 				if top_image_index < 1000:
-					r1000.append(1)
+					r1000.append(1.0)
 				if top_image_index < 100:
-					r100.append(1)
+					r100.append(1.0)
 				if top_image_index < 20:
-					r20.append(1)
+					r20.append(1.0)
 				if top_image_index < 10:
-					r10.append(1)
+					r10.append(1.0)
 				if top_image_index < 5:
-					r5.append(1)
+					r5.append(1.0)
 				if top_image_index == 0:
-					r1.append(1)
+					r1.append(1.0)
 
-		printProgress(predicted_image_index + 1, predicted_images_size, prefix="Calculating similarities and sorting")
+		print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
 
 	r1_avg = sum(r1) / predicted_images_size
 	r5_avg = sum(r5) / predicted_images_size
@@ -264,14 +268,14 @@ def evaluate_model(model):
 
 
 def build_caption_vector_filename_dict(filename_caption_vector_tuples):
-	caption_vector_filename_dictionary = dict()
+	caption_vector_filename_dictionary = {}
 	total_filname_caption_vector = len(filename_caption_vector_tuples)
 	for i in range(total_filname_caption_vector):
 		filename, cap_vec = filename_caption_vector_tuples[i]
 		tuple_key = totuple(cap_vec)
 		caption_vector_filename_dictionary[tuple_key] = filename
 		if i % 1000 == 0 or i > total_filname_caption_vector - 5:
-			printProgress(i + 1, total_filname_caption_vector, prefix="Building cap vec -> filename dict", barLength=50)
+			print_progress(i + 1, total_filname_caption_vector, prefix="Building cap vec -> filename dict", barLength=50)
 	return caption_vector_filename_dictionary
 
 

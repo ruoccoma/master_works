@@ -3,7 +3,7 @@ import pickle
 
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.metrics.pairwise import cosine_similarity
-from helpers.image_helpers import printProgress
+from list_helpers import print_progress
 
 
 def kmeans_clustering(vectors, n_clusters=1000):
@@ -53,7 +53,7 @@ def get_member_ids_dict(all_image_filenames, all_image_vectors, cluster):
 			member_ids_dict[id] = member_list
 		else:
 			member_ids_dict[id] = [(all_image_filenames[i], all_image_vectors[i])]
-		printProgress(i, tot, prefix="Create members dictionary")
+		print_progress(i, tot, prefix="Create members dictionary")
 	return member_ids_dict
 
 

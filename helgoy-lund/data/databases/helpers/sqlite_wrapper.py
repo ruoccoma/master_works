@@ -21,7 +21,7 @@ def convert_array(text):
 
 
 db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
-db.text_factory = lambda x: str(x, "utf-8", "ignore")
+# db.text_factory = lambda x: unicode(x, "utf-8", "ignore")
 
 
 sqlite3.register_adapter(np.ndarray, adapt_array)

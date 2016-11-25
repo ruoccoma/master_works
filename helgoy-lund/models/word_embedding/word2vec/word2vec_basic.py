@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import settings
 import tensorflow as tf
-from image_helpers import printProgress
+from list_helpers import print_progress
 from text_preprocessing import preprocessing
 from sklearn.manifold import TSNE
 from word_database_helper import save_word_vector
@@ -49,7 +49,7 @@ def run_word2vec():
 				preprocessed_words = preprocessing(sentence, remove_stopwords=True, min_length=3)
 				for x in preprocessed_words:
 					data.append(x)
-				printProgress(index, length, prefix='Read data:', suffix='Complete', barLength=50)
+				print_progress(index, length, prefix='Read data:', suffix='Complete', barLength=50)
 		return data
 
 
