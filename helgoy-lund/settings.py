@@ -8,7 +8,12 @@ def add_modules_to_sys_path(root_dir):
 	sys.path.append(root_dir + "data/embeddings/plotting")
 	sys.path.append(root_dir + "data/embeddings/testing")
 	sys.path.append(root_dir + "helpers")
-	sys.path.append(root_dir + "models/word2vec")
+	sys.path.append(root_dir + "models/word_embedding")
+	sys.path.append(root_dir + "models/word_embedding/word2vec")
+	sys.path.append(root_dir + "models/word_embedding/glove")
+	sys.path.append(root_dir + "models/image_embedding")
+	sys.path.append(root_dir + "models/image_embedding/inception")
+	sys.path.append(root_dir + "models/image_embedding/vgg")
 	sys.path.append(root_dir + "models/word2visualvec")
 	sys.path.append(root_dir + "models/word2visualvec/old_architectures")
 	sys.path.append(root_dir + "models/word2visualvec/results")
@@ -17,14 +22,21 @@ ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
 
 add_modules_to_sys_path(ROOT_DIR)
 
-DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database.db"
+# vgg | inception
+IMAGE_EMBEDDING_METHOD = "vgg"
 
-CNN_NAME = "inception"
+# word2vec | glove
 WORD_EMBEDDING_METHOD = "word2vec"
-DATASET = "Flickr8k"
+
+# Flickr8k | Flickr30k
+DATASET = "Flickr30k"
+
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
 CREATE_NEGATIVE_EXAMPLES = False
+
+DB_SUFFIX = "%s-%s-%s" % (IMAGE_EMBEDDING_METHOD, WORD_EMBEDDING_METHOD, DATASET)
+DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database-%s.db" % DB_SUFFIX
 
 # Word2Vec
 WORD_EMBEDDING_DIMENSION = 300
@@ -34,7 +46,7 @@ WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr30k/flickr30k/results_20130124.t
 # Stored embeddings
 STORED_EMBEDDINGS_DIR = ROOT_DIR + "data/embeddings/stored-embeddings/"
 NEG_TAG = "neg" if CREATE_NEGATIVE_EXAMPLES else ""
-STORED_EMBEDDINGS_PREFIX = "%s%s-%s-%s-%s" % (WORD_EMBEDDING_DIMENSION, WORD_EMBEDDING_METHOD, CNN_NAME, DATASET, NEG_TAG)
+STORED_EMBEDDINGS_NAME = "%s-%s" % (DB_SUFFIX, NEG_TAG)
 
 RESULT_TEXTFILE_PATH = ROOT_DIR + "models/word2visualvec/results/results.txt"
 

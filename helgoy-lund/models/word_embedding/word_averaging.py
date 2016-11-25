@@ -5,7 +5,7 @@ import numpy as np  # Make sure that numpy is imported
 
 import settings
 from caption_database_helper import save_caption_vector, save_caption_vector_list
-from image_helpers import printProgress
+from list_helpers import print_progress
 from word_database_helper import fetch_all_word_vectors, fetch_word_vector
 
 
@@ -91,7 +91,7 @@ def convert_sentences(sentences, num_features):
 	# Loop through the reviews
 	for sentence in sentences:
 		if counter % 1000 == 0:
-			printProgress(counter, len_sentences, prefix='Convert sentences:', suffix='Complete', barLength=50)
+			print_progress(counter, len_sentences, prefix='Convert sentences:', suffix='Complete', barLength=50)
 
 		# Call the function (defined above) that makes average feature vectors
 		sentenceFeatureVecs[counter] = convert_sentence_to_vector(sentence, num_features, dictionary)

@@ -1,74 +1,120 @@
-
-
-# Add all project modules to sys.path
 import datetime
-import multiprocessing as mp
 import os
 import sys
 import time
 from random import randint
 
 import numpy
-
-# Get root dir (parent of parent of main.py)
-
+from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 
 import settings
-from euclidian_distance_architecture import SuperDeepEuclidianDist, ShallowEuclidDist
+
+import io_helper
+io_helper.create_missing_folders()
+
+from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
+from euclidian_distance_architecture import EuclidanDistanceArchitecture, MSEEuclidianDistance, MAEEuclidianDistance, HingeEuclidianDistance, SquaredHingeEuclidianDistance, MAPEEuclidianDistance, MSLEEuclidianDistance, BinaryCrossentropyEuclidianDistance, KLBEuclidianDistance, PoissonEuclidianDistance, CosineProximityEuclidianDistance
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
 from embeddings_helper import structure_and_store_embeddings
-from image_helpers import show_image, printProgress
-from list_helpers import split_list, find_n_most_similar_images, compare_vectors, find_n_most_similar_images_fast
+from image_helpers import show_image
+from list_helpers import split_list, find_n_most_similar_images, compare_vectors, print_progress
 from word_averaging import create_caption_vector
-# Import models
 
-# Settings
-PREDICT_NEW = False
-ARCHITECTURES = [SuperDeepEuclidianDist(epochs=100, batch_size=256), ShallowEuclidDist(epochs=75, batch_size=256)]
+ARCHITECTURES = [EuclidanDistanceArchitecture(),
+				 MSEEuclidianDistance(),
+				 MAEEuclidianDistance(),
+				 HingeEuclidianDistance(),
+				 SquaredHingeEuclidianDistance(),
+				 MAPEEuclidianDistance(),
+				 MSLEEuclidianDistance(),
+				 BinaryCrossentropyEuclidianDistance(),
+				 KLBEuclidianDistance(),
+				 PoissonEuclidianDistance(),
+				 CosineProximityEuclidianDistance()]
+
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
 
-def word2visualvec_main():
+def main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
-		print("\nRUNNING NEW ARCHITECTURE: %s\n" % ARCHITECTURE.get_name())
-		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-		file.write(ARCHITECTURE.get_name() + "\n")
-		file.close()
-		if is_saved(ARCHITECTURE):
-			load_model(ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
-		else:
-			ARCHITECTURE.train()
-			save_model_to_file(ARCHITECTURE.model, ARCHITECTURE)
-			ARCHITECTURE.generate_prediction_model()
+		print(ARCHITECTURE.get_name())
+		train(ARCHITECTURE)
+		if "eval" in sys.argv:
+			evaluate(ARCHITECTURE)
+		if "caption_query" in sys.argv:
+			caption_query(ARCHITECTURE)
+		if "sample_image_query" in sys.argv:
+			sample_image_query(ARCHITECTURE)
+		if "fiddle" in sys.argv:
+			fiddle(ARCHITECTURE)
 
-		if PREDICT_NEW:
-			predict(ARCHITECTURE.prediction_model)
-		else:
-			print("Starting evaluation of model...")
-			time_start = time.time()
-			r1_avg, r5_avg, r10_avg, r20_avg = evaluate(ARCHITECTURE.prediction_model)
-			time_end = time.time()
 
-			# test_model(ARCHITECTURE.prediction_model)
+def train(architecture):
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(architecture.get_name())
+	result_file.close()
+	if is_saved(architecture):
+		print("Architecture already trained")
+	else:
+		print("Training architecture...")
+		architecture.train()
+		save_model_to_file(architecture.model, architecture)
 
-			result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-			recall_results = "r1:%s,r5:%s,r10:%s,r20:%s\n" % (r1_avg, r5_avg, r10_avg, r20_avg)
 
-			file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-			file.write(result_header)
-			file.write(recall_results)
-			file.close()
+def evaluate(architecture):
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(architecture.get_name())
+	result_file.close()
 
-			print(result_header)
-			print(recall_results)
-		print("\n")
+	load_model(architecture)
+	architecture.generate_prediction_model()
+
+	print("Starting evaluation of model...")
+	time_start = time.time()
+	r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(architecture.prediction_model)
+	time_end = time.time()
+
+	# test_model(ARCHITECTURE.prediction_model)
+
+	result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+	recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
+	(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(result_header)
+	result_file.write(recall_results)
+	result_file.close()
+
+	print(result_header)
+	print(recall_results)
+	print("\n")
+
+
+def caption_query(architecture):
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		predict(architecture.prediction_model)
+	else:
+		print("Architecture not trained")
+		print(architecture.get_name())
+
+
+def sample_image_query(architecture):
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		test_model(architecture.prediction_model)
+	else:
+		print("Architecture not trained")
+		print(architecture.get_name())
 
 
 def save_model_to_file(model, architecture):
@@ -86,7 +132,6 @@ def is_saved(arc):
 def load_model(arc):
 	arc.generate_model()
 	name = arc.get_name()
-	print("Loading model \"%s\" from disk..." % name)
 	arc.model.load_weights("stored_models/" + name + ".h5")
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
@@ -107,6 +152,7 @@ def predict(model):
 	captions = []
 	user_provided_caption = " "
 	while 1:
+		# TODO input not working in python 2
 		user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
 		if user_provided_caption == "":
 			break
@@ -170,69 +216,77 @@ def totuple(a):
 		return a
 
 
-def evaluate(model):
+def evaluate_model(model):
 	r1 = []
 	r5 = []
 	r10 = []
 	r20 = []
-	size = 20
-	filename_vector_tuples = fetch_all_filename_caption_vector_tuples()
-	filename_caption_vector_dictionary = dict()
-	total_filname_caption_vector = len(filename_vector_tuples)
-	for i in range(total_filname_caption_vector):
-		filename, cap_vec = filename_vector_tuples[i]
-		tuple_key = totuple(cap_vec)
-		filename_caption_vector_dictionary[tuple_key] = filename
-		printProgress(i + 1, total_filname_caption_vector, prefix="Preprocessing training data", barLength=50)
-	print("\n")
+	r100 = []
+	r1000 = []
 
-	caption_vectors = fetch_test_captions_vectors()
-	predicted_image_vectors = model.predict(caption_vectors)
+	te_ca_caption_vectors = fetch_test_captions_vectors()
+	predicted_image_vectors = model.predict(te_ca_caption_vectors)
 
-	filename_image_vector_pairs = fetch_all_image_vector_pairs()
-	pool_formated_list = []
-	len_caption_vectors = len(caption_vectors)
-	for i in range(len_caption_vectors):
-		caption_vector = caption_vectors[i]
-		tuple_key = totuple(caption_vector)
-		correct_image_filename = filename_caption_vector_dictionary[tuple_key]
-		predicted_image_vector = predicted_image_vectors[i]
-		pool_formated_list.append((predicted_image_vector, correct_image_filename, filename_image_vector_pairs, 20))
+	tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
+	tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
+	tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
 
-	processes = int(mp.cpu_count())
-	print("Running on %s processes" % processes)
-	pool = mp.Pool(processes=processes)
-	print("Starting evaluation pool...")
-	result = pool.map_async(find_n_most_similar_images_fast, pool_formated_list)
-	pool.close()
+	tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
 
-	while not result.ready():
-		new_chunks = result._number_left
-		print("Chunks left until evaluation is done: %s" % new_chunks)
-		time.sleep(10)
+	tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
 
-	name_name_lists = result.get()
-	total_results = len(name_name_lists)
-	for i in range(total_results):
-		name, name_list = name_name_lists[i]
-		for top_image_index in range(size):
-			if name == name_list[top_image_index]:
+	print("Creating cosine similarity matrix...")
+	similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
+	predicted_images_size = len(predicted_image_vectors)
+	total_image_size = len(tr_im_image_vectors)
+	for predicted_image_index in range(predicted_images_size):
+		similarities = []
+		for i in range(total_image_size):
+			tr_filename = tr_im_filenames[i]
+			similarities.append((tr_filename, similarity_matrix[predicted_image_index][i]))
+		similarities.sort(key=lambda s: s[1], reverse=True)
+
+		test_caption_vector = te_ca_caption_vectors[predicted_image_index]
+		test_caption_vector_key = totuple(test_caption_vector)
+		test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
+
+		for top_image_index in range(1000):
+			comparison_filename = similarities[top_image_index][0]
+			if test_filename == comparison_filename:
+				if top_image_index < 1000:
+					r1000.append(1.0)
+				if top_image_index < 100:
+					r100.append(1.0)
 				if top_image_index < 20:
-					r20.append(1)
+					r20.append(1.0)
 				if top_image_index < 10:
-					r10.append(1)
+					r10.append(1.0)
 				if top_image_index < 5:
-					r5.append(1)
+					r5.append(1.0)
 				if top_image_index == 0:
-					r1.append(1)
-		printProgress(i + 1, total_results, prefix="Calculating recall")
+					r1.append(1.0)
 
-	r1_avg = sum(r1) / len_caption_vectors
-	r5_avg = sum(r5) / len_caption_vectors
-	r10_avg = sum(r10) / len_caption_vectors
-	r20_avg = sum(r20) / len_caption_vectors
+		print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
 
-	return r1_avg, r5_avg, r10_avg, r20_avg
+	r1_avg = sum(r1) / predicted_images_size
+	r5_avg = sum(r5) / predicted_images_size
+	r10_avg = sum(r10) / predicted_images_size
+	r20_avg = sum(r20) / predicted_images_size
+	r100_avg = sum(r100) / predicted_images_size
+	r1000_avg = sum(r1000) / predicted_images_size
+	return r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg
+
+
+def build_caption_vector_filename_dict(filename_caption_vector_tuples):
+	caption_vector_filename_dictionary = {}
+	total_filname_caption_vector = len(filename_caption_vector_tuples)
+	for i in range(total_filname_caption_vector):
+		filename, cap_vec = filename_caption_vector_tuples[i]
+		tuple_key = totuple(cap_vec)
+		caption_vector_filename_dictionary[tuple_key] = filename
+		if i % 1000 == 0 or i > total_filname_caption_vector - 5:
+			print_progress(i + 1, total_filname_caption_vector, prefix="Building cap vec -> filename dict", barLength=50)
+	return caption_vector_filename_dictionary
 
 
 def fetch_test_captions_vectors():
@@ -242,4 +296,33 @@ def fetch_test_captions_vectors():
 	return numpy.asarray(test_x)
 
 
-word2visualvec_main()
+def fiddle(architecture):
+	print("Fiddle")
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		model = architecture.model
+		# model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
+		min = 1
+		max = 0
+		test_caption_vector = fetch_test_captions_vectors()[:1000]
+		for i in range(len(test_caption_vector)):
+			correct_image_filename, correct_image_caption = fetch_filename_caption_tuple(test_caption_vector[i])
+			correct_image_vector = fetch_image_vector(correct_image_filename)
+			# caption_vector = numpy.reshape(test_caption_vector[i], (1, 300))
+			# image_vector = numpy.reshape(correct_image_vector, (1, 4096))
+			caption_vector = numpy.asarray(test_caption_vector[i:i + 1])
+			image_vector = numpy.asarray([correct_image_vector])
+			# print(model.summary())
+
+			cos = model.predict([caption_vector, image_vector])[0][0]
+			if cos > max:
+				max = cos
+			if cos < min:
+				min = cos
+
+		print("Min cos: ", min)
+		print("Max cos: ", max)
+
+
+main()

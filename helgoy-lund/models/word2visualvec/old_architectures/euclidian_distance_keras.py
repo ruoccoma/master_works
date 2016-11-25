@@ -57,7 +57,6 @@ validation_split = 0.2
 optimizer = "adam"
 loss = contrastive_loss
 
-
 def train():
 	caption_vectors, image_vectors, similarities = structure_and_store_embeddings(500)
 

@@ -146,10 +146,6 @@ def fetch_all_imagepaths():
 	return [f for f in listdir(dirpath) if isfile(join(dirpath, f))]
 
 
-def main(_):
+def run_inception():
 	maybe_download_and_extract()
 	convert_images_to_vectors()
-
-
-if __name__ == '__main__':
-	tf.app.run()

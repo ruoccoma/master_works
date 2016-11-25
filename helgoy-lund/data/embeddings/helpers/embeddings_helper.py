@@ -6,7 +6,8 @@ import pickle
 import settings
 from caption_database_helper import fetch_caption_count, fetch_all_filename_caption_vector_tuples
 from image_database_helper import fetch_all_image_names, fetch_all_image_vector_pairs
-from image_helpers import printProgress
+from list_helpers import print_progress
+from io_helper import load_pickle_file, save_pickle_file, check_pickle_file
 
 
 def structure_and_store_embeddings(size=-1):
@@ -61,7 +62,9 @@ def get_similarity_dictionary():
 def get_examples(all_image_names, image_name_caption_vector_dict, positive=True):
 	sorted_caption_vector_data = []
 	sorted_image_data = []
-	similiarity_dict = get_similarity_dictionary()
+	similiarity_dict = dict()
+	if not positive:
+		similiarity_dict = get_similarity_dictionary()
 	image_name_image_vector_dict = {key: value for (key, value) in fetch_all_image_vector_pairs()}
 	all_image_names_total = len(all_image_names)
 	for i in range(all_image_names_total):
@@ -75,31 +78,29 @@ def get_examples(all_image_names, image_name_caption_vector_dict, positive=True)
 		for caption_vector in caption_vectors:
 			sorted_image_data.append(image_vector)
 			sorted_caption_vector_data.append(caption_vector)
-		printProgress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
+		print_progress(i + 1, all_image_names_total, prefix='Generating data:', suffix='Complete', barLength=50)
 
-	return sorted_caption_vector_data, sorted_image_data, [0 if positive else 99999 for x in range(len(sorted_caption_vector_data))]
-
-
-def save_embeddings(dataset, size):
-	pickle_file = open(find_filepath(size), 'wb')
-	pickle.dump(dataset, pickle_file, protocol=2)
-	pickle_file.close()
+	return sorted_caption_vector_data, sorted_image_data, [1.0 if positive else -1.0 for x in range(len(sorted_caption_vector_data))]
 
 
-def find_filepath(size):
-	return settings.STORED_EMBEDDINGS_DIR + get_filename(size)
-
-
-def embedding_exists(size):
-	return os.path.isfile(find_filepath(size))
+def save_embeddings(dataset_to_store, size):
+	filepath = find_stored_embeddings_filepath(size)
+	save_pickle_file(dataset_to_store, filepath)
 
 
 def load_embeddings(size):
-	print("Loaded compatible dataset from local storage: %s" % get_filename(size))
-	pickle_file = open(find_filepath(size), 'rb')
-	dataset = pickle.load(pickle_file)
-	pickle_file.close()
-	return dataset
+	print("Loaded compatible dataset from local storage: %s" % get_stored_embeddings_filename(size))
+	filepath = find_stored_embeddings_filepath(size)
+	return load_pickle_file(filepath)
+
+
+def find_stored_embeddings_filepath(size):
+	return settings.STORED_EMBEDDINGS_DIR + get_stored_embeddings_filename(size)
+
+
+def embedding_exists(size):
+	filepath = find_stored_embeddings_filepath(size)
+	return check_pickle_file(filepath)
 
 
 def validate_database(num_images):
@@ -109,10 +110,10 @@ def validate_database(num_images):
 		raise IOError('No captions in databases')
 
 
-def get_filename(size):
+def get_stored_embeddings_filename(size):
 	if size == -1:
 		size = "all"
-	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_PREFIX, size)
+	return "%s-%s.picklefile" % (settings.STORED_EMBEDDINGS_NAME, size)
 
 
 if __name__ == "__main__":
