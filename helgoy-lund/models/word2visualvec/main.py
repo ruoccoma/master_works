@@ -44,19 +44,22 @@ def main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
-		print("Chosen architecture %s" % ARCHITECTURE.get_name())
+		print(ARCHITECTURE.get_name())
 		train(ARCHITECTURE)
 		if "eval" in sys.argv:
 			evaluate(ARCHITECTURE)
-		if "debug" in sys.argv:
-			debug(ARCHITECTURE)
 		if "caption_query" in sys.argv:
 			caption_query(ARCHITECTURE)
 		if "sample_image_query" in sys.argv:
 			sample_image_query(ARCHITECTURE)
+		if "fiddle" in sys.argv:
+			fiddle(ARCHITECTURE)
 
 
 def train(architecture):
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(architecture.get_name())
+	result_file.close()
 	if is_saved(architecture):
 		print("Architecture already trained")
 	else:
@@ -66,33 +69,32 @@ def train(architecture):
 
 
 def evaluate(architecture):
-	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(architecture.get_name())
+	result_file.close()
 
-		print("Starting evaluation of model...")
-		time_start = time.time()
-		r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(architecture.prediction_model)
-		time_end = time.time()
+	load_model(architecture)
+	architecture.generate_prediction_model()
 
-		# test_model(ARCHITECTURE.prediction_model)
+	print("Starting evaluation of model...")
+	time_start = time.time()
+	r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg = evaluate_model(architecture.prediction_model)
+	time_end = time.time()
 
-		result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
-		recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
-		(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+	# test_model(ARCHITECTURE.prediction_model)
 
-		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-		file.write(architecture.get_name())
-		file.write(result_header)
-		file.write(recall_results)
-		file.close()
+	result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+	recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
+	(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
-		print(result_header)
-		print(recall_results)
-		print("\n")
-	else:
-		print("Architecture not trained")
-		print(architecture.get_name())
+	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+	result_file.write(result_header)
+	result_file.write(recall_results)
+	result_file.close()
+
+	print(result_header)
+	print(recall_results)
+	print("\n")
 
 
 def caption_query(architecture):
@@ -294,12 +296,12 @@ def fetch_test_captions_vectors():
 	return numpy.asarray(test_x)
 
 
-def debug(ARCHITECTURE):
-	print("Debugging")
-	if is_saved(ARCHITECTURE):
-		load_model(ARCHITECTURE)
-		ARCHITECTURE.generate_prediction_model()
-		model = ARCHITECTURE.model
+def fiddle(architecture):
+	print("Fiddle")
+	if is_saved(architecture):
+		load_model(architecture)
+		architecture.generate_prediction_model()
+		model = architecture.model
 		# model = Model(input=base_model.input, output=base_model.get_layer("Cosine_layer").output)
 		min = 1
 		max = 0
