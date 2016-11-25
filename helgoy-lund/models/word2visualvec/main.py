@@ -74,6 +74,7 @@ def evaluate(architecture):
 		(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 		file = open(settings.RESULT_TEXTFILE_PATH, 'a')
+		file.write(architecture.get_name())
 		file.write(result_header)
 		file.write(recall_results)
 		file.close()
