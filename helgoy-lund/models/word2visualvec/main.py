@@ -58,7 +58,7 @@ def main():
 
 def train(architecture):
 	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-	result_file.write(architecture.get_name())
+	result_file.write(architecture.get_name() + "\n")
 	result_file.close()
 	if is_saved(architecture):
 		print("Architecture already trained")
@@ -70,7 +70,7 @@ def train(architecture):
 
 def evaluate(architecture):
 	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-	result_file.write(architecture.get_name())
+	result_file.write(architecture.get_name() + "\n")
 	result_file.close()
 
 	load_model(architecture)
