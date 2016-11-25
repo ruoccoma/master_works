@@ -54,4 +54,8 @@ class AbstractWord2VisualVecArchitecture:
 		pass
 
 	def get_parameter_string(self):
-		return "%s-%s-%s-%s" % (self.epochs, self.batch_size, self.optimizer, self.loss.__name__)
+		if isinstance(self.loss, str):
+			loss_name = self.loss
+		else:
+			loss_name = self.loss.__name__
+		return "%s-%s-%s-%s" % (self.epochs, self.batch_size, self.optimizer, loss_name)
