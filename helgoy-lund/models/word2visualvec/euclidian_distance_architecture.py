@@ -149,30 +149,25 @@ class CosineProximityEuclidianDistance(EuclidanDistanceArchitecture):
 		super(EuclidanDistanceArchitecture, self).__init__()
 		self.loss = "cosine_proximity"
 
-# class MSENoAbsEuclidianDistance(MSEEuclidianDistance):
-# 	def __init__(self,
-# 				 epochs=50,
-# 				 batch_size=128):
-# 		super(EuclidanDistanceArchitecture, self).__init__()
-# 		self.epochs = epochs
-# 		self.batch_size = batch_size
-# 		self.loss = "mse"
-#
-# 	@staticmethod
-# 	def get_caption_model():
-# 		caption_inputs = Input(shape=(300,), name="Caption_input")
-# 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
-# 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
-# 		caption_model = Dense(500, activation='relu')(caption_model)
-# 		caption_model = Dense(800, activation='relu')(caption_model)
-# 		caption_model = Dense(1024, activation='relu')(caption_model)
-# 		caption_model = Dense(4096, activation='relu')(caption_model)
-# 		return caption_inputs, caption_model
-#
-# 	def generate_model(self):
-# 		image_inputs = Input(shape=(4096,), name="Image_input")
-#
-# 		caption_inputs, caption_model = self.get_caption_model()
-#
-# 		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
-# 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
+class NoAbsEuclidianDistance(MSEEuclidianDistance):
+	def __init__(self):
+		super(EuclidanDistanceArchitecture, self).__init__()
+
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+	def generate_model(self):
+		image_inputs = Input(shape=(4096,), name="Image_input")
+
+		caption_inputs, caption_model = self.get_caption_model()
+
+		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
+		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
