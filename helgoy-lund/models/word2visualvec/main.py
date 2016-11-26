@@ -37,7 +37,7 @@ from word_averaging import create_caption_vector
 # 				 PoissonEuclidianDistance(),
 # 				 CosineProximityEuclidianDistance()]
 
-ARCHITECTURES = [NoAbsEuclidianDistance]
+ARCHITECTURES = [NoAbsEuclidianDistance()]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
