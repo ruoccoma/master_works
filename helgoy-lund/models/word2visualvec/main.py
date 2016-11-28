@@ -16,7 +16,7 @@ import io_helper
 io_helper.create_missing_folders()
 
 from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
-from euclidian_distance_architecture import NoAbsEuclidianDistance, EuclidanDistanceArchitecture, MSEEuclidianDistance, MAEEuclidianDistance, HingeEuclidianDistance, SquaredHingeEuclidianDistance, MAPEEuclidianDistance, MSLEEuclidianDistance, BinaryCrossentropyEuclidianDistance, KLBEuclidianDistance, PoissonEuclidianDistance, CosineProximityEuclidianDistance
+from euclidian_distance_architecture import NoAbsEuclidianDistance, EuclidanDistanceArchitecture, EightLayerEuclidianDistance, OneLayerEuclidianDistance
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
@@ -25,19 +25,11 @@ from image_helpers import show_image
 from list_helpers import split_list, find_n_most_similar_images, compare_vectors, print_progress
 from word_averaging import create_caption_vector
 
-# ARCHITECTURES = [EuclidanDistanceArchitecture(),
-# 				 MSEEuclidianDistance(),
-# 				 MAEEuclidianDistance(),
-# 				 HingeEuclidianDistance(),
-# 				 SquaredHingeEuclidianDistance(),
-# 				 MAPEEuclidianDistance(),
-# 				 MSLEEuclidianDistance(),
-# 				 BinaryCrossentropyEuclidianDistance(),
-# 				 KLBEuclidianDistance(),
-# 				 PoissonEuclidianDistance(),
-# 				 CosineProximityEuclidianDistance()]
 
-ARCHITECTURES = [NoAbsEuclidianDistance()]
+ARCHITECTURES = [NoAbsEuclidianDistance(),
+				 EightLayerEuclidianDistance(),
+				 OneLayerEuclidianDistance()]
+
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 

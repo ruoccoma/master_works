@@ -90,74 +90,11 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 		self.prediction_model = caption_model
 
 
-class MSEEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "mse"
-
-
-class MAEEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "mae"
-
-
-class HingeEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "hinge"
-
-
-class SquaredHingeEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "squared_hinge"
-
-
-class MAPEEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "mape"
-
-
-class MSLEEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "msle"
-
-
-class BinaryCrossentropyEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "binary_crossentropy"
-
-
-class KLBEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "kld"
-
-
-class PoissonEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "poisson"
-
-
-class CosineProximityEuclidianDistance(EuclidanDistanceArchitecture):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-		self.loss = "cosine_proximity"
-
-class NoAbsEuclidianDistance(MSEEuclidianDistance):
-	def __init__(self):
-		super(EuclidanDistanceArchitecture, self).__init__()
-
+class NoAbsEuclidianDistance(EuclidanDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
-		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
 		caption_model = Dense(500, activation='relu')(caption_model)
 		caption_model = Dense(800, activation='relu')(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
@@ -171,3 +108,28 @@ class NoAbsEuclidianDistance(MSEEuclidianDistance):
 
 		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
+
+class EightLayerEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class OneLayerEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		return caption_inputs, caption_model
