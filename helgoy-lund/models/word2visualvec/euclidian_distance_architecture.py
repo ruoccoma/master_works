@@ -1,7 +1,7 @@
 import numpy as np
 from keras import backend as K
 from keras.engine import Input, Model
-from keras.layers import Dense, Lambda, Dropout
+from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
 
 from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
@@ -90,46 +90,64 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 		self.prediction_model = caption_model
 
 
-class NoAbsEuclidianDistance(EuclidanDistanceArchitecture):
-	@staticmethod
-	def get_caption_model():
-		caption_inputs = Input(shape=(300,), name="Caption_input")
-		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
-		caption_model = Dense(500, activation='relu')(caption_model)
-		caption_model = Dense(800, activation='relu')(caption_model)
-		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dense(4096, activation='relu')(caption_model)
-		return caption_inputs, caption_model
-
-	def generate_model(self):
-		image_inputs = Input(shape=(4096,), name="Image_input")
-
-		caption_inputs, caption_model = self.get_caption_model()
-
-		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
-		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
-
-class EightLayerEuclidianDistance(EuclidanDistanceArchitecture):
-	@staticmethod
-	def get_caption_model():
-		caption_inputs = Input(shape=(300,), name="Caption_input")
-		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
-		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
-		caption_model = Dense(500, activation='relu')(caption_model)
-		caption_model = Dense(500, activation='relu')(caption_model)
-		caption_model = Dense(800, activation='relu')(caption_model)
-		caption_model = Dense(800, activation='relu')(caption_model)
-		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dense(4096, activation='relu')(caption_model)
-		caption_model = Dense(4096, activation='relu')(caption_model)
-		return caption_inputs, caption_model
-
-class OneLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
 		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+
+class TwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+
+class TwoLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = BatchNormalization()(caption_inputs)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = BatchNormalization()(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+
+class SixLayerEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class SixLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = BatchNormalization()(caption_inputs)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = BatchNormalization()(caption_model)
+		caption_model = Dense(800, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = BatchNormalization()(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(4096, activation='relu')(caption_model)
 		return caption_inputs, caption_model

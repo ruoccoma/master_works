@@ -16,7 +16,7 @@ import io_helper
 io_helper.create_missing_folders()
 
 from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
-from euclidian_distance_architecture import NoAbsEuclidianDistance, EuclidanDistanceArchitecture, EightLayerEuclidianDistance, OneLayerEuclidianDistance
+from euclidian_distance_architecture import SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance, TwoLayerBatchNormEuclidianDistance, TwoLayerEuclidianDistance, NoNormTwoLayerEuclidianDistance, EuclidanDistanceArchitecture
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from caption_database_helper import fetch_filename_caption_tuple, fetch_all_filename_caption_vector_tuples
@@ -26,9 +26,11 @@ from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 
 
-ARCHITECTURES = [NoAbsEuclidianDistance(),
-				 EightLayerEuclidianDistance(),
-				 OneLayerEuclidianDistance()]
+ARCHITECTURES = [NoNormTwoLayerEuclidianDistance,
+				 TwoLayerEuclidianDistance(),
+				 TwoLayerBatchNormEuclidianDistance(),
+				 SixLayerEuclidianDistance(),
+				 SixLayerBatchNormEuclidianDistance()]
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
@@ -59,6 +61,7 @@ def train(architecture):
 	else:
 		print("Training architecture...")
 		architecture.train()
+		print(architecture.model.summary())
 		save_model_to_file(architecture.model, architecture)
 
 
