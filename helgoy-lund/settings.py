@@ -26,7 +26,7 @@ add_modules_to_sys_path(ROOT_DIR)
 IMAGE_EMBEDDING_METHOD = "vgg"
 
 # word2vec | glove
-WORD_EMBEDDING_METHOD = "word2vec"
+WORD_EMBEDDING_METHOD = "glove"
 
 # Flickr8k | Flickr30k
 DATASET = "Flickr30k"
