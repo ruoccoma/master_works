@@ -26,7 +26,7 @@ from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 
 
-ARCHITECTURES = [NoNormTwoLayerEuclidianDistance,
+ARCHITECTURES = [NoNormTwoLayerEuclidianDistance(),
 				 TwoLayerEuclidianDistance(),
 				 TwoLayerBatchNormEuclidianDistance(),
 				 SixLayerEuclidianDistance(),
