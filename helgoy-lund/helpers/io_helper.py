@@ -6,7 +6,7 @@ import settings
 def save_pickle_file(data, name):
 	print("Saving pickle file: %s" % name)
 	f = open(name, "wb")
-	pickle.dump(data, f)
+	pickle.dump(data, f, protocol=2)
 	f.close()
 
 

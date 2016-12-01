@@ -10,7 +10,7 @@ from caption_database_helper import fetch_filename_caption_tuple, fetch_all_file
 from embeddings_helper import structure_and_store_embeddings
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from image_helpers import show_image
-from io_helper import save_pickle_file
+from io_helper import save_pickle_file, load_pickle_file
 from list_helpers import find_n_most_similar_images, compare_vectors, print_progress, totuple, split_list
 from word_averaging import create_caption_vector
 
@@ -143,7 +143,18 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		self.generate_prediction_model()
 		caption_vectors = numpy.asarray(caption_vectors)
 		pred_image_vectors = self.prediction_model.predict(caption_vectors)
-		return [filenames, pred_image_vectors]
+		total_count = len(filenames)
+		half = int(total_count / 2)
+		first_embedding_tuple = filenames[:half], pred_image_vectors[:half]
+		last_embedding_tuple = filenames[half:], pred_image_vectors[half:]
+		save_pickle_file(first_embedding_tuple, "model_embeddings/%s-%s.pickle" % ("1", self.get_name()))
+		save_pickle_file(last_embedding_tuple, "model_embeddings/%s-%s.pickle" % ("2", self.get_name()))
+
+	def get_training_data_embeddings(self):
+		first_filenames, first_image_vectors = load_pickle_file("model_embeddings/%s-%s.pickle" % ("1", self.get_name()))
+		last_filenames, last_image_vectors = save_pickle_file("model_embeddings/%s-%s.pickle" % ("2", self.get_name()))
+		return first_filenames + last_filenames, first_image_vectors + last_image_vectors
+
 
 	@abstractmethod
 	def train(self):
