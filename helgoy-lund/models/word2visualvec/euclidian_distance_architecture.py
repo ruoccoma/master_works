@@ -4,7 +4,7 @@ from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
 
-from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
+from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 
@@ -27,13 +27,13 @@ def eucl_dist_output_shape(shapes):
 	return shape1[0], 1
 
 # vgg_w2v r1000: 0.386
-class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
+class EuclidianDistanceArchitecture(AbstractTextToImageArchitecture):
 	def __init__(self,
 				 epochs=100,
 				 batch_size=256,
 				 validation_split=0.2,
 				 optimizer="adam"):
-		super(EuclidanDistanceArchitecture, self).__init__()
+		super(EuclidianDistanceArchitecture, self).__init__()
 		self.epochs = epochs
 		self.batch_size = batch_size
 		self.validation_split = validation_split
@@ -89,8 +89,26 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 
 		self.prediction_model = caption_model
 
-# vgg_w2v r1000: 0.46
-class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
+
+class TanhEuclidianDistance(EuclidianDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Dense(2048, activation='tanh')(caption_model)
+		caption_model = Dense(4096, activation='tanh')(caption_model)
+		return caption_inputs, caption_model
+	
+	def generate_model(self):
+		image_inputs = Input(shape=(4096,), name="Image_input")
+
+		caption_inputs, caption_model = self.get_caption_model()
+
+		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
+		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
+
+
+class NoNormTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -101,7 +119,7 @@ class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class TwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class TwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -112,7 +130,7 @@ class TwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class TwoLayerDropoutEuclidianDistance(EuclidanDistanceArchitecture):
+class TwoLayerDropoutEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -124,7 +142,7 @@ class TwoLayerDropoutEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class TwoLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
+class TwoLayerBatchNormEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -135,7 +153,7 @@ class TwoLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class ThreeLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class ThreeLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -147,7 +165,7 @@ class ThreeLayerEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class FiveLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class FiveLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -161,7 +179,7 @@ class FiveLayerEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class SixLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class SixLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -176,7 +194,7 @@ class SixLayerEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class SixLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
+class SixLayerBatchNormEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
@@ -192,7 +210,7 @@ class SixLayerBatchNormEuclidianDistance(EuclidanDistanceArchitecture):
 		return caption_inputs, caption_model
 
 
-class NoAbsEuclidianDistance(EuclidanDistanceArchitecture):
+class NoAbsEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")

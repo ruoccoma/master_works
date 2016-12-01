@@ -3,7 +3,6 @@ import os
 import sys
 import time
 
-from text2image_evaluation import predict_text2image_model, test_text2image_model, evaluate_text2image_model
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
@@ -12,15 +11,12 @@ import settings
 import io_helper
 io_helper.create_missing_folders()
 
-from reverse_euclidian_distance_architecture import ReversedEuclidanDistanceArchitecture
-from euclidian_distance_architecture import FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
+from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArchitecture
+
+from euclidian_distance_architecture import EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
 	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
 
-ARCHITECTURES = [ReversedEuclidanDistanceArchitecture(),
-				 ThreeLayerEuclidianDistance(),
-				 FiveLayerEuclidianDistance(),
-				 SixLayerEuclidianDistance(),
-				 SixLayerBatchNormEuclidianDistance()]
+ARCHITECTURES = []
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"

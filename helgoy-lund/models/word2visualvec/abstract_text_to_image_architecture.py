@@ -17,7 +17,7 @@ from word_averaging import create_caption_vector
 class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 	__metaclass__ = ABCMeta
 
-	def predict_text2image_model(self):
+	def predict(self):
 		captions = []
 		while 1:
 			# TODO input not working in python 2
@@ -40,7 +40,7 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 				print(i + 1, filename)
 			print("")
 
-	def test_text2image_model(self):
+	def test(self):
 		test_size = 1
 		test_caption_vectors = fetch_test_captions_vectors()
 		numpy.random.shuffle(test_caption_vectors)
@@ -75,7 +75,7 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 			print("")
 			show_image(settings.IMAGE_DIR + correct_image_filename, "QUERY: " + correct_image_caption)
 
-	def evaluate_text2image_model(self):
+	def evaluate(self):
 		r1 = []
 		r5 = []
 		r10 = []
@@ -84,7 +84,7 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		r1000 = []
 
 		te_ca_caption_vectors = fetch_test_captions_vectors()
-		predicted_image_vectors = self.model.predict(te_ca_caption_vectors)
+		predicted_image_vectors = self.prediction_model.predict(te_ca_caption_vectors)
 
 		tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
 		tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]

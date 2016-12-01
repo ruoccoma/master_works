@@ -4,7 +4,7 @@ from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
 
-from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
+from abstract_image_to_text_architecture import AbstractImageToTextArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 
@@ -28,13 +28,13 @@ def eucl_dist_output_shape(shapes):
 
 
 # vgg_w2v r1000: 0.386
-class ReversedEuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
+class ReversedEuclidianDistanceArchitecture(AbstractImageToTextArchitecture):
 	def __init__(self,
 				 epochs=100,
 				 batch_size=256,
 				 validation_split=0.2,
 				 optimizer="adam"):
-		super(ReversedEuclidanDistanceArchitecture, self).__init__()
+		super(ReversedEuclidianDistanceArchitecture, self).__init__()
 		self.epochs = epochs
 		self.batch_size = batch_size
 		self.validation_split = validation_split
