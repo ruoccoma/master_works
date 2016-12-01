@@ -11,7 +11,6 @@ import io_helper
 io_helper.create_missing_folders()
 
 from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArchitecture
-
 from euclidian_distance_architecture import EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
 	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
 
