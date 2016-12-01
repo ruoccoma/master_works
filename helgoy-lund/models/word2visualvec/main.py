@@ -9,13 +9,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
-
 import settings
 
 import io_helper
 io_helper.create_missing_folders()
 
 from cosine_similarity_architecture import CosineSimilarityArchitecture, FiveLayerCosineSimilarityArchitecture
+from reverse_euclidian_distance_architecture import ReversedEuclidanDistanceArchitecture
 from euclidian_distance_architecture import FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, TwoLayerDropoutEuclidianDistance, SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance, TwoLayerBatchNormEuclidianDistance, TwoLayerEuclidianDistance, NoNormTwoLayerEuclidianDistance, EuclidanDistanceArchitecture
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
@@ -26,10 +26,7 @@ from list_helpers import split_list, find_n_most_similar_images, compare_vectors
 from word_averaging import create_caption_vector
 
 
-ARCHITECTURES = [NoNormTwoLayerEuclidianDistance(),
-				 TwoLayerEuclidianDistance(),
-				 TwoLayerDropoutEuclidianDistance(),
-				 TwoLayerBatchNormEuclidianDistance(),
+ARCHITECTURES = [ReversedEuclidanDistanceArchitecture(),
 				 ThreeLayerEuclidianDistance(),
 				 FiveLayerEuclidianDistance(),
 				 SixLayerEuclidianDistance(),
