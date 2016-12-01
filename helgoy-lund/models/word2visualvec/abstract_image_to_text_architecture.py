@@ -148,6 +148,9 @@ class AbstractImageToTextArchitecture(AbstractWord2VisualVecArchitecture):
 	def generate_model(self):
 		pass
 
+	def generate_training_data_embeddings(self):
+		pass
+
 
 def build_caption_vector_filename_dict(filename_caption_vector_tuples):
 	caption_vector_filename_dictionary = {}

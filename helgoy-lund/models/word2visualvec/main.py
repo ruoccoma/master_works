@@ -3,7 +3,6 @@ import os
 import sys
 import time
 
-
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
@@ -34,6 +33,8 @@ def main():
 			caption_query(ARCHITECTURE)
 		if "sample_image_query" in sys.argv:
 			sample_image_query(ARCHITECTURE)
+		if "embed_training_captions" in sys.argv:
+			embed_training_captions(ARCHITECTURE)
 
 
 def train(architecture):
@@ -79,23 +80,20 @@ def evaluate(architecture):
 
 
 def caption_query(architecture):
-	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
-		architecture.predict()
-	else:
-		print("Architecture not trained")
-		print(architecture.get_name())
+	load_model(architecture)
+	architecture.generate_prediction_model()
+	architecture.predict()
 
 
 def sample_image_query(architecture):
-	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
-		architecture.test()
-	else:
-		print("Architecture not trained")
-		print(architecture.get_name())
+	load_model(architecture)
+	architecture.generate_prediction_model()
+	architecture.test()
+
+
+def embed_training_captions(architecture):
+	load_model(architecture)
+	architecture.generate_training_data_embeddings()
 
 
 def save_model_to_file(model, architecture):

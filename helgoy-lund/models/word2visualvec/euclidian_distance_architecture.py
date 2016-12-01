@@ -3,6 +3,7 @@ from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
+from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 
 from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from embeddings_helper import structure_and_store_embeddings
@@ -25,6 +26,7 @@ def euclidean_distance(vects):
 def eucl_dist_output_shape(shapes):
 	shape1, shape2 = shapes
 	return shape1[0], 1
+
 
 # vgg_w2v r1000: 0.386
 class EuclidianDistanceArchitecture(AbstractTextToImageArchitecture):
@@ -52,12 +54,12 @@ class EuclidianDistanceArchitecture(AbstractTextToImageArchitecture):
 
 		# plot(self.model, 'results/%s.png' % self.get_name())
 		self.model.fit([caption_vectors, image_vectors],
-					   similarities,
-					   batch_size=self.batch_size,
-					   nb_epoch=self.epochs,
-					   callbacks=self.callbacks,
-					   shuffle=True,
-					   validation_split=self.validation_split)
+		               similarities,
+		               batch_size=self.batch_size,
+		               nb_epoch=self.epochs,
+		               callbacks=self.callbacks,
+		               shuffle=True,
+		               validation_split=self.validation_split)
 
 	def generate_model(self):
 		image_inputs = Input(shape=(4096,), name="Image_input")
@@ -98,7 +100,7 @@ class TanhEuclidianDistance(EuclidianDistanceArchitecture):
 		caption_model = Dense(2048, activation='tanh')(caption_model)
 		caption_model = Dense(4096, activation='tanh')(caption_model)
 		return caption_inputs, caption_model
-	
+
 	def generate_model(self):
 		image_inputs = Input(shape=(4096,), name="Image_input")
 
@@ -108,7 +110,8 @@ class TanhEuclidianDistance(EuclidianDistanceArchitecture):
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 
-class NoNormTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
+# vgg_w2v r1000: 0.46
+class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
