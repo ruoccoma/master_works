@@ -87,14 +87,15 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		te_ca_caption_vectors = fetch_test_captions_vectors()
 		predicted_image_vectors = self.prediction_model.predict(te_ca_caption_vectors)
 
-		tr_im_filenames, tr_im_image_vectors = self.generate_training_data_embeddings()
+		tr_im_filenames, tr_im_image_vectors = self.get_training_data_embeddings()
+
+		similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
 
 		tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
 
 		tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
 
 		print("Creating cosine similarity matrix...")
-		similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
 		predicted_images_size = len(predicted_image_vectors)
 		total_image_size = len(tr_im_image_vectors)
 		for predicted_image_index in range(predicted_images_size):
@@ -150,8 +151,8 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 
 	def get_training_data_embeddings(self):
 		first_filenames, first_image_vectors = load_pickle_file("model_embeddings/%s-%s.pickle" % ("1", self.get_name()))
-		last_filenames, last_image_vectors = save_pickle_file("model_embeddings/%s-%s.pickle" % ("2", self.get_name()))
-		return first_filenames + last_filenames, first_image_vectors + last_image_vectors
+		last_filenames, last_image_vectors = load_pickle_file("model_embeddings/%s-%s.pickle" % ("2", self.get_name()))
+		return numpy.append(first_filenames, last_filenames), numpy.append(first_image_vectors, last_image_vectors, axis=0)
 
 
 	@abstractmethod
