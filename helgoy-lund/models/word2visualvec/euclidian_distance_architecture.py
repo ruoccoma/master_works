@@ -111,7 +111,7 @@ class TanhEuclidianDistance(EuclidianDistanceArchitecture):
 
 
 # vgg_w2v r1000: 0.46
-class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):
+class NoNormTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(300,), name="Caption_input")
