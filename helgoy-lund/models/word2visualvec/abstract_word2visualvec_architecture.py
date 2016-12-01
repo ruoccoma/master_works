@@ -48,6 +48,10 @@ class AbstractWord2VisualVecArchitecture:
 		pass
 
 	@abstractmethod
+	def generate_training_data_embeddings(self):
+		pass
+
+	@abstractmethod
 	def evaluate(self):
 		pass
 

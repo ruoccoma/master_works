@@ -3,8 +3,7 @@ from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
-
-from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
+from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 
@@ -26,13 +25,14 @@ def eucl_dist_output_shape(shapes):
 	shape1, shape2 = shapes
 	return shape1[0], 1
 
+
 # vgg_w2v r1000: 0.386
-class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
+class EuclidanDistanceArchitecture(AbstractTextToImageArchitecture):
 	def __init__(self,
-				 epochs=100,
-				 batch_size=256,
-				 validation_split=0.2,
-				 optimizer="adam"):
+	             epochs=100,
+	             batch_size=256,
+	             validation_split=0.2,
+	             optimizer="adam"):
 		super(EuclidanDistanceArchitecture, self).__init__()
 		self.epochs = epochs
 		self.batch_size = batch_size
@@ -52,12 +52,12 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 
 		# plot(self.model, 'results/%s.png' % self.get_name())
 		self.model.fit([caption_vectors, image_vectors],
-					   similarities,
-					   batch_size=self.batch_size,
-					   nb_epoch=self.epochs,
-					   callbacks=self.callbacks,
-					   shuffle=True,
-					   validation_split=self.validation_split)
+		               similarities,
+		               batch_size=self.batch_size,
+		               nb_epoch=self.epochs,
+		               callbacks=self.callbacks,
+		               shuffle=True,
+		               validation_split=self.validation_split)
 
 	def generate_model(self):
 		image_inputs = Input(shape=(4096,), name="Image_input")
@@ -88,6 +88,7 @@ class EuclidanDistanceArchitecture(AbstractWord2VisualVecArchitecture):
 		caption_model.compile(optimizer=self.optimizer, loss=self.loss)
 
 		self.prediction_model = caption_model
+
 
 # vgg_w2v r1000: 0.46
 class NoNormTwoLayerEuclidianDistance(EuclidanDistanceArchitecture):

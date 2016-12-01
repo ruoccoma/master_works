@@ -10,6 +10,7 @@ from caption_database_helper import fetch_filename_caption_tuple, fetch_all_file
 from embeddings_helper import structure_and_store_embeddings
 from image_database_helper import fetch_image_vector, fetch_all_image_vector_pairs
 from image_helpers import show_image
+from io_helper import save_pickle_file
 from list_helpers import find_n_most_similar_images, compare_vectors, print_progress, totuple, split_list
 from word_averaging import create_caption_vector
 
@@ -134,6 +135,15 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		r100_avg = sum(r100) / predicted_images_size
 		r1000_avg = sum(r1000) / predicted_images_size
 		return r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg
+
+	def generate_training_data_embeddings(self):
+		tr_ca_vector_tuples = fetch_all_filename_caption_vector_tuples()
+		filenames = [x[0] for x in tr_ca_vector_tuples]
+		caption_vectors = [x[1] for x in tr_ca_vector_tuples]
+		self.generate_prediction_model()
+		caption_vectors = numpy.asarray(caption_vectors)
+		pred_image_vectors = self.prediction_model.predict(caption_vectors)
+		return [filenames, pred_image_vectors]
 
 	@abstractmethod
 	def train(self):

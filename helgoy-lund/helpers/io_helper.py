@@ -6,7 +6,7 @@ import settings
 def save_pickle_file(data, name):
 	print("Saving pickle file: %s" % name)
 	f = open(name, "wb")
-	pickle.dump(data, f, protocol=2)
+	pickle.dump(data, f)
 	f.close()
 
 
@@ -29,7 +29,8 @@ def create_missing_folders():
 	               "data/embeddings/stored-embeddings",
 	               "models/word2vec/embeddings",
 	               "models/word2visualvec/results",
-	               "models/word2visualvec/stored_models"]
+	               "models/word2visualvec/stored_models",
+	               "models/word2visualvec/model_embeddings"]
 
 	for directory in directories:
 		complete_path = settings.ROOT_DIR + directory

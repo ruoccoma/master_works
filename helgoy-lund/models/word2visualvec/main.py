@@ -3,8 +3,6 @@ import os
 import sys
 import time
 
-from text2image_evaluation import predict_text2image_model, test_text2image_model, evaluate_text2image_model
-
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
@@ -14,14 +12,9 @@ io_helper.create_missing_folders()
 
 from reverse_euclidian_distance_architecture import ReversedEuclidanDistanceArchitecture
 from euclidian_distance_architecture import FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
-	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
+	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance, TwoLayerEuclidianDistance
 
-ARCHITECTURES = [ReversedEuclidanDistanceArchitecture(),
-				 ThreeLayerEuclidianDistance(),
-				 FiveLayerEuclidianDistance(),
-				 SixLayerEuclidianDistance(),
-				 SixLayerBatchNormEuclidianDistance()]
-
+ARCHITECTURES = [TwoLayerEuclidianDistance()]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
@@ -38,6 +31,8 @@ def main():
 			caption_query(ARCHITECTURE)
 		if "sample_image_query" in sys.argv:
 			sample_image_query(ARCHITECTURE)
+		if "embed_training_captions" in sys.argv:
+			embed_training_captions(ARCHITECTURE)
 
 
 def train(architecture):
@@ -83,23 +78,20 @@ def evaluate(architecture):
 
 
 def caption_query(architecture):
-	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
-		architecture.predict()
-	else:
-		print("Architecture not trained")
-		print(architecture.get_name())
+	load_model(architecture)
+	architecture.generate_prediction_model()
+	architecture.predict()
 
 
 def sample_image_query(architecture):
-	if is_saved(architecture):
-		load_model(architecture)
-		architecture.generate_prediction_model()
-		architecture.test()
-	else:
-		print("Architecture not trained")
-		print(architecture.get_name())
+	load_model(architecture)
+	architecture.generate_prediction_model()
+	architecture.test()
+
+
+def embed_training_captions(architecture):
+	load_model(architecture)
+	architecture.generate_training_data_embeddings()
 
 
 def save_model_to_file(model, architecture):
