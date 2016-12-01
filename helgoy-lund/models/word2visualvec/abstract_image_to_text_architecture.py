@@ -86,56 +86,54 @@ class AbstractImageToTextArchitecture(AbstractWord2VisualVecArchitecture):
 		r100 = []
 		r1000 = []
 
-		te_ca_caption_vectors = fetch_test_captions_vectors()
-		predicted_image_vectors = self.model.predict(te_ca_caption_vectors)
-
-		tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
-		tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
-		tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
+		te_ca_vectors, te_ca_image_vectors = fetch_test_image_vectors()
+		predicted_caption_vectors = self.prediction_model.predict(te_ca_image_vectors)
 
 		tr_ca_caption_vector_tuples = fetch_all_filename_caption_vector_tuples()
+		tr_ca_filenames = [x[0] for x in tr_ca_caption_vector_tuples]
+		tr_ca_caption_vectors = [x[1] for x in tr_ca_caption_vector_tuples]
 
 		tr_ca_caption_vector_filename_dictionary = build_caption_vector_filename_dict(tr_ca_caption_vector_tuples)
 
 		print("Creating cosine similarity matrix...")
-		similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
-		predicted_images_size = len(predicted_image_vectors)
-		total_image_size = len(tr_im_image_vectors)
-		for predicted_image_index in range(predicted_images_size):
+		similarity_matrix = cosine_similarity(predicted_caption_vectors, tr_ca_caption_vectors)
+		predicted_captions_size = len(predicted_caption_vectors)
+		total_caption_size = len(tr_ca_caption_vectors)
+		for predicted_caption_index in range(predicted_captions_size):
 			similarities = []
-			for i in range(total_image_size):
-				tr_filename = tr_im_filenames[i]
-				similarities.append((tr_filename, similarity_matrix[predicted_image_index][i]))
+			for i in range(total_caption_size):
+				tr_filename = tr_ca_filenames[i]
+				similarities.append((tr_filename, similarity_matrix[predicted_caption_index][i]))
 			similarities.sort(key=lambda s: s[1], reverse=True)
 
-			test_caption_vector = te_ca_caption_vectors[predicted_image_index]
+			test_caption_vector = te_ca_vectors[predicted_caption_index]
 			test_caption_vector_key = totuple(test_caption_vector)
 			test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
 
-			for top_image_index in range(1000):
-				comparison_filename = similarities[top_image_index][0]
+			for top_caption_index in range(1000):
+				comparison_filename = similarities[top_caption_index][0]
 				if test_filename == comparison_filename:
-					if top_image_index < 1000:
+					if top_caption_index < 1000:
 						r1000.append(1.0)
-					if top_image_index < 100:
+					if top_caption_index < 100:
 						r100.append(1.0)
-					if top_image_index < 20:
+					if top_caption_index < 20:
 						r20.append(1.0)
-					if top_image_index < 10:
+					if top_caption_index < 10:
 						r10.append(1.0)
-					if top_image_index < 5:
+					if top_caption_index < 5:
 						r5.append(1.0)
-					if top_image_index == 0:
+					if top_caption_index == 0:
 						r1.append(1.0)
 
-			print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
+			print_progress(predicted_caption_index + 1, predicted_captions_size, prefix="Calculating recall")
 
-		r1_avg = sum(r1) / predicted_images_size
-		r5_avg = sum(r5) / predicted_images_size
-		r10_avg = sum(r10) / predicted_images_size
-		r20_avg = sum(r20) / predicted_images_size
-		r100_avg = sum(r100) / predicted_images_size
-		r1000_avg = sum(r1000) / predicted_images_size
+		r1_avg = sum(r1) / predicted_captions_size
+		r5_avg = sum(r5) / predicted_captions_size
+		r10_avg = sum(r10) / predicted_captions_size
+		r20_avg = sum(r20) / predicted_captions_size
+		r100_avg = sum(r100) / predicted_captions_size
+		r1000_avg = sum(r1000) / predicted_captions_size
 		return r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg
 
 	@abstractmethod
@@ -167,11 +165,13 @@ def build_caption_vector_filename_dict(filename_caption_vector_tuples):
 	return caption_vector_filename_dictionary
 
 
-def fetch_test_captions_vectors():
-	data_x, _, _ = structure_and_store_embeddings()
+def fetch_test_image_vectors():
+	# data_x, _, _ = structure_and_store_embeddings()
+	caption_vectors, image_vectors, _ = structure_and_store_embeddings()
 	training_test_ratio = 0.8
-	_, test_x = split_list(data_x, training_test_ratio)
-	return numpy.asarray(test_x)
+	_, image_vectors = split_list(image_vectors, training_test_ratio)
+	_, caption_vectors = split_list(caption_vectors, training_test_ratio)
+	return numpy.asarray(caption_vectors[:200]), numpy.asarray(image_vectors[:200])
 
 
 def convert_captions_to_vectors(queries):

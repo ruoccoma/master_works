@@ -21,6 +21,7 @@ def convert_array(text):
 
 
 db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+# TODO str Not working in python 2, unicode does
 # db.text_factory = lambda x: unicode(x, "utf-8", "ignore")
 
 
