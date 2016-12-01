@@ -211,3 +211,14 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=1, barLength
 	if iteration == total:
 		sys.stdout.write('\n')
 	sys.stdout.flush()
+
+
+def totuple(np_array):
+	"""
+	:param np_array:numpy array
+	:return: tuples with tuples if np_array is multidim
+	"""
+	try:
+		return tuple(totuple(i) for i in np_array)
+	except TypeError:
+		return np_array

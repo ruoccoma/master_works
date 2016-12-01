@@ -39,6 +39,18 @@ class AbstractWord2VisualVecArchitecture:
 	def train(self):
 		pass
 
+	@abstractmethod
+	def predict(self):
+		pass
+
+	@abstractmethod
+	def test(self):
+		pass
+
+	@abstractmethod
+	def evaluate(self):
+		pass
+
 	def get_architecture_name(self):
 		return type(self).__name__
 
