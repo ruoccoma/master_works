@@ -124,6 +124,7 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 						r5.append(1.0)
 					if top_image_index == 0:
 						r1.append(1.0)
+					break
 
 			print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
 
@@ -153,7 +154,6 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		first_filenames, first_image_vectors = load_pickle_file("model_embeddings/%s-%s.pickle" % ("1", self.get_name()))
 		last_filenames, last_image_vectors = load_pickle_file("model_embeddings/%s-%s.pickle" % ("2", self.get_name()))
 		return numpy.append(first_filenames, last_filenames), numpy.append(first_image_vectors, last_image_vectors, axis=0)
-
 
 	@abstractmethod
 	def train(self):
