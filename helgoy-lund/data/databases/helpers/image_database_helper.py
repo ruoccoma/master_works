@@ -12,12 +12,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(file_par_par_par_dir))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
 
-from list_helpers import l2norm, print_progress
-
-
 import sqlite_wrapper as wrapper
-
-np.set_printoptions(10)
 
 
 def store_image_vector_to_db(image_name, vector):
@@ -67,3 +62,39 @@ if __name__ == "__main__":
 		fiddle()
 	elif "norm" in sys.argv:
 		normalize_abs_image_vectors()
+
+
+
+
+"""
+
+Transitive dependence
+
+"""
+
+
+def l2norm(array):
+	norm = math.sqrt(np.sum(([math.pow(x, 2) for x in array])))
+	array = [x / norm for x in array]
+	return array
+
+
+def print_progress(iteration, total, prefix='', suffix='', decimals=1, barLength=30):
+	"""
+	Call in a loop to create terminal progress bar
+	@params:
+		iteration   - Required  : current iteration (Int)
+		total       - Required  : total iterations (Int)
+		prefix      - Optional  : prefix string (Str)
+		suffix      - Optional  : suffix string (Str)
+		decimals    - Optional  : positive number of decimals in percent complete (Int)
+		barLength   - Optional  : character length of bar (Int)
+	"""
+	formatStr = "{0:." + str(decimals) + "f}"
+	percents = formatStr.format(100 * (iteration / float(total)))
+	filledLength = int(round(barLength * iteration / float(total)))
+	bar = '#' * filledLength + '-' * (barLength - filledLength)
+	sys.stdout.write('\r%s |%s| %s%s %s%s%s  %s' % (prefix, bar, percents, '%', iteration, '/', total, suffix)),
+	if iteration == total:
+		sys.stdout.write('\n')
+	sys.stdout.flush()
