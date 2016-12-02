@@ -87,7 +87,9 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		te_ca_caption_vectors = fetch_test_captions_vectors()
 		predicted_image_vectors = self.prediction_model.predict(te_ca_caption_vectors)
 
-		tr_im_filenames, tr_im_image_vectors = self.get_training_data_embeddings()
+		tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
+		tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
+		tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
 
 		similarity_matrix = cosine_similarity(predicted_image_vectors, tr_im_image_vectors)
 
