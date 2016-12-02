@@ -1,6 +1,6 @@
 import numpy as np
-from keras.engine import Input, Model
-from keras.layers import Dense, Lambda, Dropout, BatchNormalization, Embedding, Conv1D, MaxPooling1D, Flatten, LSTM
+from keras.engine import Input
+from keras.layers import Dense, Embedding, LSTM
 from euclidian_distance_architecture import EuclidianDistanceArchitecture
 from embeddings_helper import structure_and_store_embeddings
 import settings
@@ -29,12 +29,11 @@ class LSTMEmbeddingArchitecture(EuclidianDistanceArchitecture):
 
 	@staticmethod
 	def get_caption_model():
-		embedding_layer = Embedding(20323 + 1,
+		caption_inputs = Input(shape=(82,), name="Caption_input")
+		caption_embedding = Embedding(20323 + 1,
 									settings.WORD_EMBEDDING_DIMENSION,
-									input_length=82)
-
-		caption_embedding = embedding_layer()
+									input_length=82)(caption_inputs)
 		caption_model = LSTM(100)(caption_embedding)
 		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dense(2048, activation='relu')(caption_model)
-		return embedding_layer, caption_model
+		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
+		return caption_inputs, caption_model

@@ -5,9 +5,9 @@ from keras.preprocessing import sequence
 import numpy as np  # Make sure that numpy is imported
 
 import settings
-from caption_database_helper import save_caption_vector, save_caption_vector_list
+from caption_database_helper import save_caption_vector_list
 from list_helpers import print_progress
-from word_database_helper import fetch_all_word_vectors, fetch_word_vector
+from word_database_helper import fetch_all_word_vectors
 
 
 def getWordVectors():
