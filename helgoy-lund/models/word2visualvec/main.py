@@ -10,6 +10,7 @@ import settings
 import io_helper
 io_helper.create_missing_folders()
 
+from euclidian_distance_architecture import PreNormImageTwoLayerEuclidianDistance
 from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArchitecture
 from euclidian_distance_architecture import NormLastTwoLayerEuclidianDistance, TwoLayerEuclidianDistance, EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
 	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
@@ -115,4 +116,5 @@ def load_model(arc):
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
 
-main()
+if __name__ == "__main__":
+	main()
