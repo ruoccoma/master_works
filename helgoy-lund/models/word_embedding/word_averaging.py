@@ -50,7 +50,7 @@ def generate_and_store_caption_vectors(filepath):
 	if settings.WORD_EMBEDDING_METHOD == "sequence":
 		# sequence_embedding_vectors = sequence.pad_sequences(sentences, maxlen)
 		sequence_embedding_vectors = create_pad_sequences(sentences)
-		return
+
 		store_caption_vector(filepath, sequence_embedding_vectors)
 	else:
 		mean_vectors = convert_sentences(np.asarray(sentences), settings.WORD_EMBEDDING_DIMENSION)
