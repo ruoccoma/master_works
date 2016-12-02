@@ -82,6 +82,11 @@ def db_all_filename_img_vec_pairs():
 	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
 
 
+def db_update_filename_img_vec_pairs():
+	cursor = db.cursor()
+	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
+
+
 def db_insert_image_vector(filename, image_vector):
 
 	cursor = db.cursor()
@@ -94,6 +99,12 @@ def db_get_filename_from_image_vector(image_vector):
 	result = cursor.execute("""SELECT filename FROM images WHERE image_vector = ?""",
 	                        (image_vector,)).fetchone()
 	return result
+
+
+def db_insert_image_vector_list(tuple_list):
+	cursor = db.cursor()
+	cursor.executemany("""UPDATE images SET image_vector = ? WHERE filename = ?""", tuple_list)
+	db.commit()
 
 
 """ TABLE: CAPTIONS """

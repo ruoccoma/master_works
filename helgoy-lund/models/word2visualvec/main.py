@@ -114,4 +114,5 @@ def load_model(arc):
 	arc.model.compile(optimizer=arc.optimizer, loss=arc.loss)
 
 
-main()
+if __name__ == "__main__":
+	main()
