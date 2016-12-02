@@ -65,4 +65,5 @@ def fiddle():
 if __name__ == "__main__":
 	if "fiddle" in sys.argv:
 		fiddle()
-	normalize_abs_image_vectors()
+	elif "norm" in sys.argv:
+		normalize_abs_image_vectors()
