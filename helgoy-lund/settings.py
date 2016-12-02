@@ -25,8 +25,8 @@ add_modules_to_sys_path(ROOT_DIR)
 # vgg | inception
 IMAGE_EMBEDDING_METHOD = "vgg"
 
-# word2vec | glove
-WORD_EMBEDDING_METHOD = "word2vec"
+# word2vec | glove | sequence
+WORD_EMBEDDING_METHOD = "sequence"
 
 # Flickr8k | Flickr30k
 DATASET = "Flickr30k"
