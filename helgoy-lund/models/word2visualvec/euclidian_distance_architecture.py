@@ -120,6 +120,44 @@ class NormLastTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 		self.prediction_model = caption_model
 
 
+class NormImageLastTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Dense(2048, activation='relu')(caption_inputs)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_model)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		return caption_inputs, caption_model
+
+	@staticmethod
+	def get_prediction_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Dense(2048, activation='relu')(caption_inputs)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+	def generate_prediction_model(self):
+		weights = self.model.get_weights()
+		caption_inputs, caption_model = self.get_prediction_model()
+
+		caption_model = Model(input=caption_inputs, output=caption_model)
+		caption_model.set_weights(weights)
+		caption_model.compile(optimizer=self.optimizer, loss=self.loss)
+
+		self.prediction_model = caption_model
+
+	def generate_model(self):
+		image_inputs = Input(shape=(4096,), name="Image_input")
+		image_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_image_vector")(image_inputs)
+		image_model = Lambda(lambda x: abs(x), name="Image Abs")(image_model)
+
+		caption_inputs, caption_model = self.get_caption_model()
+
+		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_model])
+		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
+
+
 class TanhEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():

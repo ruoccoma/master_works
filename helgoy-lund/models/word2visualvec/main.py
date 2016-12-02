@@ -12,9 +12,9 @@ io_helper.create_missing_folders()
 
 from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArchitecture
 from euclidian_distance_architecture import NormLastTwoLayerEuclidianDistance, TwoLayerEuclidianDistance, EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
-	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
+	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance, NormImageLastTwoLayerEuclidianDistance
 
-ARCHITECTURES = [NormLastTwoLayerEuclidianDistance()]
+ARCHITECTURES = [NormImageLastTwoLayerEuclidianDistance()]
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
