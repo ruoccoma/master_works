@@ -92,6 +92,34 @@ class EuclidianDistanceArchitecture(AbstractTextToImageArchitecture):
 		self.prediction_model = caption_model
 
 
+class NormLastTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Dense(2048, activation='relu')(caption_inputs)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_model)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		return caption_inputs, caption_model
+
+	@staticmethod
+	def get_prediction_model():
+		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_model = Dense(2048, activation='relu')(caption_inputs)
+		caption_model = Dense(4096, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+	def generate_prediction_model(self):
+		weights = self.model.get_weights()
+		caption_inputs, caption_model = self.get_prediction_model()
+
+		caption_model = Model(input=caption_inputs, output=caption_model)
+		caption_model.set_weights(weights)
+		caption_model.compile(optimizer=self.optimizer, loss=self.loss)
+
+		self.prediction_model = caption_model
+
+
 class TanhEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
 	def get_caption_model():
