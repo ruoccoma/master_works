@@ -22,7 +22,7 @@ from theano import tensor
 import multiprocessing as mp
 import time
 
-# from image_database_helper import fetch_all_image_vector_pairs
+from image_database_helper import fetch_all_image_vector_pairs
 
 
 def split_list(data, split_ratio=0.8):
@@ -63,33 +63,33 @@ def cosine_similiary(v1, v2):
 	v2 = v2.reshape(1, -1)
 	return sklearn.metrics.pairwise.cosine_similarity(v1, v2)
 
-#
-# def find_n_most_similar_images(predicted_image_vector, n=5):
-# 	image_vector_pairs = fetch_all_image_vector_pairs()
-#
-# 	first_image_vector = image_vector_pairs[0][1]
-# 	first_image_filename = image_vector_pairs[0][0]
-# 	first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)
-#
-# 	best_image_vector_mse_list = [0 for i in range(n)]
-# 	best_image_vector_name_list = ["" for i in range(n)]
-# 	best_image_vector_list = [[] for i in range(n)]
-#
-# 	best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
-# 	best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
-# 	best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
-#
-# 	for temp_image_name, temp_image_vector in image_vector_pairs:
-# 		temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
-# 		for index in range(len(best_image_vector_list)):
-# 			if temp_image_mse < best_image_vector_mse_list[index]:
-# 				best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
-# 				                                                    temp_image_mse)
-# 				best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
-# 				                                                     temp_image_name)
-# 				best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
-# 				break
-# 	return best_image_vector_name_list, best_image_vector_list
+
+def find_n_most_similar_images(predicted_image_vector, n=5):
+	image_vector_pairs = fetch_all_image_vector_pairs()
+
+	first_image_vector = image_vector_pairs[0][1]
+	first_image_filename = image_vector_pairs[0][0]
+	first_image_mse = compare_vectors(predicted_image_vector, first_image_vector)
+
+	best_image_vector_mse_list = [0 for i in range(n)]
+	best_image_vector_name_list = ["" for i in range(n)]
+	best_image_vector_list = [[] for i in range(n)]
+
+	best_image_vector_mse_list = insert_and_remove_last(0, best_image_vector_mse_list, first_image_mse)
+	best_image_vector_name_list = insert_and_remove_last(0, best_image_vector_name_list, first_image_filename)
+	best_image_vector_list = insert_and_remove_last(0, best_image_vector_list, first_image_vector)
+
+	for temp_image_name, temp_image_vector in image_vector_pairs:
+		temp_image_mse = compare_vectors(predicted_image_vector, temp_image_vector)
+		for index in range(len(best_image_vector_list)):
+			if temp_image_mse < best_image_vector_mse_list[index]:
+				best_image_vector_mse_list = insert_and_remove_last(index, best_image_vector_mse_list,
+				                                                    temp_image_mse)
+				best_image_vector_name_list = insert_and_remove_last(index, best_image_vector_name_list,
+				                                                     temp_image_name)
+				best_image_vector_list = insert_and_remove_last(index, best_image_vector_list, temp_image_vector)
+				break
+	return best_image_vector_name_list, best_image_vector_list
 
 
 def find_n_most_similar_images_fast(pred_img_tuples):
@@ -147,49 +147,49 @@ def generate_sorted_similarity(image_vector_tuple):
 
 	return image_filname, best_image_vector_tuple_list
 
-#
-# def make_similarity_dict():
-# 	pool = mp.Pool()
-# 	print("Getting image-vector pairs...")
-# 	image_vector_pairs = fetch_all_image_vector_pairs()
-#
-# 	pool_formated_list = [(image_filname, image_vector, image_vector_pairs) for image_filname, image_vector in
-# 	                      image_vector_pairs]
-#
-# 	print("Starting pool...")
-# 	result = pool.map_async(generate_sorted_similarity, pool_formated_list)
-# 	pool.close()
-#
-# 	while not result.ready():
-# 		new_chunks = result._number_left
-# 		print("Chunks left %s" % new_chunks)
-# 		time.sleep(10)
-#
-# 	map_res = result.get()
-# 	return dict(map_res)
+
+def make_similarity_dict():
+	pool = mp.Pool()
+	print("Getting image-vector pairs...")
+	image_vector_pairs = fetch_all_image_vector_pairs()
+
+	pool_formated_list = [(image_filname, image_vector, image_vector_pairs) for image_filname, image_vector in
+	                      image_vector_pairs]
+
+	print("Starting pool...")
+	result = pool.map_async(generate_sorted_similarity, pool_formated_list)
+	pool.close()
+
+	while not result.ready():
+		new_chunks = result._number_left
+		print("Chunks left %s" % new_chunks)
+		time.sleep(10)
+
+	map_res = result.get()
+	return dict(map_res)
 
 
-# if __name__ == "__main__":
-# 	SAVE_NEW = True
-# 	name = "similarity-dict.p"
-# 	if SAVE_NEW:
-# 		a = make_similarity_dict()
-# 		try:
-# 			pickle_file = open(name, 'wb')
-# 			pickle.dump(a, pickle_file, protocol=2)
-# 			pickle_file.close()
-# 			print("Saved dictionary to file.")
-# 		except Exception as e:
-# 			print(a)
-# 			print(e)
-# 	else:
-# 		pickle_file = open(name, 'rb')
-# 		print("loaded", name)
-# 		dataset = pickle.load(pickle_file)
-# 		pickle_file.close()
-# 		key, value = dataset.popitem()
-# 		print(key)
-# 		print(value)
+if __name__ == "__main__":
+	SAVE_NEW = True
+	name = "similarity-dict.p"
+	if SAVE_NEW:
+		a = make_similarity_dict()
+		try:
+			pickle_file = open(name, 'wb')
+			pickle.dump(a, pickle_file, protocol=2)
+			pickle_file.close()
+			print("Saved dictionary to file.")
+		except Exception as e:
+			print(a)
+			print(e)
+	else:
+		pickle_file = open(name, 'rb')
+		print("loaded", name)
+		dataset = pickle.load(pickle_file)
+		pickle_file.close()
+		key, value = dataset.popitem()
+		print(key)
+		print(value)
 
 
 def print_progress(iteration, total, prefix='', suffix='', decimals=1, barLength=30):
