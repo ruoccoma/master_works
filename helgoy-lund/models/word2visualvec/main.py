@@ -11,8 +11,9 @@ import io_helper
 io_helper.create_missing_folders()
 
 from euclidian_distance_architecture import PreNormImageTwoLayerEuclidianDistance
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 
-ARCHITECTURES = [PreNormImageTwoLayerEuclidianDistance()]
+ARCHITECTURES = [ContrastiveLossArchitecture()]
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"

@@ -1,32 +1,37 @@
-import numpy as np
-from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, merge
 # from keras.utils.visualize_util import plot
 import tensorflow as tf
+import numpy as np
 
-from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
-from embeddings_helper import structure_and_store_embeddings
+from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from list_helpers import tf_l2norm
+from embeddings_helper import structure_and_store_embeddings
+import settings
 
 
-def contrastive_loss(y_true, y_pred):
-	x, y = tf.split(1, 2, y_pred)
-	print(tf.shape(x))
-	print(tf.shape(y))
-	d = tf.reduce_sum(tf.square(x - y), 1)
-	d_sqrt = tf.sqrt(d)
+def contrastive_loss(_, predict):
+	s, im = tf.split(1, 2, predict)
+	s2 = tf.expand_dims(tf.transpose(s, [0, 1]), 1)
+	im2 = tf.expand_dims(tf.transpose(im, [0, 1]), 0)
+	diff = im2 - s2
+	maximum = tf.maximum(diff, 0.0)
+	tensor_pow = tf.square(maximum)
+	errors = tf.reduce_sum(tensor_pow, 2)
+	diagonal = tf.diag_part(errors)
+	cost_s = tf.maximum(0.05 - errors + diagonal, 0.0)
+	cost_im = tf.maximum(0.05 - errors + tf.reshape(diagonal, (-1, 1)), 0.0)
+	cost_tot = cost_s + cost_im
+	zero_diag = tf.mul(diagonal, 0.0)
+	cost_tot_diag = tf.matrix_set_diag(cost_tot, zero_diag)
+	tot_sum = tf.reduce_sum(cost_tot_diag)
+	return tot_sum
 
-	margin = 1
 
-	loss = y_true * tf.square(tf.maximum(0., margin - d_sqrt)) + (1 - y_true) * d
-	return 0.5 * loss
-
-
-class ContrastiveLossArchitecture(AbstractWord2VisualVecArchitecture):
+class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 	def __init__(self,
-	             epochs=50,
-	             batch_size=128,
+	             epochs=100,
+	             batch_size=256,
 	             validation_split=0.2,
 	             optimizer="adam"):
 		super(ContrastiveLossArchitecture, self).__init__()
@@ -56,27 +61,21 @@ class ContrastiveLossArchitecture(AbstractWord2VisualVecArchitecture):
 		               validation_split=self.validation_split)
 
 	def generate_model(self):
-		image_inputs = Input(shape=(4096,), name="Image_input")
-		image_model = Lambda(lambda x: abs(x), name="Image Abs")(image_inputs)
+		image_inputs = Input(shape=(settings.IMAGE_EMBEDDING_DIMENSIONS,), name="Image_input")
 
 		caption_inputs, caption_model = self.get_caption_model()
 
-		norm_image_model = Lambda(lambda x: K.l2_normalize(x, axis=1), name="Image_norm")(image_model)
-		norm_caption_model = Lambda(lambda x: K.l2_normalize(x, axis=1), name="Caption_norm")(caption_model)
+		merge_layer = merge([caption_model, image_inputs], mode='concat', name="Merge_layer")
 
-		distance = merge([norm_caption_model, norm_image_model], mode='concat', name="Merge_layer")
-
-		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
+		self.model = Model(input=[caption_inputs, image_inputs], output=merge_layer)
 
 	@staticmethod
 	def get_caption_model():
-		caption_inputs = Input(shape=(300,), name="Caption_input")
+		caption_inputs = Input(shape=(settings.WORD_EMBEDDING_DIMENSION,), name="Caption_input")
 		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
 		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
-		caption_model = Dense(500, activation='relu')(caption_model)
-		caption_model = Dense(800, activation='relu')(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
-		caption_model = Dense(4096, activation='relu')(caption_model)
+		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
 
 	def generate_prediction_model(self):
