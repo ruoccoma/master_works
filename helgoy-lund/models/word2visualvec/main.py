@@ -11,15 +11,9 @@ import io_helper
 io_helper.create_missing_folders()
 
 from euclidian_distance_architecture import PreNormImageTwoLayerEuclidianDistance
-from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArchitecture
-from euclidian_distance_architecture import NormLastTwoLayerEuclidianDistance, TwoLayerEuclidianDistance, EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
-	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
-from lstm_embedding_architecture import LSTMEmbeddingArchitecture, TwoBiLSTMEmbeddingArchitecture, \
-	BiLSTMEmbeddingArchitecture, TwoLayerLSTMEmbeddingArchitecture
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 
-ARCHITECTURES = [BiLSTMEmbeddingArchitecture(),
-				 TwoBiLSTMEmbeddingArchitecture(),
-				 TwoLayerLSTMEmbeddingArchitecture()]
+ARCHITECTURES = [ContrastiveLossArchitecture()]
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
