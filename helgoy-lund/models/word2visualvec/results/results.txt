@@ -217,6 +217,60 @@ RESULTS: (Evaluating time: 1.59941668510437)
 r1:0.0030902348578491965,r5:0.01211372064276885,r10:0.022620519159456117,r20:0.042892459826946845,r100:0.15352286773794807,r1000:0.47243510506798514
 RESULTS: (Evaluating time: 23.86087009906769)
 r1:0.0024541421514646194,r5:0.009659251801277413,r10:0.017493628669414465,r20:0.032155554856369756,r100:0.11484126734417771,r1000:0.38869836075889624
+FiveLayerCosineSimilarityArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30kRESULTS: (Evaluating time: 1.88272025188)
+r1:0,r5:0,r10:0,r20:0,r100:0,r1000:0
+FiveLayerCosineSimilarityArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30kRESULTS: (Evaluating time: 1.94414331913)
+r1:0,r5:0,r10:0,r20:0,r100:0,r1000:0
+FiveLayerCosineSimilarityArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30kRESULTS: (Evaluating time: 2.20514864922)
+r1:0,r5:0,r10:0.001,r20:0.004,r100:0.04,r1000:0.246
+NoAbsEuclidianDistance-50-128-adam-categorical_crossentropy-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-50-128-adam-categorical_crossentropy-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-50-128-adam-categorical_crossentropy-vgg-word2vec-Flickr30k
+EuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-50-128-adam-mse-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-50-128-adam-categorical_crossentropy-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+NoAbsEuclidianDistance-1-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+0,loss,0.785218614747,val_loss,0.761083206287,
+EightLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+0,loss,0.809232591021,val_loss,0.801458563331,
+NoNormTwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+NoNormTwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+NoNormTwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+EuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+EuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidanDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+0,loss,0.804261027968,val_loss,0.783522370836,
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+EuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+RESULTS: (Evaluating time: 1.38143158356)
+r1:0,r5:0,r10:0,r20:0,r100:0,r1000:0
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+ReversedEuclidianDistanceArchitecture-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
+RESULTS: (Evaluating time: 2.04917606513)
+r1:0,r5:0,r10:0,r20:0,r100:0,r1000:0.025
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-glove-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
@@ -247,5 +301,15 @@ TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+RESULTS: (Evaluating time: 173.943900816)
+r1:0.99826951515,r5:1.13148538527,r10:1.19935185477,r20:1.29191706258,r100:1.65654595224,r1000:2.70279709279
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
 TwoLayerEuclidianDistance-100-256-adam-contrastive_loss-vgg-word2vec-Flickr30k
+RESULTS: (Evaluating time: 160.925957485)
+r1:0.99826951515,r5:0.999968536639,r10:1.0,r20:1.0,r100:1.0,r1000:1.0
+LSTMEmbeddingArchitecture-100-256-adam-contrastive_loss-inception-sequence-Flickr30k
+LSTMEmbeddingArchitecture-100-256-adam-contrastive_loss-vgg-sequence-Flickr30k
+LSTMEmbeddingArchitecture-100-256-adam-contrastive_loss-vgg-sequence-Flickr30k
+LSTMEmbeddingArchitecture-100-256-adam-contrastive_loss-inception-sequence-Flickr30k
+0,loss,228.838539442,val_loss,201.941999018,
+LSTMEmbeddingArchitecture-100-256-adam-contrastive_loss-inception-sequence-Flickr30k
