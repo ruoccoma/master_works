@@ -27,8 +27,8 @@ IMAGE_EMBEDDING_METHOD = "inception"
 IMAGE_EMBEDDING_DIMENSIONS = 4096 if IMAGE_EMBEDDING_METHOD == "vgg" else 2048
 
 
-# word2vec | glove
-WORD_EMBEDDING_METHOD = "word2vec"
+# word2vec | glove | sequence
+WORD_EMBEDDING_METHOD = "sequence"
 
 # Flickr8k | Flickr30k
 DATASET = "Flickr30k"
