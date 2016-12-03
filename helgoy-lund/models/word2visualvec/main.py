@@ -15,10 +15,11 @@ from reverse_euclidian_distance_architecture import ReversedEuclidianDistanceArc
 from euclidian_distance_architecture import NormLastTwoLayerEuclidianDistance, TwoLayerEuclidianDistance, EuclidianDistanceArchitecture, FiveLayerEuclidianDistance, ThreeLayerEuclidianDistance, \
 	SixLayerBatchNormEuclidianDistance, SixLayerEuclidianDistance
 from lstm_embedding_architecture import LSTMEmbeddingArchitecture, TwoBiLSTMEmbeddingArchitecture, \
-	BiLSTMEmbeddingArchitecture
+	BiLSTMEmbeddingArchitecture, TwoLayerLSTMEmbeddingArchitecture
 
 ARCHITECTURES = [BiLSTMEmbeddingArchitecture(),
-				 TwoBiLSTMEmbeddingArchitecture()]
+				 TwoBiLSTMEmbeddingArchitecture(),
+				 TwoLayerLSTMEmbeddingArchitecture()]
 
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
