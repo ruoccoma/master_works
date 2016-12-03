@@ -178,23 +178,6 @@ class NormImageLastTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
 
 
-class TanhEuclidianDistance(EuclidianDistanceArchitecture):
-	@staticmethod
-	def get_caption_model():
-		caption_inputs = Input(shape=(settings.WORD_EMBEDDING_DIMENSION,), name="Caption_input")
-		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
-		caption_model = Dense(2048, activation='tanh')(caption_model)
-		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='tanh')(caption_model)
-		return caption_inputs, caption_model
-
-	def generate_model(self):
-		image_inputs = Input(shape=(settings.IMAGE_EMBEDDING_DIMENSIONS,), name="Image_input")
-
-		caption_inputs, caption_model = self.get_caption_model()
-
-		distance = Lambda(euclidean_distance, output_shape=eucl_dist_output_shape)([caption_model, image_inputs])
-		self.model = Model(input=[caption_inputs, image_inputs], output=distance)
-
 # vgg_w2v r1000: 0.46
 class NoNormTwoLayerEuclidianDistance(EuclidianDistanceArchitecture):
 	@staticmethod
