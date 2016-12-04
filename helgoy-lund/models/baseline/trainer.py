@@ -1,3 +1,4 @@
+import numpy
 import tensorflow as tf
 from keras.layers import Embedding, GRU, Merge
 from keras.layers import Input, Dense
@@ -97,7 +98,13 @@ def train(params):
 	print("First in Y:", training_data[1][0])
 
 	print("Fitting model...")
-	model.fit([training_data[0], training_data[1]], training_data[0], validation_split=0.2, nb_epoch=300)
+
+	train_caps = training_data[0]
+	train_ims = training_data[1]
+
+	train_caps = numpy.asarray(train_caps)
+
+	model.fit([train_caps, train_ims], train_caps, validation_split=0.2, nb_epoch=300)
 
 	model.save_weights('my_model_weights.h5')
 
