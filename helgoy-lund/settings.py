@@ -23,7 +23,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
 add_modules_to_sys_path(ROOT_DIR)
 
 # vgg | inception
-IMAGE_EMBEDDING_METHOD = "vgg"
+IMAGE_EMBEDDING_METHOD = "inception"
 IMAGE_EMBEDDING_DIMENSIONS = 4096 if IMAGE_EMBEDDING_METHOD == "vgg" else 2048
 
 

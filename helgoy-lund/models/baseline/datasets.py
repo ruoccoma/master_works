@@ -41,6 +41,9 @@ def load_dataset():
 	train_ims, test_ims = split_list(all_data["ims"], 0.8)
 	train_caps, test_caps = split_list(all_data["caps"], 0.8)
 
+	train_caps = numpy.asarray(train_caps)
+	test_caps = numpy.asarray(test_caps)
+
 	train_dict["ims"] = train_ims
 	train_dict["caps"] = train_caps
 	test_dict["ims"] = test_ims
