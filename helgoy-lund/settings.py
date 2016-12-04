@@ -23,7 +23,7 @@ ROOT_DIR = os.path.dirname((os.path.abspath(__file__))) + "/"
 add_modules_to_sys_path(ROOT_DIR)
 
 # vgg | inception
-IMAGE_EMBEDDING_METHOD = "inception"
+IMAGE_EMBEDDING_METHOD = "vgg"
 IMAGE_EMBEDDING_DIMENSIONS = 4096 if IMAGE_EMBEDDING_METHOD == "vgg" else 2048
 
 
@@ -31,7 +31,7 @@ IMAGE_EMBEDDING_DIMENSIONS = 4096 if IMAGE_EMBEDDING_METHOD == "vgg" else 2048
 WORD_EMBEDDING_METHOD = "word2vec"
 
 # Flickr8k | Flickr30k
-DATASET = "Flickr8k"
+DATASET = "Flickr30k"
 
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
