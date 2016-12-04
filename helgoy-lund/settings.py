@@ -28,10 +28,10 @@ IMAGE_EMBEDDING_DIMENSIONS = 4096 if IMAGE_EMBEDDING_METHOD == "vgg" else 2048
 
 
 # word2vec | glove | sequence
-WORD_EMBEDDING_METHOD = "sequence"
+WORD_EMBEDDING_METHOD = "word2vec"
 
 # Flickr8k | Flickr30k
-DATASET = "Flickr30k"
+DATASET = "Flickr8k"
 
 RES_DIR = ROOT_DIR + "res/"
 IMAGE_DIR = ROOT_DIR + "data/datasets/" + DATASET + "/images/"
@@ -43,7 +43,11 @@ DB_FILE_PATH = ROOT_DIR + "/data/databases/sqlite/database-%s.db" % DB_SUFFIX
 # Word2Vec
 WORD_EMBEDDING_DIMENSION = 300
 WORD_EMBEDDING_DIR = ROOT_DIR + "models/word2vec/embeddings/"
-WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr30k/flickr30k/results_20130124.token"
+
+if DATASET == "Flickr8k":
+	WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr8k/Flickr8k.token.txt"
+else:
+	WORD_FILEPATH = ROOT_DIR + "data/datasets/Flickr30k/flickr30k/results_20130124.token"
 
 # Stored embeddings
 STORED_EMBEDDINGS_DIR = ROOT_DIR + "data/embeddings/stored-embeddings/"
