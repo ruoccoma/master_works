@@ -35,6 +35,7 @@ def load_dataset():
 			all_data["caps"].append(caption)
 
 	all_data["ims"] = numpy.asarray(all_data["ims"])
+	all_data["caps"] = numpy.asarray(all_data["caps"])
 	train_dict = {}
 	test_dict = {}
 
