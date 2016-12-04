@@ -58,6 +58,8 @@ class Datasource():
 			cc = self.data['caps'][i]
 			real = [self.worddict[w] if w in self.worddict else 1 for w in cc.split()]
 			padding = [0] * (self.max_cap_lengh - len(real))
-			seqs.append(real + padding)
+			real_padding = real + padding
+			np_real_padding = numpy.array(real_padding)
+			seqs.append(np_real_padding)
 
 		return numpy.array(seqs)

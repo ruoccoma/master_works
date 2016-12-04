@@ -60,7 +60,7 @@ def train(params):
 	model_config['worddict'] = len(worddict)
 
 	print('Loading data')
-	train_iter = datasource.Datasource(train, batch_size=model_config['batch_size'], worddict=worddict)
+	train_iter = datasource.Datasource(train, batch_size=model_config['batch_size'], worddict=worddict, max_cap_lengh=model_config['max_cap_length'])
 
 	print("Image model loading")
 	# # this returns a tensor of emb_image
@@ -87,22 +87,11 @@ def train(params):
 	model.compile(optimizer=model_config['optimizer'][0], loss=contrastive_loss_keras)
 
 	training_data = train_iter.all()
-	print("Training data info")
-	print("Len of X:", len(training_data[0]))
-	print("Len of Y:", len(training_data[1]))
-
-	print("Len of first in X:", len(training_data[0][0]))
-	print("Len of first in Y:", len(training_data[1][0]))
-
-	print("First in X:", training_data[0][0])
-	print("First in Y:", training_data[1][0])
 
 	print("Fitting model...")
 
 	train_caps = training_data[0]
 	train_ims = training_data[1]
-
-	train_caps = numpy.asarray(train_caps)
 
 	model.fit([train_caps, train_ims], train_caps, validation_split=0.2, nb_epoch=300)
 

@@ -22,7 +22,7 @@ config = {
 	'output_dim': 1024,
 	'dim_word': 300,
 	'lrate': 0.05,
-	'max_cap_length': 50,
+	'max_cap_length': 82,
 	'cnn': '10crop',
 	'margin': 0.05
 }
