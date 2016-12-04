@@ -86,6 +86,15 @@ def train(params):
 	model.compile(optimizer=model_config['optimizer'][0], loss=contrastive_loss_keras)
 
 	training_data = train_iter.all()
+	print("Training data info")
+	print("Len of X:", len(training_data[0]))
+	print("Len of Y:", len(training_data[1]))
+
+	print("Len of first in X:", len(training_data[0][0]))
+	print("Len of first in Y:", len(training_data[1][0]))
+
+	print("First in X:", training_data[0][0])
+	print("First in Y:", training_data[1][0])
 
 	print("Fitting model...")
 	model.fit([training_data[0], training_data[1]], training_data[0], validation_split=0.2, nb_epoch=300)
