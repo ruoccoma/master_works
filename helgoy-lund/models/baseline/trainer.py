@@ -1,5 +1,6 @@
 import numpy
 import tensorflow as tf
+from keras import callbacks
 from keras.layers import Embedding, GRU, Merge
 from keras.layers import Input, Dense
 from keras.layers.core import Lambda, Masking
@@ -8,7 +9,8 @@ from keras.models import Model
 import datasource
 from datasets import build_dictionary
 from datasets import load_dataset
-
+from custom_callback import WriteToFileCallback
+import settings
 
 def tf_l2norm(tensor_array):
 	norm = tf.sqrt(tf.reduce_sum(tf.pow(tensor_array, 2)))
@@ -93,7 +95,14 @@ def train(params):
 	train_caps = training_data[0]
 	train_ims = training_data[1]
 
-	model.fit([train_caps, train_ims], train_caps, validation_split=0.2, nb_epoch=300)
+	result_file = open(settings.RESULT_TEXTFILE_PATH)
+	result_file.write("BASELINE\n")
+	result_file.close()
+
+	custom_callback = WriteToFileCallback(settings.RESULT_TEXTFILE_PATH)
+	early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=3)
+
+	model.fit([train_caps, train_ims], train_caps, validation_split=0.2, nb_epoch=300, callbacks=[custom_callback, early_stopping])
 
 	model.save_weights('my_model_weights.h5')
 
