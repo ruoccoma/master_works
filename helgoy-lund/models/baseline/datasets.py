@@ -10,11 +10,6 @@ from io_helper import save_pickle_file, check_pickle_file, load_pickle_file
 
 
 def load_dataset():
-	stored_dataset_filename = "%s-baseline-dataset.pickle" % settings.DATASET
-
-	if check_pickle_file(stored_dataset_filename):
-		return load_pickle_file(stored_dataset_filename)
-
 	dataset = {"caps": [], "ims": []}
 
 	text_caption_file = open(settings.WORD_FILEPATH)
@@ -43,7 +38,6 @@ def load_dataset():
 
 	dataset["ims"] = numpy.asarray(dataset["ims"])
 
-	save_pickle_file(dataset, stored_dataset_filename)
 	return dataset
 
 

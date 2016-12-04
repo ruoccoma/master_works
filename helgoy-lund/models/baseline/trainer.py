@@ -4,7 +4,6 @@ import datasource
 from keras.layers import Embedding, GRU, Merge
 
 # from model import VGG_19
-from evaluation import t2i, i2t
 from datasets import build_dictionary
 from datasets import load_dataset
 # from theano.tensor.extra_ops import fill_diagonal
