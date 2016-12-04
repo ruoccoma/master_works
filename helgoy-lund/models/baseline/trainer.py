@@ -90,7 +90,7 @@ def train(params, eval_mode=False):
 	else:
 		print("Fitting model...")
 		custom_callback = WriteToFileCallback(settings.RESULT_TEXTFILE_PATH)
-		early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=3)
+		early_stopping = callbacks.EarlyStopping(monitor='val_loss', patience=30)
 		model.fit([train_caps, train_ims], train_caps, validation_split=0.2, nb_epoch=300,
 		          callbacks=[custom_callback, early_stopping])
 
