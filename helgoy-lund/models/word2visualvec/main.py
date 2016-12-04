@@ -49,10 +49,6 @@ def train(architecture):
 
 
 def evaluate(architecture):
-	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
-	result_file.write(architecture.get_name() + "\n")
-	result_file.close()
-
 	load_model(architecture)
 	architecture.generate_prediction_model()
 
@@ -63,7 +59,7 @@ def evaluate(architecture):
 
 	# test_model(ARCHITECTURE.prediction_model)
 
-	result_header = "RESULTS: (Evaluating time: %s)\n" % ((time_end - time_start) / 60.0)
+	result_header = "RESULTS FOR %s: (Evaluating time: %s)\n" % (architecture.get_name(), (time_end - time_start) / 60.0)
 	recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
 	(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
