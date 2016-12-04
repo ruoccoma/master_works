@@ -1,17 +1,12 @@
-import datasource
-# import theano
-# import theano.tensor as tensor
+import tensorflow as tf
 from keras.layers import Embedding, GRU, Merge
-
-# from model import VGG_19
-from evaluation import t2i, i2t
-from datasets import build_dictionary
-from datasets import load_dataset
-# from theano.tensor.extra_ops import fill_diagonal
 from keras.layers import Input, Dense
 from keras.layers.core import Lambda, Masking
 from keras.models import Model
-import tensorflow as tf
+
+import datasource
+from datasets import build_dictionary
+from datasets import load_dataset
 
 
 def tf_l2norm(tensor_array):
@@ -41,8 +36,6 @@ def contrastive_loss_keras(_, predict):
 # main trainer
 def train(params):
 	# GRID SEARCH
-	print(params)
-
 	global model_config
 	model_config['margin'] = params['margin'] if 'margin' in params else model_config['margin']
 	model_config['output_dim'] = params['output_dim'] if 'output_dim' in params else model_config['output_dim']
@@ -53,7 +46,10 @@ def train(params):
 
 	# Load training and development sets
 	print('Loading dataset')
-	train = load_dataset()
+	dataset = load_dataset()
+
+	train = dataset["train"]
+	test = dataset["test"]
 
 	# Create dictionary
 	print('Creating dictionary')

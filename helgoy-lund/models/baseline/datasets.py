@@ -4,26 +4,19 @@ Dataset loading
 from collections import OrderedDict
 
 import numpy
+
 import settings
 from image_database_helper import fetch_all_image_vector_pairs
-from io_helper import save_pickle_file, check_pickle_file, load_pickle_file
+from list_helpers import split_list
 
 
 def load_dataset():
-	stored_dataset_filename = "%s-baseline-dataset.pickle" % settings.DATASET
-
-	if check_pickle_file(stored_dataset_filename):
-		return load_pickle_file(stored_dataset_filename)
-
-	dataset = {"caps": [], "ims": []}
+	all_data = {"caps": [], "ims": []}
 
 	text_caption_file = open(settings.WORD_FILEPATH)
 	all_lines = text_caption_file.readlines()
 	text_caption_file.close()
 
-	"""
-	1306145560_1e37081b91.jpg#1	A black dog swims in the water .
-	"""
 	caption_dictionary = {}
 	for caption_line in all_lines:
 		splitted_line = caption_line.split("#")
@@ -34,16 +27,26 @@ def load_dataset():
 		else:
 			caption_dictionary[filename] = [caption]
 
-	image_vector_pairs = fetch_all_image_vector_pairs()  # List with (filename, array)
+	image_vector_pairs = fetch_all_image_vector_pairs()
 
 	for filename, vector in image_vector_pairs:
 		for caption in caption_dictionary[filename]:
-			dataset["ims"].append(vector)
-			dataset["caps"].append(caption)
+			all_data["ims"].append(vector)
+			all_data["caps"].append(caption)
 
-	dataset["ims"] = numpy.asarray(dataset["ims"])
+	all_data["ims"] = numpy.asarray(all_data["ims"])
+	train_dict = {}
+	test_dict = {}
 
-	save_pickle_file(dataset, stored_dataset_filename)
+	train_ims, test_ims = split_list(all_data["ims"], 0.8)
+	train_caps, test_caps = split_list(all_data["caps"], 0.8)
+
+	train_dict["ims"] = train_ims
+	train_dict["caps"] = train_caps
+	test_dict["ims"] = test_ims
+	test_dict["caps"] = test_caps
+
+	dataset = {"train": train_dict, "test": test_dict}
 	return dataset
 
 
