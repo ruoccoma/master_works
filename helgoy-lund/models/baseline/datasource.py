@@ -12,13 +12,14 @@ class Datasource():
     2) Access to the entire dataset using all()
     """
 
-	def __init__(self, data, worddict, batch_size=128, max_cap_lengh=50):
+	def __init__(self, data, worddict, batch_size=128, max_cap_lengh=50, eval_mode=False):
 		self.data = data
 		self.batch_size = batch_size
 		self.worddict = worddict
 		self.num_images = len(self.data['ims'])
 		self.parents = defaultdict(set)
 		self.max_cap_lengh = max_cap_lengh
+		self.eval_mode = eval_mode
 		self.reset()
 
 	def reset(self):
@@ -46,8 +47,10 @@ class Datasource():
 		return x, im
 
 	def all(self):
-
-		return self.prepare_caps(range(0, len(self.data['caps']))), self.data['ims']
+		if self.eval_mode:
+			return self.prepare_caps(range(0, len(self.data['caps']))), self.data['ims'], self.data["filenames"]
+		else:
+			return self.prepare_caps(range(0, len(self.data['caps']))), self.data['ims']
 
 	def __iter__(self):
 		return self

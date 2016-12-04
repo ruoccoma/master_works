@@ -4,6 +4,8 @@ Author: Igor Lapshun
 import os
 import sys
 
+import datetime
+
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
@@ -29,5 +31,13 @@ config = {
 
 if __name__ == '__main__':
 	import trainer
+
+	current_time = datetime.datetime.time(datetime.datetime.now())
+	print ("Current time: %s" % current_time)
+
+	if settings.DATASET == "Flickr8k":
+		config["max_cap_length"] = 50
+	elif settings.DATASET == "Flickr30k":
+		config["max_cap_length"] = 82
 
 	trainer.trainer(config)

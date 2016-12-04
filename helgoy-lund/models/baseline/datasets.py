@@ -10,8 +10,11 @@ from image_database_helper import fetch_all_image_vector_pairs
 from list_helpers import split_list
 
 
-def load_dataset():
-	all_data = {"caps": [], "ims": []}
+def load_dataset(evaluate_mode=False):
+	if evaluate_mode:
+		all_data = {"caps": [], "ims": [], "filenames": []}
+	else:
+		all_data = {"caps": [], "ims": []}
 
 	text_caption_file = open(settings.WORD_FILEPATH)
 	all_lines = text_caption_file.readlines()
@@ -33,9 +36,10 @@ def load_dataset():
 		for caption in caption_dictionary[filename]:
 			all_data["ims"].append(vector)
 			all_data["caps"].append(caption)
+			if evaluate_mode:
+				all_data["filenames"].append(filename)
 
 	all_data["ims"] = numpy.asarray(all_data["ims"])
-	all_data["caps"] = all_data["caps"]
 	train_dict = {}
 	test_dict = {}
 
@@ -44,8 +48,14 @@ def load_dataset():
 
 	train_dict["ims"] = train_ims
 	train_dict["caps"] = train_caps
+
 	test_dict["ims"] = test_ims
 	test_dict["caps"] = test_caps
+
+	if evaluate_mode:
+		train_filenames, test_filenames = split_list(all_data["filenames"], 0.8, convert_to_np=False)
+		train_dict["filenames"] = train_filenames
+		test_dict["filenames"] = test_filenames
 
 	dataset = {"train": train_dict, "test": test_dict}
 	return dataset
