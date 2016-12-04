@@ -25,8 +25,13 @@ import time
 from image_database_helper import fetch_all_image_vector_pairs
 
 
-def split_list(data, split_ratio=0.8):
-	return np.asarray(data[:int((len(data) * split_ratio))]), np.asarray(data[int((len(data) * split_ratio)):])
+def split_list(data, split_ratio=0.8, convert_to_np=True):
+	first = data[:int((len(data) * split_ratio))]
+	last = data[int((len(data) * split_ratio)):]
+	if convert_to_np:
+		return np.asarray(first), np.asarray(last)
+	else:
+		return first, last
 
 
 def insert_and_remove_last(index, array, element):

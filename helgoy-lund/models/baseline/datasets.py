@@ -35,12 +35,12 @@ def load_dataset():
 			all_data["caps"].append(caption)
 
 	all_data["ims"] = numpy.asarray(all_data["ims"])
-	all_data["caps"] = numpy.asarray(all_data["caps"])
+	all_data["caps"] = all_data["caps"]
 	train_dict = {}
 	test_dict = {}
 
 	train_ims, test_ims = split_list(all_data["ims"], 0.8)
-	train_caps, test_caps = split_list(all_data["caps"], 0.8)
+	train_caps, test_caps = split_list(all_data["caps"], 0.8, convert_to_np=False)
 
 	train_dict["ims"] = train_ims
 	train_dict["caps"] = train_caps
