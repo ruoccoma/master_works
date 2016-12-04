@@ -95,7 +95,7 @@ def train(params):
 	train_caps = training_data[0]
 	train_ims = training_data[1]
 
-	result_file = open(settings.RESULT_TEXTFILE_PATH)
+	result_file = open(settings.RESULT_TEXTFILE_PATH, "a")
 	result_file.write("BASELINE\n")
 	result_file.close()
 
