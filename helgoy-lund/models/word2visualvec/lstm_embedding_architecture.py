@@ -16,9 +16,11 @@ class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
 	             optimizer="adam",
 				 image_embedding=settings.IMAGE_EMBEDDING_METHOD):
 		super(LSTMEmbeddingArchitecture, self).__init__(epochs=epochs, batch_size=batch_size, validation_split=validation_split, optimizer=optimizer, word_embedding="sequence", image_embedding=image_embedding)
+		self.word_embedding = "sequence"
+		self.image_embedding = image_embedding
 
 	def train(self):
-		update_database_connection()
+		update_database_connection(self.word_embedding, self.image_embedding)
 
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 

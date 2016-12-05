@@ -43,11 +43,11 @@ class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 		self.validation_split = validation_split
 		self.optimizer = optimizer
 		self.loss = contrastive_loss
-		settings.WORD_EMBEDDING_METHOD = word_embedding
-		settings.IMAGE_EMBEDDING_METHOD = image_embedding
+		self.word_embedding = word_embedding
+		self.image_embedding = image_embedding
 
 	def train(self):
-		update_database_connection()
+		update_database_connection(self.word_embedding, self.image_embedding)
 
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
