@@ -40,6 +40,7 @@ def update_database_connection(word_embedding, image_embedding):
 	settings.DB_SUFFIX = "%s-%s-%s" % (image_embedding, word_embedding, settings.DATASET)
 	settings.DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database-%s.db" % settings.DB_SUFFIX
 	db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+	print("Connected to %s" % settings.DB_FILE_PATH)
 
 """ TABLE: WORDS """
 

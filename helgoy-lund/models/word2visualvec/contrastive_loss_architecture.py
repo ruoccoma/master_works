@@ -47,8 +47,6 @@ class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 		self.image_embedding = image_embedding
 
 	def train(self):
-		update_database_connection(self.word_embedding, self.image_embedding)
-
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 		caption_vectors = np.asarray(caption_vectors)

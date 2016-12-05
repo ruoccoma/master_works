@@ -3,6 +3,7 @@ import os
 import sys
 import time
 
+from sqlite_wrapper import update_database_connection
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
@@ -28,6 +29,7 @@ def main():
 	current_time = datetime.datetime.time(datetime.datetime.now())
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
+		update_database_connection(ARCHITECTURE.word_embedding, ARCHITECTURE.image_embedding)
 		print(ARCHITECTURE.get_name())
 		print("Image embedding %s\tWord embedding %s" % (settings.IMAGE_EMBEDDING_METHOD, settings.IMAGE_EMBEDDING_METHOD))
 		train(ARCHITECTURE)
