@@ -18,8 +18,10 @@ from contrastive_loss_architecture import ContrastiveLossArchitecture
 
 ARCHITECTURES = [
 	ContrastiveLossArchitecture(image_embedding="inception", word_embedding="glove", epochs=1),
-	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="glove", epochs=1),
+	ContrastiveLossArchitecture(image_embedding="inception", word_embedding="word2vec", epochs=1),
 	LSTMEmbeddingArchitecture(image_embedding="inception", epochs=1),
+	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="glove", epochs=1),
+	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="word2vec", epochs=1),
 	LSTMEmbeddingArchitecture(image_embedding="vgg", epochs=1)]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
