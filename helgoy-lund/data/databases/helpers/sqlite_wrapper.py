@@ -41,7 +41,7 @@ def update_database_connection(word_embedding, image_embedding):
 	settings.DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database-%s.db" % settings.DB_SUFFIX
 	db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 	settings.STORED_EMBEDDINGS_NAME = "%s-%s" % (settings.DB_SUFFIX, settings.NEG_TAG)
-	settings.IMAGE_EMBEDDING_DIMENSIONS = 4096 if settings.IMAGE_EMBEDDING_METHOD == "vgg" else 2048
+	settings.IMAGE_EMBEDDING_DIMENSIONS = 4096 if image_embedding == "vgg" else 2048
 	print("Connected to %s" % settings.DB_FILE_PATH)
 
 """ TABLE: WORDS """
