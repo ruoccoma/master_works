@@ -55,7 +55,7 @@ class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 		self.generate_model()
 
 		self.model.compile(optimizer=self.optimizer, loss=self.loss)
-		self.model.summary()
+
 		# plot(self.model, 'results/%s.png' % self.get_name())
 		self.model.fit([caption_vectors, image_vectors],
 		               similarities,

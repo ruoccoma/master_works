@@ -18,6 +18,7 @@ class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
 		super(LSTMEmbeddingArchitecture, self).__init__(epochs=epochs, batch_size=batch_size, validation_split=validation_split, optimizer=optimizer, word_embedding="sequence", image_embedding=image_embedding)
 
 	def train(self):
+
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 		caption_vectors = np.asarray(caption_vectors)
