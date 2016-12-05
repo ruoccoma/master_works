@@ -35,6 +35,11 @@ c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_text TE
 c.execute('''CREATE TABLE IF NOT EXISTS words (word_text TEXT UNIQUE, word_vector array)''')
 db.commit()
 
+def update_database_connection():
+	global db
+	settings.DB_SUFFIX = "%s-%s-%s" % (settings.IMAGE_EMBEDDING_METHOD, settings.WORD_EMBEDDING_METHOD, settings.DATASET)
+	settings.DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database-%s.db" % settings.DB_SUFFIX
+	db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
 
 """ TABLE: WORDS """
 

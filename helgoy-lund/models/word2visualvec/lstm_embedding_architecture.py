@@ -4,6 +4,7 @@ from embeddings_helper import structure_and_store_embeddings
 from keras.engine import Input
 from keras.layers import Dense, Embedding, LSTM, Bidirectional
 from contrastive_loss_architecture import ContrastiveLossArchitecture
+from sqlite_wrapper import update_database_connection
 
 
 class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
@@ -17,6 +18,8 @@ class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
 		super(LSTMEmbeddingArchitecture, self).__init__(epochs=epochs, batch_size=batch_size, validation_split=validation_split, optimizer=optimizer, word_embedding="sequence", image_embedding=image_embedding)
 
 	def train(self):
+		update_database_connection()
+
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 		caption_vectors = np.asarray(caption_vectors)

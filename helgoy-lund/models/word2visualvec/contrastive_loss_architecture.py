@@ -8,6 +8,7 @@ from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from list_helpers import tf_l2norm
 from embeddings_helper import structure_and_store_embeddings
 import settings
+from sqlite_wrapper import update_database_connection
 
 
 def contrastive_loss(_, predict):
@@ -46,6 +47,8 @@ class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 		settings.IMAGE_EMBEDDING_METHOD = image_embedding
 
 	def train(self):
+		update_database_connection()
+
 		caption_vectors, image_vectors, similarities = structure_and_store_embeddings()
 
 		caption_vectors = np.asarray(caption_vectors)
