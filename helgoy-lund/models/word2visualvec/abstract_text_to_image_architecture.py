@@ -111,6 +111,8 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 			test_caption_vector_key = totuple(test_caption_vector)
 			test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
 
+			print("Q: " + test_filename)
+
 			for top_image_index in range(1000):
 				comparison_filename = similarities[top_image_index][0]
 				if test_filename == comparison_filename:
@@ -125,10 +127,11 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 					if top_image_index < 5:
 						r5.append(1.0)
 					if top_image_index == 0:
+						print("Sim: ", similarities[top_image_index])
 						r1.append(1.0)
 					break
 
-			print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
+			# print_progress(predicted_image_index + 1, predicted_images_size, prefix="Calculating recall")
 
 		r1_avg = sum(r1) / predicted_images_size
 		r5_avg = sum(r5) / predicted_images_size
@@ -185,8 +188,10 @@ def build_caption_vector_filename_dict(filename_caption_vector_tuples):
 
 def fetch_test_captions_vectors():
 	data_x, _, _ = structure_and_store_embeddings()
-	training_test_ratio = 0.8
-	_, test_x = split_list(data_x, training_test_ratio)
+	# training_test_ratio = 0.8
+	# _, test_x = split_list(data_x, training_test_ratio)
+	training_test_ratio = 0.2
+	test_x, _ = split_list(data_x, training_test_ratio)
 	return numpy.asarray(test_x)
 
 

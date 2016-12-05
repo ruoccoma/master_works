@@ -3,7 +3,7 @@ from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, merge
 
-from abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
+from models.word2visualvec.abstract_word2visualvec_architecture import AbstractWord2VisualVecArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 

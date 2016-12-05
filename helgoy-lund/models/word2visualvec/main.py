@@ -3,18 +3,23 @@ import os
 import sys
 import time
 
+from models.word2visualvec.lstm_embedding_architecture import LSTMEmbeddingArchitecture
+
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
 
 import io_helper
+
 io_helper.create_missing_folders()
 
-from euclidian_distance_architecture import PreNormImageTwoLayerEuclidianDistance
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 
-ARCHITECTURES = [ContrastiveLossArchitecture()]
-
+ARCHITECTURES = [
+	ContrastiveLossArchitecture(image_embedding="inception", word_embedding="glove", epochs=1),
+	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="glove", epochs=1),
+	LSTMEmbeddingArchitecture(image_embedding="inception", epochs=1),
+	LSTMEmbeddingArchitecture(image_embedding="vgg", epochs=1)]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
@@ -24,6 +29,7 @@ def main():
 	print("Current time: %s" % current_time)
 	for ARCHITECTURE in ARCHITECTURES:
 		print(ARCHITECTURE.get_name())
+		print("Image embedding %s\tWord embedding %s" % (settings.IMAGE_EMBEDDING_METHOD, settings.IMAGE_EMBEDDING_METHOD))
 		train(ARCHITECTURE)
 		if "eval" in sys.argv:
 			evaluate(ARCHITECTURE)
@@ -59,9 +65,10 @@ def evaluate(architecture):
 
 	# test_model(ARCHITECTURE.prediction_model)
 
-	result_header = "RESULTS FOR %s: (Evaluating time: %s)\n" % (architecture.get_name(), (time_end - time_start) / 60.0)
+	result_header = "RESULTS FOR %s: (Evaluating time: %s)\n" % (
+	architecture.get_name(), (time_end - time_start) / 60.0)
 	recall_results = "r1:%s,r5:%s,r10:%s,r20:%s,r100:%s,r1000:%s\n" % \
-	(r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
+					 (r1_avg, r5_avg, r10_avg, r20_avg, r100_avg, r1000_avg)
 
 	result_file = open(settings.RESULT_TEXTFILE_PATH, 'a')
 	result_file.write(result_header)

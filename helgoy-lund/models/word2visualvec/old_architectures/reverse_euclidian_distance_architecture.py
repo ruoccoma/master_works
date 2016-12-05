@@ -4,7 +4,7 @@ from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
 
-from abstract_image_to_text_architecture import AbstractImageToTextArchitecture
+from models.word2visualvec.abstract_image_to_text_architecture import AbstractImageToTextArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 

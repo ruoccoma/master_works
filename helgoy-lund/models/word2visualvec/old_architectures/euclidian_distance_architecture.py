@@ -3,9 +3,9 @@ from keras import backend as K
 from keras.engine import Input, Model
 from keras.layers import Dense, Lambda, Dropout, BatchNormalization
 # from keras.utils.visualize_util import plot
-from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
+from models.word2visualvec.abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 
-from abstract_text_to_image_architecture import AbstractTextToImageArchitecture
+from models.word2visualvec.abstract_text_to_image_architecture import AbstractTextToImageArchitecture
 from embeddings_helper import structure_and_store_embeddings
 from list_helpers import tf_l2norm
 import settings

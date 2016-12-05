@@ -31,6 +31,7 @@ class AbstractWord2VisualVecArchitecture:
 		self.model = None
 		self.prediction_model = None
 
+
 		config1 = ker.tf.ConfigProto()
 		config1.gpu_options.allow_growth = True
 		ker.set_session(ker.tf.Session(config=config1))
