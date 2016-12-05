@@ -3,8 +3,7 @@ import settings
 from embeddings_helper import structure_and_store_embeddings
 from keras.engine import Input
 from keras.layers import Dense, Embedding, LSTM, Bidirectional
-from models.word2visualvec.contrastive_loss_architecture import ContrastiveLossArchitecture
-from models.word2visualvec.old_architectures.euclidian_distance_architecture import EuclidianDistanceArchitecture
+from contrastive_loss_architecture import ContrastiveLossArchitecture
 
 
 class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
