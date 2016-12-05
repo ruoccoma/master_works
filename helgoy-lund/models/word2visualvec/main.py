@@ -3,7 +3,6 @@ import os
 import sys
 import time
 
-from lstm_embedding_architecture import LSTMEmbeddingArchitecture
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
@@ -13,6 +12,7 @@ import io_helper
 
 io_helper.create_missing_folders()
 
+from lstm_embedding_architecture import LSTMEmbeddingArchitecture
 from contrastive_loss_architecture import ContrastiveLossArchitecture
 
 ARCHITECTURES = [
