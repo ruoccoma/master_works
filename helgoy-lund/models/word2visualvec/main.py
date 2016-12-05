@@ -3,13 +3,13 @@ import os
 import sys
 import time
 
-from sqlite_wrapper import update_database_connection
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
 import settings
 
 import io_helper
+from sqlite_wrapper import update_database_connection
 
 io_helper.create_missing_folders()
 
