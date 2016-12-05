@@ -43,10 +43,6 @@ def fetch_filenames_from_cation_vector(caption_vector):
 
 
 if __name__ == "__main__":
-	import math
-	for x in fetch_all_caption_rows():
-		x_ = x[1][0]
-		if math.isnan(x_):
-			print(x[0], x[2])
-
-
+	caps = fetch_caption_vectors_for_image_name("1000092795.jpg")
+	for cap in caps:
+		print len(cap)

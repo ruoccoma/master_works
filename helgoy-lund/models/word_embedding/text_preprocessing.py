@@ -19,7 +19,7 @@ def preprocessing(text, remove_stopwords = False, stem_word = False, min_length 
     # Tokenizing
     words = tokenize(text)
 
-    ascii_check(words)
+    # ascii_check(words)
 
     if remove_stopwords:
         words = stopwording(words)
