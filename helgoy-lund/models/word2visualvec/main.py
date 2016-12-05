@@ -3,7 +3,7 @@ import os
 import sys
 import time
 
-from models.word2visualvec.lstm_embedding_architecture import LSTMEmbeddingArchitecture
+from lstm_embedding_architecture import LSTMEmbeddingArchitecture
 
 ROOT_DIR = os.path.dirname((os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), os.pardir)))) + "/"
 sys.path.append(ROOT_DIR)
