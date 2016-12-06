@@ -43,10 +43,11 @@ class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
 		caption_embedding = Embedding(20323 + 1,
 									  settings.WORD_EMBEDDING_DIMENSION,
 									  input_length=82)(caption_inputs)
-		caption_model = LSTM(500)(caption_embedding)
+		caption_model = LSTM(300)(caption_embedding)
 		caption_model = Dense(1024, activation='relu')(caption_model)
 		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
+
 
 class TwoLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
 	@staticmethod
