@@ -94,6 +94,20 @@ class ContrastiveLossArchitecture(AbstractTextToImageArchitecture):
 		self.prediction_model = caption_model
 
 
+class LargeContrastive(ContrastiveLossArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(settings.WORD_EMBEDDING_DIMENSION,), name="Caption_input")
+		caption_model = Lambda(lambda x: tf_l2norm(x), name="Normalize_caption_vector")(caption_inputs)
+		caption_model = Lambda(lambda x: abs(x), name="Caption Abs")(caption_model)
+		caption_model = Dense(500, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+
 class Word2visualVecContrastive(ContrastiveLossArchitecture):
 	@staticmethod
 	def get_caption_model():

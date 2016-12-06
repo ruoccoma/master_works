@@ -13,16 +13,17 @@ from sqlite_wrapper import update_database_connection
 
 io_helper.create_missing_folders()
 
-from lstm_embedding_architecture import LSTMEmbeddingArchitecture
-from contrastive_loss_architecture import ContrastiveLossArchitecture
+from lstm_embedding_architecture import LSTMEmbeddingArchitecture, FourHiddenLSTMEmbeddingArchitecture, \
+	BiLSTMEmbeddingArchitecture, TwoLSTMEmbeddingArchitecture
+from contrastive_loss_architecture import ContrastiveLossArchitecture, LargeContrastive
 
 ARCHITECTURES = [
-	ContrastiveLossArchitecture(image_embedding="inception", word_embedding="glove", epochs=1),
-	ContrastiveLossArchitecture(image_embedding="inception", word_embedding="word2vec", epochs=1),
-	LSTMEmbeddingArchitecture(image_embedding="inception", epochs=1),
-	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="glove", epochs=1),
-	ContrastiveLossArchitecture(image_embedding="vgg", word_embedding="word2vec", epochs=1),
-	LSTMEmbeddingArchitecture(image_embedding="vgg", epochs=1)]
+	LargeContrastive(image_embedding="inception", word_embedding="glove"),
+	LargeContrastive(image_embedding="inception", word_embedding="word2vec"),
+	FourHiddenLSTMEmbeddingArchitecture(image_embedding="inception"),
+	TwoLSTMEmbeddingArchitecture(image_embedding="vgg"),
+	FourHiddenLSTMEmbeddingArchitecture(image_embedding="vgg"),
+	BiLSTMEmbeddingArchitecture(image_embedding="vgg")]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 

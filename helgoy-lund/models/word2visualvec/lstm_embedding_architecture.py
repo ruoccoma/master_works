@@ -43,21 +43,35 @@ class LSTMEmbeddingArchitecture(ContrastiveLossArchitecture):
 		caption_embedding = Embedding(20323 + 1,
 									  settings.WORD_EMBEDDING_DIMENSION,
 									  input_length=82)(caption_inputs)
-		caption_model = LSTM(100)(caption_embedding)
+		caption_model = LSTM(500)(caption_embedding)
 		caption_model = Dense(1024, activation='relu')(caption_model)
 		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
 
-
-class TwoLayerLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
+class TwoLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
 	@staticmethod
 	def get_caption_model():
 		caption_inputs = Input(shape=(82,), name="Caption_input")
 		caption_embedding = Embedding(20323 + 1,
 									  settings.WORD_EMBEDDING_DIMENSION,
 									  input_length=82)(caption_inputs)
-		caption_model = Bidirectional(LSTM(100))(caption_embedding)
+		caption_model = LSTM(500)(caption_embedding)
+		caption_model = LSTM(500)(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
+		return caption_inputs, caption_model
+
+class FourHiddenLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
+	@staticmethod
+	def get_caption_model():
+		caption_inputs = Input(shape=(82,), name="Caption_input")
+		caption_embedding = Embedding(20323 + 1,
+									  settings.WORD_EMBEDDING_DIMENSION,
+									  input_length=82)(caption_inputs)
+		caption_model = LSTM(500)(caption_embedding)
+		caption_model = Dense(1024, activation='relu')(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
+		caption_model = Dense(2048, activation='relu')(caption_model)
 		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
 
@@ -69,7 +83,7 @@ class BiLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
 		caption_embedding = Embedding(20323 + 1,
 									  settings.WORD_EMBEDDING_DIMENSION,
 									  input_length=82)(caption_inputs)
-		caption_model = Bidirectional(LSTM(100))(caption_embedding)
+		caption_model = Bidirectional(LSTM(500))(caption_embedding)
 		caption_model = Dense(1024, activation='relu')(caption_model)
 		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
@@ -82,8 +96,8 @@ class TwoBiLSTMEmbeddingArchitecture(LSTMEmbeddingArchitecture):
 		caption_embedding = Embedding(20323 + 1,
 									  settings.WORD_EMBEDDING_DIMENSION,
 									  input_length=82)(caption_inputs)
-		caption_model = Bidirectional(LSTM(100))(caption_embedding)
-		caption_model = Bidirectional(LSTM(100))(caption_model)
+		caption_model = Bidirectional(LSTM(300))(caption_embedding)
+		caption_model = Bidirectional(LSTM(500))(caption_model)
 		caption_model = Dense(1024, activation='relu')(caption_model)
 		caption_model = Dense(settings.IMAGE_EMBEDDING_DIMENSIONS, activation='relu')(caption_model)
 		return caption_inputs, caption_model
