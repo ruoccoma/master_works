@@ -99,6 +99,7 @@ def load_meta_values(log_file):
 
     max_length = int(data[0])
     n_movies = int(data[1])
-    top_k_movies = ast.literal_eval(data[5])
+    #top_k_movies = ast.literal_eval(data[5])
+    top_k_movies = "todo"
 
     return max_length, n_movies, top_k_movies

@@ -1,117 +1,51 @@
-# http://www.kdnuggets.com/2016/05/intro-recurrent-networks-tensorflow.html
-
+from __future__ import division
+from evaluation import *
+from baselines import *
+from batch_operations import *
 import tensorflow as tf
 from tensorflow.python.ops import rnn, rnn_cell
 import numpy as np
 import time
 
 base_path = '/home/ole/recSys-pro/yoochoose/'
-rnn_log = base_path+'rnn.log'
-training_set = base_path + 'rsc15_train_full_ole.txt'
-test_set = base_path + 'test-set.txt'
+training_data_file = base_path + 'rsc15_train_full_ole.txt'
+test_data_file = base_path + 'rsc15_test_ole.txt'
+#knn_data_file = base_path + '1M-train-knn.dat'
+preprocess_log = base_path + 'preprocess.log'
 
-num_hidden = 100    # Number of hidden units in the hidden layer(s)
-#num_layers = 1     # Number of RNN (e.g. GRU) layers
-max_length = 19     # Maximum number of clicks in a session
-n_classes = 37483   # Size of representation of each click
-batch_size = 50
-max_epochs = 5
-n_training_sessions = 7966257
+num_hidden = 100    # number of hidden units in the RNN layer
+batch_size = 200
+max_epochs = 10
+# number of epochs between each test run
+test_frequency = 1
+use_ff = True
 
+# Load some values about the dataset
+max_length, n_classes, top_k = load_meta_values(preprocess_log)
+print("max_length = "+str(max_length)+" | n_classes = " + str(n_classes))
 
-################## READ DATA ##################################################
-# create the 1-HOT representation once and then we can just use pointers to these
-# time/space trade-off. Uses about 10.6 GB!
-print " creating library of 1-HOT vectors..."
-start = time.time()
-one_hot_representations = []
-for i in range(n_classes):
-    tmp = [0.]*n_classes
-    tmp[i] = 1.0
-    one_hot_representations.append(np.array(tmp))
-dummy_vector = [0.]*n_classes
-end = time.time()
-print "   1-HOT vectors created in " + str(end-start) + "s"
+dataset_manager = DatasetManager(training_data_file, test_data_file, n_classes, max_length, batch_size)
 
-print " loading training set..."
-start = time.time()
-training_data = []
-with open(training_set, 'r') as f:
-    for line in f:
-        line = line.split(' ')
-        line = map(int, line)
-        training_data.append(line)
-end = time.time()
-print "   training set loaded in " + str(end-start) + "s"
+# Prints precomputed baslines. Use print_all_baselines() to recalculate
+#knn_training_set = load_knn_training_set(knn_data_file)
+#print_all_baselines(max_length, n_classes, dataset_manager.get_test_set(), top_k, knn_training_set)
+print_all_baslines_precomputed()
 
-# Retrieves training session i, anc converts it to the proper format for RNN input
-def get_training_session(i):
-    raw_session = training_data[i]
-    session = []
-    # add the real clicks as 1-HOT encoded vectors
-    for click in raw_session:
-        #c = [0.]*n_classes
-        #c[click] = 1.0
-        #session.append(c)
-        session.append(one_hot_representations[click])
-    # Might need to pad the session to reach max_length
-    padding_length = max_length - len(session)
-    real_session_length = len(session) - 1  # last one is only target
-    for i in range(padding_length):
-        session.append(dummy_vector)
-    
-    # Split session into input and target clicks
-    session_x = []
-    session_y = []
-    for i in range(len(session)-1):
-        session_x.append(session[i])
-        session_y.append(session[i+1])
-    #return np.array(session_x), np.array(session_y), np.array(real_session_length)
-    return session_x, session_y, real_session_length
-
-# Method to easily get next training batch
-training_batch_current_index = 0
-def get_next_training_batch():
-    global training_batch_current_index
-    batch_x = []
-    batch_y = []
-    session_lengths = []
-    if training_batch_current_index + batch_size < len(training_data):
-        # Either we can get the batch_size next batches
-        for i in range(training_batch_current_index, training_batch_current_index+batch_size):
-            session_x, session_y, real_session_length = get_training_session(i)
-            batch_x.append(session_x)
-            batch_y.append(session_y)
-            session_lengths.append(real_session_length)
-        training_batch_current_index += batch_size
-    else:
-        # or we will reach the end of the set, and need to start from the beginning
-        additional_from_beginning = batch_size - (len(training_data)-training_batch_current_index)
-        for i in range(training_batch_current_index, len(training_data)):
-            session_x, session_y, real_session_length = get_training_session(i)
-            batch_x.append(session_x)
-            batch_y.append(session_y)
-            session_lengths.append(real_session_length)
-        for i in range(additional_from_beginnning):
-            session_x, session_y, real_session_length = get_training_session(i)
-            batch_x.append(session_x)
-            batch_y.append(session_y)
-            session_lengths.append(real_session_length)
-        training_batch_current_index = additional_from_beginning
-    #return np.array(batch_x), np.array(batch_y), np.array(session_lengths)
-    return batch_x, batch_y, session_lengths
-
-
-################# MODEL SETUP #################################################
-print " creating model..."
-start = time.time()
 # [Batch size, #timesteps (minus 1 since each click has the next one as target), click representation size]
-x = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="input_x")
-y = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="target_y")
+x = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="InputX")
+y = tf.placeholder(tf.float32, [None, max_length-1, n_classes], name="TargetY")
 # Vector with the session lengths for each session in a batch.
-session_length = tf.placeholder(tf.int32, [None], name="seq_len_of_input")
-output, state = rnn.dynamic_rnn(
+session_length = tf.placeholder(tf.int32, [None], name="SeqLenOfInput")
+if use_ff:
+    output, state = rnn.dynamic_rnn(
         rnn_cell.GRUCell(num_hidden),
+        x,
+        dtype=tf.float32,
+        sequence_length=session_length
+        )
+else:
+    output, state = rnn.dynamic_rnn(
+        rnn_cell.GRUCell(n_classes),
         x,
         dtype=tf.float32,
         sequence_length=session_length
@@ -120,49 +54,100 @@ output, state = rnn.dynamic_rnn(
 layer = {'weights':tf.Variable(tf.random_normal([num_hidden, n_classes])),
         'biases':tf.Variable(tf.random_normal([n_classes]))}
 
+keep_prob = tf.placeholder(tf.float32)
 # Flatten to apply same weights to all time steps.
-output = tf.reshape(output, [-1, num_hidden])
-prediction = tf.matmul(output, layer['weights'])# + layer['biases'] TODO
+if use_ff:
+    # add dropout [no significant difference]
+    #output = tf.nn.dropout(output, keep_prob)
 
-# Unflatten (?) back to original shape
-# skip this, since it they cancel each other out
-#prediction = tf.reshape(prediction, [-1, max_length, n_classes])
-#prediction = tf.reshape(prediction, [-1, n_classes])
+    output = tf.reshape(output, [-1, num_hidden])
+    prediction = tf.matmul(output, layer['weights'])# + layer['biases'] TODO
+else:
+    prediction = tf.reshape(output, [-1, n_classes])
 
 y_flat = tf.reshape(y, [-1, n_classes])
+
 # Reduce sum, since average divides by max_length, which is often wrong
-cost = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(prediction,y_flat))
+final_output = tf.nn.softmax_cross_entropy_with_logits(prediction,y_flat)
+cost = tf.reduce_sum(final_output)
 
+# The training 'function'
 optimizer = tf.train.AdamOptimizer().minimize(cost)
-end = time.time()
-print "   model created in " + str(end-start) + " s"
+
+# The testing part
+top_pred_vals, top_pred_indices = tf.nn.top_k(prediction, k=20, sorted=True, name="TopPredictions")
 
 
-################## RUN TRAINING ###############################################
-init = tf.initialize_all_variables()
+# Run training and testing
 with tf.Session() as sess:
-    print " initializing all variables..."
-    start = time.time()
-    sess.run(init)
-    end = time.time()
-    print "   variables initialized in " + str(end-start) + " s"
-    
-    epoch = 1
-    while epoch <= max_epochs:
-        epoch_start = time.time()
-        completed_training_sessions = 0
-        epoch_cost = 0
-        while completed_training_sessions < n_training_sessions:
-            start = time.time()
-            batch_x, batch_y, sess_len = get_next_training_batch()
-            completed_training_sessions += batch_size
-            _, c = sess.run([optimizer, cost], feed_dict={x:batch_x, y:batch_y, session_length:sess_len})
-            end = time.time()
-            print " cost: "+str(c) + " | "+str(completed_training_sessions)+"/"+str(n_training_sessions)+"  | batch optimization took " + str(end-start) + "s"
-            epoch_cost += c
-        print "epoch "+str(epoch)+" finished."
-        print "  epoch_cost = "+str(epoch_cost)
-        epoch += 1
-        epoch_end = time.time()
-        print "   epoch took " + str(epoch_end - epoch_start) + "s to run"
+    sess.run(tf.initialize_all_variables())
 
+    # Go through specified number of epochs
+    for epoch in range(max_epochs):
+
+        # Record runtime for each epoch and cost
+        epoch_start = time.time()
+        epoch_cost = 0
+
+        # Split the epoch in batches
+        num_training_batches = dataset_manager.get_number_of_training_batches()
+        for training_batch_number in range(num_training_batches):
+            batch_time = time.time()
+            print(str(training_batch_number)+"/"+str(num_training_batches))
+            batch_data_start = time.time()
+            batch_x, batch_y, sess_len = dataset_manager.get_next_training_batch()
+            print("  batch data retrieved in "+str(time.time()-batch_data_start)+" s")
+
+            # Calculate loss and optimize the weights
+            o, c = sess.run([optimizer, cost], feed_dict={x:batch_x, y:batch_y, session_length:sess_len, keep_prob:0.5})
+            epoch_cost += c
+            print("batch_time: "+str(time.time()-batch_time)+" s")
+
+        # Print statistics for training in this epoch
+        epoch_time = time.time() - epoch_start
+        print("epoch "+str(epoch)+" | cost: "+str(epoch_cost)+" | time: " + str(epoch_time) + "s")
+        
+        # Test the accuracy
+        if epoch%test_frequency == 0:
+
+            # Record runtime of testing, pluss statistics for test accuracy++
+            test_start = time.time()
+            correct_preds = 0
+            total_num_items_count = 0
+            ranks = []
+
+            # Split test in batches
+            num_test_batches = dataset_manager.get_number_of_test_batches()
+            for test_batch_number in range(num_test_batches):
+                test_x, test_y, sess_len = dataset_manager.get_next_test_batch()
+
+                # Get top (20) predictions for each session
+                preds = sess.run([top_pred_indices], feed_dict={x:test_x, session_length:sess_len, keep_prob:1.0})
+
+                # For each test batch
+                for batch_i in range(len(preds)):
+                    # Get predictions and targets for a session in the batch
+                    batch_preds = preds[batch_i]
+                    batch_y = test_y[batch_i]
+
+                    # For items in session
+                    for i in range(len(batch_y)):
+                        # Get the correct click aka target value
+                        correct_click = batch_y[i]
+
+                        # Check if the predictions contain the target value
+                        if correct_click in batch_preds[i]:
+                            correct_preds += 1
+
+                        total_num_items_count += 1
+
+                        # Calculate reciprocal ranks for the MeanReciprocalRank
+                        reciprocal_rank = get_reciprocal_rank(correct_click, batch_preds[i])
+                        ranks.append(reciprocal_rank)
+
+            # Calculate accuracy and MRR
+            accuracy = correct_preds / total_num_items_count
+            mrr = sum(ranks)/len(ranks)
+            
+            test_time = time.time() - test_start
+            print(" Recall@20: "+str(accuracy)+" | MRR@20: "+str(mrr)+" | time: "+str(test_time)+"s")

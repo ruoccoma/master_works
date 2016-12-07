@@ -12,80 +12,85 @@ hidasi_test = base_path + 'rsc15_test.txt'
 ole_test = base_path + 'rsc15_test_ole.txt'
 
 buffer_size = 20000000
+max_length = 10
 
-session_max_length = 19
+def read_data(in_file):
+    data = {}
+    # Read all the sessions into the data map
+    with open(in_file, buffering=buffer_size) as in_f:
+        for line in in_f:
+            if line[0] == 'S':
+                continue
+       
+            line = line.split('\t')
+            session_id = int(line[0])
+            item_id = int(line[1])
+            # line[0]=sessionID   line[1]=itemID   line[2]=timestamp
+            if session_id not in data:
+                data[session_id] = []
+            data[session_id].append(item_id)
 
-def crop_session(session):
-    session = session.split(' ')
-    out = ""
-    for i in range(session_max_length):
-        out += session[i] + " "
-    return out, session_max_length
+    return data
+
+def write_data(out_file, data):
+    with open(out_file, 'w') as out_f:
+        for key in data:
+            session = data[key]
+            session = session[:max_length]
+            line = ""
+            for item_click in session:
+                line += str(item_click) + " "
+            out_f.write(line.rstrip()+"\n")
+
 
 # We use the preprocessing by Hidasi to get the correct sessions (in format: sessionID | itemID | timestamp)
 #  then we do another pass to get the data in a format that is easier to work with
-def preprocess_data(in_file, out_file):
-    # all items
-    items = {}
-    session_id = -1
-    n_sessions = 0
-    longest_session = 0
-    with open(in_file, buffering=buffer_size) as in_f:
-        with open(out_file, 'w') as out_f:
-            try:
-                # read first session id, read twice to skip the first line
-                line = in_f.readline()
+def preprocess_data():
+    train_data = read_data(hidasi_full_train)
+    test_data = read_data(hidasi_test)
 
-                line = in_f.readline()
-                line = line.split('\t')
+    session_lengths = [0]*201
 
-                session_id = int(line[0])
+    # Go through all the itemIDs and map them down to smalles possible values
+    all_items = {}
+    for key in train_data:
+        session = train_data[key]
+        session_lengths[len(session)] += 1
+        for item_click in range(len(session)):
+            item = session[item_click]
+            if item not in all_items:
+                all_items[item] = len(all_items.keys())
+            session[item_click] = all_items[item]
+    for key in test_data:
+        session = test_data[key]
+        session_lengths[len(session)] += 1
+        for item_click in range(len(session)):
+            item = session[item_click]
+            if item not in all_items:
+                all_items[item] = len(all_items.keys())
+            session[item_click] = all_items[item]
 
-                in_f.seek(0)
-                line = in_f.readline() # skip first line again
+    n_items = len(all_items.keys())
 
-                session = ""
-                session_length = 0
+    write_data(ole_full_train, train_data)
+    write_data(ole_test, test_data)
 
-                for line in in_f:
-                    line = line.split('\t')
-                    tmp_session_id = int(line[0])
-                    item_id = int(line[1])
+    with open(preprocess_log, 'w') as log:
+        log.write("max_length (session):"+str(max_length)+"\n")
+        log.write("num items:"+str(n_items)+"\n")
 
-                    # Map item ids down to smaller numbers
-                    if item_id not in items:
-                        items[item_id] = len(items.keys())
-                    # use the downscaled item_id
-                    item_id = items[item_id]
-
-                    # Are we still on the same session?
-                    if tmp_session_id == session_id:
-                        session += str(item_id) + " "
-                        session_length += 1
-                    else:
-                        if 19 < session_length:
-                            session, session_length = crop_session(session)
-                        # write out this session
-                        out_f.write(session.rstrip() + '\n')
-                        if longest_session < session_length:
-                            longest_session = session_length
-                        n_sessions += 1
-                        # start next session
-                        session = str(item_id) + " "
-                        session_length = 1
-                        session_id = tmp_session_id
-
-            except Exception as e:
-                print str(e)
-
-    # log some info abut the processing (useful to check correctness)
-    with open(preprocess_log, 'a') as log:
-        log.write("\n ----------------- \n")
-        log.write("  Processed "+in_file+" and stored result in "+out_file+"\n")
-        log.write("  Number of sessions: "+str(n_sessions)+"\n")
-        log.write("  Number of unique items: "+str(len(items.keys()))+"\n")
-        log.write("  Longest session: "+str(longest_session)+"\n")
+    print("Session lengths:")
+    print(session_lengths)
+    print("Num sessions:")
+    print(sum(session_lengths))
+    print("Num sessions@10:")
+    print(sum([session_lengths[i] for i in range(11)]))
+    print("Num sessions@20:")
+    print(sum([session_lengths[i] for i in range(21)]))
+    print("Num items:")
+    print(n_items)
 
 
-preprocess_data(hidasi_full_train, ole_full_train)
+
+preprocess_data()
 

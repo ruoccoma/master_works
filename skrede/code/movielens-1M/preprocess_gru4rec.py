@@ -1,36 +1,36 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import pickle
 
 base_path = '/home/ole/recSys-pro/movielens-1M/'
 data_set = base_path + 'ratings.dat'
 preprocess_log = base_path + 'preprocess.log'
-meta_pickle = base_path + 'meta.pickle'
 
 buffer_size = 20000000
-n_initial_movies = 3952
+n_movies = 3952
 
 # most are below 900
 max_length = 10
-k = 10
+n_top_movies = 10
 
 
 def preprocess_data(in_file, train_file, test_file, train_knn_file):
-    
-    movie_statistics = [0]*n_initial_movies
-    
-    train_file = base_path + train_file
-    test_file = base_path + test_file
-    train_knn_file = base_path + train_knn_file
+    global preprocess_log
+    movie_statistics = [0]*3952
+    gru4rec = "_gru4rec"
+
+    train_file = base_path + train_file + gru4rec
+    test_file = base_path + test_file + gru4rec
+    train_knn_file = base_path + train_knn_file + gru4rec
+    preprocess_log = preprocess_log + gru4rec
+
     data = {}
 
     # Read all data first
-    print("Loading data")
     with open(in_file, buffering=buffer_size) as in_f:
         for line in in_f:
             line = line.split('::')
-            line = [int(i) for i in line]
+            line = map(int, line)
             
             # -1 to convert to 0-indexing
             user_id   = line[0]-1
@@ -41,19 +41,17 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
             if user_id not in data:
                 data[user_id] = []
 
-            data[user_id].append([movie_id, rating, timestamp])
+            data[user_id].append([movie_id, timestamp])
 
             movie_statistics[movie_id] += 1
 
     # Sort the user-clicks by time. Only sorts per user.
-    print("Sorting user clicks")
     for key in data.keys():
-        data[key] = sorted(data[key], key=lambda x: x[2])
+        data[key] = sorted(data[key], key=lambda x: x[1])
 
     # Only keep movie ratings with good enough support. 
     # (MovieID should appear at least 5 times)
     # I also only keep the movie_id info from here on
-    print("Filtering out low support movies and short sessions")
     filtered_data = []
     for key in data.keys():
         session = data[key]
@@ -65,7 +63,7 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
 
             # Only keep movies with enough support
             if 5 < movie_id_support:
-                new_session.append(movie_id)
+                new_session.append(rating_info)
 
         # Only keep sessions that are long enough        
         if max_length <= len(new_session):
@@ -76,10 +74,10 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
     filtered_data = None
 
     # Check how many movie_ids we are left with
-    print("Counting remaining movies and mapping down id's")
     remaining_movie_ids = {}
     for session in data:
-        for movie_id in session:
+        for rating_info in session:
+            movie_id = rating_info[0]
             if movie_id not in remaining_movie_ids:
                 remaining_movie_ids[movie_id] = len(remaining_movie_ids.keys())
     
@@ -87,14 +85,13 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
     #  necessary
     for session_index in range(len(data)):
         session = data[session_index]
-        for movie_index in range(len(session)):
-            session[movie_index] = remaining_movie_ids[session[movie_index]]
+        for rating_index in range(len(session)):
+            session[rating_index][0] = remaining_movie_ids[session[rating_index][0]]
     
     # Update total number of movies we are left with
     n_movies = len(remaining_movie_ids.keys())
 
     # Split data between training and testing
-    print("Spliting data between training and testing")
     training_split = int(0.8*len(data))
     training_data = data[:training_split]
     test_data = data[training_split:]
@@ -102,25 +99,24 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
     # Update movie statistics
     movie_statistics = [0]*n_movies
     for session in training_data:
-        for movie_id in session:
-            movie_statistics[movie_id] += 1
+        for rating in session:
+            movie_statistics[rating[0]] += 1
 
     # Find top k movies
-    print("Finding top", k, "movies")
-    top_k_movies = sorted(range(len(movie_statistics)), key=lambda i: movie_statistics[i])[-k:]
+    top_k_movies = sorted(range(len(movie_statistics)), key=lambda i: movie_statistics[i])[-n_top_movies:]
 
     # Store the current training set as is for the k-nn baseline to use
-    print("Storing trainingset for k-nn")
     with open(train_knn_file, 'w') as out_f:
         for session in training_data:
             line = ""
-            for movie_id in session:
+            for rating in session:
+                movie_id = rating[0]
                 line += str(movie_id) + " "
             out_f.write(line.rstrip()+'\n')
-            
+    
+
     # Create multiple sessions out of each session.
     # E.g. [1, 3, 7, 2, 4] -> {[1, 3, 7], [3, 7, 2], [7, 2, 4]} if max_length == 3
-    print("Splitting long sessions into multiple shorter (overlapping) sessions")
     processed_sessions = []
     for session in training_data:
         length = len(session) + 1
@@ -130,11 +126,9 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
             processed_sessions.append(new_session)
             i += 2
 
-
     training_data = processed_sessions
 
-    # Cut the test sessions to shorter sessions also
-    print("Cutting test sessions as well")
+    # Cut the test sessions to shorter sessions also (here we only split them to be shorter than max_length)
     processed_sessions = []
     for session in test_data:
         session
@@ -147,28 +141,25 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
 
     test_data = processed_sessions
     
-    print("Storing processed data")
     with open(train_file, 'w') as out_f:
-        for session in training_data:
+        out_f.write("SessionId\tItemId\tTime\n")
+        for session_id in range(len(training_data)):
             line = ""
-            for movie_id in session:
-                line += str(movie_id) + " "
-            out_f.write(line.rstrip()+'\n')
+            session = training_data[session_id]
+            for rating in session:
+                movie = rating[0]
+                timestamp = rating[1]
+                out_f.write(str(session_id)+"\t"+str(movie)+"\t"+str(timestamp)+"\n")
 
     with open(test_file, 'w') as out_f:
-        for session in test_data:
+        out_f.write("SessionId\tItemId\tTime\n")
+        for session_id in range(len(test_data)):
             line = ""
-            for movie_id in session:
-                line += str(movie_id) + " "
-            out_f.write(line.rstrip()+'\n')
-    
-    # Store some metadata
-    meta = {'n_classes':n_movies,
-    	    'max_sequence_length':max_length,
-    	    'top_k_movies':top_k_movies,
-            'k': k
-            }
-    pickle.dump( meta, open( meta_pickle, "wb" ) )
+            session = test_data[session_id]
+            for rating in session:
+                movie = rating[0]
+                timestamp = rating[1]
+                out_f.write(str(session_id)+"\t"+str(movie)+"\t"+str(timestamp)+"\n")
             
     # log some info abut the processing (useful to check correctness)
     with open(preprocess_log, 'w') as log:    
@@ -179,9 +170,5 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
         log.write("test_sessions:"+str(len(test_data))+"\n")
         log.write("top_k_movies:"+str(top_k_movies)+"\n")
     
-
-
 preprocess_data(data_set, "1M-train.dat", "1M-test.dat", "1M-train-knn.dat")
-
-from convert_to_csv import *
 
