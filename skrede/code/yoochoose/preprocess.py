@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import pickle
 
 base_path = '/home/ole/recSys-pro/yoochoose/'
 preprocess_log = base_path + 'preprocess.log'
@@ -11,8 +12,11 @@ ole_full_train = base_path + 'rsc15_train_full_ole.txt'
 hidasi_test = base_path + 'rsc15_test.txt'
 ole_test = base_path + 'rsc15_test_ole.txt'
 
+meta_pickle = base_path + 'meta.pickle'
+
 buffer_size = 20000000
 max_length = 10
+k = 20
 
 def read_data(in_file):
     data = {}
@@ -51,7 +55,7 @@ def preprocess_data():
 
     session_lengths = [0]*201
 
-    # Go through all the itemIDs and map them down to smalles possible values
+    # Go through all the itemIDs and map them down to smallest possible values
     all_items = {}
     for key in train_data:
         session = train_data[key]
@@ -89,6 +93,13 @@ def preprocess_data():
     print(sum([session_lengths[i] for i in range(21)]))
     print("Num items:")
     print(n_items)
+    
+    # Store some metadata
+    meta = {'n_classes':n_items,
+    	    'max_sequence_length':max_length,
+            'k': k
+            }
+    pickle.dump( meta, open( meta_pickle, "wb" ) )
 
 
 

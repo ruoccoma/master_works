@@ -4,7 +4,7 @@ import time
 # Specify stuff here
 batch_size = 200
 max_epochs = 10
-location = '/home/ole/recSys-pro/movielens-1M/'
+location = '/home/ole/recSys-pro/yoochoose/'
 
 # Load and store some parameters
 meta_pickle = location + 'meta.pickle'
@@ -22,15 +22,20 @@ with tf.Session() as sess:
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
     epoch_time = time.time()
     batch_time = time.time()
-    epoch_cost = 0
+    
     for i in range(1926):
-        _, c = sess.run([optimizer, cost], feed_dict={keep_prob:0.5})
-        epoch_cost += c
-        if i%30==0:
-            print("30 batches time", str(time.time()-batch_time))
-            print("  cost", str(epoch_cost))
-            epoch_cost=0
+        batch_cost=0
+        
+        _, c, ait = sess.run([optimizer, batch_loss, mask_weights], feed_dict={keep_prob:0.5})
+        print(ait.shape)
+        batch_cost += c
+
+        if i%10==0:
+            print("10 batches time", str(time.time()-batch_time))
             batch_time = time.time()
+            print("  cost", str(batch_cost))
+
+
     print("epoch time", str(time.time()-epoch_time))
     coord.request_stop()
     coord.join(threads)
