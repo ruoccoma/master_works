@@ -13,7 +13,7 @@ n_initial_movies = 3952
 
 # most are below 900
 max_length = 10
-k = 10
+k = 20
 
 
 def preprocess_data(in_file, train_file, test_file, train_knn_file):
@@ -166,7 +166,8 @@ def preprocess_data(in_file, train_file, test_file, train_knn_file):
     meta = {'n_classes':n_movies,
     	    'max_sequence_length':max_length,
     	    'top_k_movies':top_k_movies,
-            'k': k
+            'k': k,
+            'n_training_examples': len(training_data)
             }
     pickle.dump( meta, open( meta_pickle, "wb" ) )
             

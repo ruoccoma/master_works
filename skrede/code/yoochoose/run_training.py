@@ -26,8 +26,8 @@ with tf.Session() as sess:
     for i in range(1926):
         batch_cost=0
         
-        _, c, ait = sess.run([optimizer, batch_loss, mask_weights], feed_dict={keep_prob:0.5})
-        print(ait.shape)
+        _, c = sess.run([optimizer, batch_loss], feed_dict={keep_prob:0.5})
+        #print(ait.shape)
         batch_cost += c
 
         if i%10==0:

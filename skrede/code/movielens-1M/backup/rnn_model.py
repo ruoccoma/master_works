@@ -1,8 +1,7 @@
 import tensorflow as tf
 import pickle
-import numpy as np
 
-location  = '/home/ole/recSys-pro/yoochoose/'
+location  = '/home/ole/recSys-pro/movielens-1M/'
 n_hidden  = 100
 
 # Automatically load some other parameters specified in preprocessing and elsewhere
@@ -13,9 +12,13 @@ k                   = meta_data['k']
 train_files         = meta_data['train_files']
 n_classes           = meta_data['n_classes']
 batch_size          = meta_data['batch_size']
-n_readers            = 8
-n_preprocess_threads = 8
+n_readers            = len(train_files)
+n_preprocess_threads = n_readers*2
 pickle.dump(meta_data, open(meta_pickle, 'wb'))
+
+# Create library of 1-hots
+#tmp = [i for i in range(n_classes)]
+#one_hots = tf.one_hot(tmp, depth=n_classes)
 
 
 #############
@@ -51,31 +54,30 @@ parsed_examples = []
 for thread_id in range(n_preprocess_threads):
     example = tf.decode_csv(value, record_defaults=record_defaults)
 
+    # Create 1-HOT vectors of the sequence
+    one_hots = example[1:]
+    one_hots = tf.reshape(one_hots, [-1])
+    one_hots = tf.one_hot(one_hots, depth=n_classes)
+
     # Split the row into input/target values
     sequence_length = example[0]
-    features = example[1:-1]
-    targets  = example[2:]
-    
-    # Create a list with the value of sequence_length. E.g. 5 -> [5]
-    input_length = tf.expand_dims(tf.sub(sequence_length, 1), 0)
-    # Use this to mask out outputs from the rnn, so we don't train on padding
-    indicator = tf.ones(input_length, dtype=tf.int32)
+    features = one_hots[:-1]
+    targets  = one_hots[1:]
+    #features = example[1:-1]
+    #targets  = example[2:]
+    #features = tf.nn.embedding_lookup(one_hots, features)
+    #targets  = tf.nn.embedding_lookup(one_hots, targets)
 
-    parsed_examples.append([sequence_length, features, targets, indicator])
+    parsed_examples.append([sequence_length, features, targets])
 
 # Batch together examples
-session_length, x_unparsed, y_unparsed, mask = tf.train.batch_join(
+session_length, x, y = tf.train.batch_join(
         parsed_examples, 
         batch_size=batch_size,
-        capacity=2*n_preprocess_threads*batch_size,
-        dynamic_pad=True)
+        capacity=2*n_preprocess_threads*batch_size)
 
 
 # Parse the examples in a batch
-x = tf.one_hot(x_unparsed, depth=n_classes)
-#y = tf.one_hot(y_unparsed, depth=n_classes)
-y = tf.cast(y_unparsed, tf.int32)
-
 
 ###############
 # RNN NETWORK #
@@ -100,19 +102,12 @@ output = tf.nn.dropout(output, keep_prob)
 # The models prediction
 prediction = tf.matmul(output, layer['weights'], name="prediction")# + layer['biases'] TODO
 
-mask_weights = tf.to_float(mask)
-
-prediction_reshaped = tf.reshape(prediction, [batch_size, max_sequence_length-1, n_classes])
-
 # Reduce sum, since average divides by max_length, which is often wrong
-losses = tf.nn.sparse_softmax_cross_entropy_with_logits(prediction_reshaped, y, name="losses")
-
-batch_loss = tf.div(tf.reduce_sum(tf.mul(losses, mask_weights)),
-        tf.reduce_sum(mask_weights),
-        name="batch_loss")
+error = tf.nn.softmax_cross_entropy_with_logits(prediction, y, name="crossEntropy")
+cost  = tf.reduce_sum(error, name="cost")
 
 # The training 'function'
-optimizer = tf.train.AdamOptimizer(name="optimizer").minimize(batch_loss)
+optimizer = tf.train.AdamOptimizer(name="optimizer").minimize(cost)
 
 # Top k predictions for testing
 top_pred_vals, top_pred_indices = tf.nn.top_k(prediction, k=k, sorted=True, name="topPredictions")
