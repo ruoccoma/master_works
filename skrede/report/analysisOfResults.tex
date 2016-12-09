@@ -1,6 +1,10 @@
 \chapter{Analysis of Results}
 Short intro here.
 
+\section{Comparison of models}
+Explain that the differences in implementation and preprocessing of datasets probably is the reason behind the performance difference. 
+The Movielens dataset is not a real dataset (?), it is generally a "worse" dataset, with less structure in the data. One problem with it is that many of the movie-ratings have the same timestamp, so the order of those are very random, and the timespan between ratings can be vary greatly, while in the yoochoose dataset, the sequences have a much shorter timespan, meaning that the clicks are much more relevant to each other.
+
 \section{Using a feed-forward layer in the model}
 
 Results with the feed-forward layer:

@@ -1,0 +1,27 @@
+epoch #0 finished in 6129.054852247238 s
+  epoch loss 217298.871533
+testing...
+  test_batch created in 6.771087646484375e-05
+  Recall@20: 0.6537216828478964
+  MRR@20: 0.291126607821
+
+epoch #1 finished in 6117.546450138092 s
+  epoch loss 183763.634241
+testing...
+  test_batch created in 6.651878356933594e-05
+  Recall@20: 0.6666666666666666
+  MRR@20: 0.290079904999
+
+epoch #2 finished in 6112.908142566681 s
+  epoch loss 179811.943682
+testing...
+  test_batch created in 4.839897155761719e-05
+  Recall@20: 0.6731391585760518
+  MRR@20: 0.295701231731
+
+epoch #3 finished in 6112.083531141281 s
+  epoch loss 178788.476849
+testing...
+  test_batch created in 5.459785461425781e-05
+  Recall@20: 0.6812297734627831
+  MRR@20: 0.299929359091

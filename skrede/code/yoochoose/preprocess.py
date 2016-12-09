@@ -54,12 +54,15 @@ def preprocess_data():
     test_data = read_data(hidasi_test)
 
     session_lengths = [0]*201
+    
+    n_training_examples = 0
 
     # Go through all the itemIDs and map them down to smallest possible values
     all_items = {}
     for key in train_data:
         session = train_data[key]
         session_lengths[len(session)] += 1
+        n_training_examples += 1
         for item_click in range(len(session)):
             item = session[item_click]
             if item not in all_items:
@@ -78,6 +81,14 @@ def preprocess_data():
 
     write_data(ole_full_train, train_data)
     write_data(ole_test, test_data)
+    
+    # Store some metadata
+    meta = {'n_classes':n_items,
+    	    'max_sequence_length':max_length,
+            'k': k,
+            'n_training_examples': n_training_examples
+            }
+    pickle.dump( meta, open( meta_pickle, "wb" ) )
 
     with open(preprocess_log, 'w') as log:
         log.write("max_length (session):"+str(max_length)+"\n")
@@ -94,14 +105,6 @@ def preprocess_data():
     print("Num items:")
     print(n_items)
     
-    # Store some metadata
-    meta = {'n_classes':n_items,
-    	    'max_sequence_length':max_length,
-            'k': k
-            }
-    pickle.dump( meta, open( meta_pickle, "wb" ) )
-
-
 
 preprocess_data()
 

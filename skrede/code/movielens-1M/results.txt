@@ -1,97 +1,153 @@
-epoch #0 finished in 50.56194591522217 s
-  epoch loss 13604.8941975
-testing...
-  test_batch created in 5.507469177246094e-05
-  Recall@20: 0.2827777777777778
-  MRR@20: 0.125353171083
-  
-epoch #1 finished in 50.43430042266846 s
-  epoch loss 12264.3650565
-testing...
-  test_batch created in 5.8650970458984375e-05
-  Recall@20: 0.2972222222222222
-  MRR@20: 0.135592400851
-
-epoch #2 finished in 50.430314779281616 s
-  epoch loss 11852.8559833
-testing...
-  test_batch created in 5.507469177246094e-05
-  Recall@20: 0.3055555555555556
-  MRR@20: 0.137377303653
-
-epoch #3 finished in 50.39137315750122 s
-  epoch loss 11620.6782489
-testing...
-  test_batch created in 5.602836608886719e-05
-  Recall@20: 0.32
-  MRR@20: 0.137152092408
-
-epoch #4 finished in 50.50908803939819 s
-  epoch loss 11460.1741271
-testing...
-  test_batch created in 5.602836608886719e-05
-  Recall@20: 0.32055555555555554
-  MRR@20: 0.13348328125
-
-epoch #5 finished in 50.404297828674316 s
-  epoch loss 11339.7599459
-testing...
-  test_batch created in 5.984306335449219e-05
-  Recall@20: 0.32555555555555554
-  MRR@20: 0.135138163911
-
-epoch #6 finished in 50.399353981018066 s
-  epoch loss 11241.2901373
+epoch #0 finished in 50.4751718044281 s
+  epoch loss 13607.6335731
 testing...
   test_batch created in 5.53131103515625e-05
-  Recall@20: 0.325
-  MRR@20: 0.136666300945
+  Recall@20: 0.2534883720930233
+  MRR@20: 0.0832906054709
 
-epoch #7 finished in 50.42421007156372 s
-  epoch loss 11161.0258679
-testing...
-  test_batch created in 5.3882598876953125e-05
-  Recall@20: 0.3288888888888889
-  MRR@20: 0.136600284328
-
-epoch #8 finished in 50.41252946853638 s
-  epoch loss 11091.2154207
+epoch #1 finished in 50.39970016479492 s
+  epoch loss 12270.1987939
 testing...
   test_batch created in 5.507469177246094e-05
-  Recall@20: 0.32666666666666666
-  MRR@20: 0.133544799069
+  Recall@20: 0.28081395348837207
+  MRR@20: 0.0893878918574
 
-epoch #9 finished in 50.420804500579834 s
-  epoch loss 11030.0790257
+epoch #2 finished in 50.28041386604309 s
+  epoch loss 11853.2286172
+testing...
+  test_batch created in 5.173683166503906e-05
+  Recall@20: 0.288953488372093
+  MRR@20: 0.0936162554256
+
+epoch #3 finished in 52.95143127441406 s
+  epoch loss 11619.9753718
+testing...
+  test_batch created in 5.5789947509765625e-05
+  Recall@20: 0.2872093023255814
+  MRR@20: 0.0925275688379
+
+epoch #4 finished in 53.895681619644165 s
+  epoch loss 11457.7449732
+testing...
+  test_batch created in 5.4836273193359375e-05
+  Recall@20: 0.2877906976744186
+  MRR@20: 0.0916563997183
+
+epoch #5 finished in 54.2617084980011 s
+  epoch loss 11332.5159545
+testing...
+  test_batch created in 5.91278076171875e-05
+  Recall@20: 0.29767441860465116
+  MRR@20: 0.0920058996671
+
+epoch #6 finished in 53.01185750961304 s
+  epoch loss 11235.4269357
+testing...
+  test_batch created in 5.125999450683594e-05
+  Recall@20: 0.29767441860465116
+  MRR@20: 0.0888076122114
+
+epoch #7 finished in 53.76524615287781 s
+  epoch loss 11156.5034952
+testing...
+  test_batch created in 5.316734313964844e-05
+  Recall@20: 0.2895348837209302
+  MRR@20: 0.0896529675665
+
+epoch #8 finished in 54.59764003753662 s
+  epoch loss 11087.9271536
+testing...
+  test_batch created in 5.340576171875e-05
+  Recall@20: 0.29593023255813955
+  MRR@20: 0.0914455983403
+
+epoch #9 finished in 53.07014179229736 s
+  epoch loss 11027.5387921
+testing...
+  test_batch created in 5.435943603515625e-05
+  Recall@20: 0.29709302325581394
+  MRR@20: 0.0923882983112
+
+epoch #10 finished in 50.825621604919434 s
+  epoch loss 10977.4283171
 testing...
   test_batch created in 5.626678466796875e-05
-  Recall@20: 0.32722222222222225
-  MRR@20: 0.133971584143
+  Recall@20: 0.30116279069767443
+  MRR@20: 0.0907865264101
 
-epoch #10 finished in 50.60473346710205 s
-  epoch loss 10979.6775179
-testing...
-  test_batch created in 5.6743621826171875e-05
-  Recall@20: 0.32666666666666666
-  MRR@20: 0.133563771344
-
-epoch #11 finished in 50.415706634521484 s
-  epoch loss 10932.1151938
+epoch #11 finished in 51.21330261230469 s
+  epoch loss 10930.4347029
 testing...
   test_batch created in 5.650520324707031e-05
-  Recall@20: 0.32166666666666666
-  MRR@20: 0.132884400551
+  Recall@20: 0.29709302325581394
+  MRR@20: 0.0905246037802
 
-epoch #12 finished in 50.35690665245056 s
-  epoch loss 10890.9707203
+epoch #12 finished in 50.9302716255188 s
+  epoch loss 10888.335289
 testing...
-  test_batch created in 5.364418029785156e-05
-  Recall@20: 0.32
-  MRR@20: 0.132519567333
+  test_batch created in 5.4836273193359375e-05
+  Recall@20: 0.2924418604651163
+  MRR@20: 0.0912942190419
 
-epoch #13 finished in 50.15965270996094 s
-  epoch loss 10852.9747591
+epoch #13 finished in 52.75789546966553 s
+  epoch loss 10851.9204059
 testing...
-  test_batch created in 5.53131103515625e-05
-  Recall@20: 0.3188888888888889
-  MRR@20: 0.129593610265
+  test_batch created in 5.1975250244140625e-05
+  Recall@20: 0.29651162790697677
+  MRR@20: 0.0933029602147
+
+epoch #14 finished in 51.0889949798584 s
+  epoch loss 10815.665555
+testing...
+  test_batch created in 5.1021575927734375e-05
+  Recall@20: 0.2941860465116279
+  MRR@20: 0.0931696502797
+
+epoch #15 finished in 53.153239488601685 s
+  epoch loss 10782.7750173
+testing...
+  test_batch created in 5.245208740234375e-05
+  Recall@20: 0.29593023255813955
+  MRR@20: 0.0928411405201
+
+epoch #16 finished in 53.78689527511597 s
+  epoch loss 10754.6591682
+testing...
+  test_batch created in 5.4836273193359375e-05
+  Recall@20: 0.2936046511627907
+  MRR@20: 0.0916561681493
+
+epoch #17 finished in 53.76058602333069 s
+  epoch loss 10727.7006135
+testing...
+  test_batch created in 5.4836273193359375e-05
+  Recall@20: 0.29767441860465116
+  MRR@20: 0.0919221306719
+
+epoch #18 finished in 53.765703439712524 s
+  epoch loss 10699.6918955
+testing...
+  test_batch created in 5.2928924560546875e-05
+  Recall@20: 0.2930232558139535
+  MRR@20: 0.0885350125715
+
+epoch #19 finished in 53.97759413719177 s
+  epoch loss 10677.8860583
+testing...
+  test_batch created in 5.5789947509765625e-05
+  Recall@20: 0.29709302325581394
+  MRR@20: 0.0912303290784
+
+epoch #20 finished in 53.98182916641235 s
+  epoch loss 10654.004458
+testing...
+  test_batch created in 5.030632019042969e-05
+  Recall@20: 0.29127906976744183
+  MRR@20: 0.0912932347141
+
+epoch #21 finished in 52.93062615394592 s
+  epoch loss 10635.1155777
+testing...
+  test_batch created in 5.078315734863281e-05
+  Recall@20: 0.2877906976744186
+  MRR@20: 0.0897288510578

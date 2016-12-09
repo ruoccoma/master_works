@@ -1,5 +1,11 @@
 \chapter{Experimentation}
 Short intro to my experimentation here
+
+\section{Comparison of models}
+- compare my own implementation to Hidasis
+  - show differences in results(accuracy and runtime)
+  - show show other differences (implementation, preprocessing of dataset)
+
 \section{Using a feed-forward layer in the model}
 I compared two different models on the Movielens-1M dataset, with and without a feed-forward layer. The first model had a smaller GRU-layer of 100 units followed by a feed-forward layer of about 3377 units (same size as input layer) and the output here was the output layer. The second model had no feed-forward layer, and only had a large GRU-layer of 3377 units, and the output from this layer became the final output vector. The two models are shown in figure \TODO{Create a figure that illustrates the two models}. 
 

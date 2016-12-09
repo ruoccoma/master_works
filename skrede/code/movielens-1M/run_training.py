@@ -65,7 +65,7 @@ with tf.Session() as sess:
             pred_sequence = preds[batch_index]
             target_sequence = yu[batch_index]
 
-            for i in range(max_sequence_length-1):
+            for i in range(sl[batch_index]):
                 target_item = target_sequence[i]
                 k_predictions = pred_sequence[i]
 

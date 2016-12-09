@@ -22,7 +22,7 @@ def process_line(line):
         sequence.append('0')
     
     # Add the sequence length as the first value
-    sequence.insert(0, seq_len)
+    sequence.insert(0, seq_len-1)
 
     # Replace spaces with commas (for .csv)
     sequence = ",".join(str(i) for i in sequence)

@@ -1,6 +1,5 @@
 import tensorflow as tf
 import pickle
-import numpy as np
 
 location  = '/home/ole/recSys-pro/yoochoose/'
 n_hidden  = 100
@@ -13,6 +12,7 @@ k                   = meta_data['k']
 train_files         = meta_data['train_files']
 n_classes           = meta_data['n_classes']
 batch_size          = meta_data['batch_size']
+max_epochs          = meta_data['max_epochs']
 n_readers            = 8
 n_preprocess_threads = 8
 pickle.dump(meta_data, open(meta_pickle, 'wb'))
@@ -57,9 +57,9 @@ for thread_id in range(n_preprocess_threads):
     targets  = example[2:]
     
     # Create a list with the value of sequence_length. E.g. 5 -> [5]
-    input_length = tf.expand_dims(tf.sub(sequence_length, 1), 0)
+    input_length = tf.expand_dims(sequence_length, 0)
     # Use this to mask out outputs from the rnn, so we don't train on padding
-    indicator = tf.ones(input_length, dtype=tf.int32)
+    indicator = tf.reshape(tf.sequence_mask(input_length, maxlen=max_sequence_length-1, dtype=tf.int32), [-1])
 
     parsed_examples.append([sequence_length, features, targets, indicator])
 
@@ -68,7 +68,7 @@ session_length, x_unparsed, y_unparsed, mask = tf.train.batch_join(
         parsed_examples, 
         batch_size=batch_size,
         capacity=2*n_preprocess_threads*batch_size,
-        dynamic_pad=True)
+        dynamic_pad=False)
 
 
 # Parse the examples in a batch
@@ -100,20 +100,22 @@ output = tf.nn.dropout(output, keep_prob)
 # The models prediction
 prediction = tf.matmul(output, layer['weights'], name="prediction")# + layer['biases'] TODO
 
-mask_weights = tf.to_float(mask)
-
+# Reshape the prediction to fit in the loss function
 prediction_reshaped = tf.reshape(prediction, [batch_size, max_sequence_length-1, n_classes])
 
-# Reduce sum, since average divides by max_length, which is often wrong
+# Compute losses
 losses = tf.nn.sparse_softmax_cross_entropy_with_logits(prediction_reshaped, y, name="losses")
 
+# Use the masks to filter out loss on padded values that appears in shorter sequences
+mask_weights = tf.to_float(mask)
 batch_loss = tf.div(tf.reduce_sum(tf.mul(losses, mask_weights)),
         tf.reduce_sum(mask_weights),
         name="batch_loss")
 
-# The training 'function'
+# The optimizer for training
 optimizer = tf.train.AdamOptimizer(name="optimizer").minimize(batch_loss)
 
 # Top k predictions for testing
 top_pred_vals, top_pred_indices = tf.nn.top_k(prediction, k=k, sorted=True, name="topPredictions")
 
+top_k_preds = tf.reshape(top_pred_indices, [batch_size, max_sequence_length-1, k])
