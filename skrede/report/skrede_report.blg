@@ -3,65 +3,56 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: skrede_report.aux
 A level-1 auxiliary file: titlepage.aux
 A level-1 auxiliary file: introduction.aux
-A level-1 auxiliary file: motivations.aux
 A level-1 auxiliary file: stateOfTheArt.aux
-A level-1 auxiliary file: challanges.aux
-A level-1 auxiliary file: ideas.aux
-A level-1 auxiliary file: experimentation.aux
-A level-1 auxiliary file: analysisOfResults.aux
-A level-1 auxiliary file: conclusion.aux
-A level-1 auxiliary file: furtherWork.aux
+A level-1 auxiliary file: core.aux
+A level-1 auxiliary file: experimentAndResults.aux
+A level-1 auxiliary file: conclusionAndFurtherWork.aux
 A level-1 auxiliary file: acronyms.aux
-A level-1 auxiliary file: appendix-b.aux
 The style file: unsrt.bst
 Database file #1: references.bib
-Warning--entry type for "BBC:go-champion" isn't style-file defined
---line 77 of file references.bib
-Warning--entry type for "AGS:implicit-recommender-systems" isn't style-file defined
---line 85 of file references.bib
-Warning--entry type for "QUUX:matrix-factorization-tutorial" isn't style-file defined
---line 93 of file references.bib
-Warning--entry type for "COLAH:understanding-lstm" isn't style-file defined
---line 101 of file references.bib
-You've used 8 entries,
+Warning--entry type for "ZALANDO:understanding-consumer-histories" isn't style-file defined
+--line 253 of file references.bib
+Warning--entry type for "discover-weekly" isn't style-file defined
+--line 278 of file references.bib
+You've used 4 entries,
             1791 wiz_defined-function locations,
-            500 strings with 5275 characters,
-and the built_in function-call counts, 1184 in all, are:
-= -- 91
-> -- 62
+            474 strings with 4480 characters,
+and the built_in function-call counts, 637 in all, are:
+= -- 46
+> -- 39
 < -- 0
-+ -- 25
-- -- 17
-* -- 39
-:= -- 212
-add.period$ -- 24
-call.type$ -- 8
-change.case$ -- 8
++ -- 15
+- -- 11
+* -- 26
+:= -- 118
+add.period$ -- 12
+call.type$ -- 4
+change.case$ -- 4
 chr.to.int$ -- 0
-cite$ -- 8
-duplicate$ -- 52
-empty$ -- 129
-format.name$ -- 17
-if$ -- 261
+cite$ -- 4
+duplicate$ -- 26
+empty$ -- 65
+format.name$ -- 11
+if$ -- 137
 int.to.chr$ -- 0
-int.to.str$ -- 8
-missing$ -- 4
-newline$ -- 43
-num.names$ -- 8
-pop$ -- 24
+int.to.str$ -- 4
+missing$ -- 2
+newline$ -- 23
+num.names$ -- 4
+pop$ -- 12
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 36
+skip$ -- 18
 stack$ -- 0
 substring$ -- 0
-swap$ -- 8
+swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 8
-width$ -- 9
-write$ -- 82
-(There were 4 warnings)
+while$ -- 4
+width$ -- 5
+write$ -- 42
+(There were 2 warnings)

@@ -1,14 +1,19 @@
-\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 2
-\BOOKMARK [1][-]{section.1.2}{Objectives of the work}{chapter.1}% 3
-\BOOKMARK [1][-]{section.1.3}{Background}{chapter.1}% 4
-\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 5
-\BOOKMARK [1][-]{section.2.1}{Matrix factorization models}{chapter.2}% 6
-\BOOKMARK [1][-]{section.2.2}{Restricted Bolzmann machines}{chapter.2}% 7
-\BOOKMARK [1][-]{section.2.3}{About the papers I have read}{chapter.2}% 8
-\BOOKMARK [2][-]{subsection.2.3.1}{Session-based Recommendations with Recurrent Neural Networks}{section.2.3}% 9
-\BOOKMARK [2][-]{subsection.2.3.2}{Modelling Contextual Information in Session-Aware Recommender Systems with Neural Networks}{section.2.3}% 10
-\BOOKMARK [2][-]{subsection.2.3.3}{Deep Neural Networks for YouTube Recommendations}{section.2.3}% 11
-\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 12
-\BOOKMARK [0][-]{appendix.B}{appendix-b}{}% 13
-\BOOKMARK [0][-]{appendix*.2}{Bibliography}{}% 14
+\BOOKMARK [0][-]{chapter*.2}{List of Figures}{}% 1
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 2
+\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.2}{Objectives}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.3}{Background}{chapter.1}% 5
+\BOOKMARK [2][-]{subsection.1.3.1}{Recommender systems}{section.1.3}% 6
+\BOOKMARK [2][-]{subsection.1.3.2}{Collaborative filtering}{section.1.3}% 7
+\BOOKMARK [2][-]{subsection.1.3.3}{Session-based recommender systems}{section.1.3}% 8
+\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 9
+\BOOKMARK [0][-]{chapter.3}{Core}{}% 10
+\BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 11
+\BOOKMARK [1][-]{section.4.1}{Experiments}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.2}{Results}{chapter.4}% 13
+\BOOKMARK [1][-]{section.4.3}{Discussion}{chapter.4}% 14
+\BOOKMARK [0][-]{chapter.5}{Conclusion and further work}{}% 15
+\BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 16
+\BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 17
+\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 18
+\BOOKMARK [0][-]{appendix*.5}{Bibliography}{}% 19

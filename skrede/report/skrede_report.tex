@@ -16,7 +16,8 @@
 \usepackage{url}							%
 
 \usepackage{xcolor}
-\newcommand\TODO[1]{\textcolor{red}{#1}}
+\newcommand\TODO[1]{\textcolor{red}{#1}}			% Add red TODOs in the paper
+\newcommand{\source}[1]{\caption*{\footnotesize{Source: {#1}}} }	% Used to cite images
 
 % Title Page
 \title{Title}
@@ -39,6 +40,7 @@
 % Content
 %%=========================================
 \setcounter{page}{0}
+\listoffigures
 \pagenumbering{arabic}
 \include{introduction}
 \include{stateOfTheArt}
@@ -50,7 +52,7 @@
 %%=========================================
 \appendix
 \include{acronyms}
-\include{appendix-b}
+%\include{appendix-b}
 
 \bibliographystyle{unsrt}
 \bibliography{references}
