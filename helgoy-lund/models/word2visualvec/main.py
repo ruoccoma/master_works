@@ -17,13 +17,14 @@ from lstm_embedding_architecture import LSTMEmbeddingArchitecture, FourHiddenLST
 	BiLSTMEmbeddingArchitecture, TwoLSTMEmbeddingArchitecture
 from contrastive_loss_architecture import ContrastiveLossArchitecture, LargeContrastive
 
-ARCHITECTURES = [
-	LargeContrastive(image_embedding="inception", word_embedding="glove"),
-	LargeContrastive(image_embedding="inception", word_embedding="word2vec"),
-	FourHiddenLSTMEmbeddingArchitecture(image_embedding="inception"),
-	TwoLSTMEmbeddingArchitecture(image_embedding="vgg"),
-	FourHiddenLSTMEmbeddingArchitecture(image_embedding="vgg"),
-	BiLSTMEmbeddingArchitecture(image_embedding="vgg")]
+ARCHITECTURES = [LSTMEmbeddingArchitecture()]
+# ARCHITECTURES = [
+# 	LargeContrastive(image_embedding="inception", word_embedding="glove"),
+# 	LargeContrastive(image_embedding="inception", word_embedding="word2vec"),
+# 	FourHiddenLSTMEmbeddingArchitecture(image_embedding="inception"),
+# 	TwoLSTMEmbeddingArchitecture(image_embedding="vgg"),
+# 	FourHiddenLSTMEmbeddingArchitecture(image_embedding="vgg"),
+# 	BiLSTMEmbeddingArchitecture(image_embedding="vgg")]
 
 NEG_TAG = "neg" if settings.CREATE_NEGATIVE_EXAMPLES else "pos"
 
@@ -34,7 +35,7 @@ def main():
 	for ARCHITECTURE in ARCHITECTURES:
 		update_database_connection(ARCHITECTURE.word_embedding, ARCHITECTURE.image_embedding)
 		print(ARCHITECTURE.get_name())
-		print("Image embedding %s\tWord embedding %s" % (settings.IMAGE_EMBEDDING_METHOD, settings.IMAGE_EMBEDDING_METHOD))
+		print("Image embedding %s\tWord embedding %s" % (settings.IMAGE_EMBEDDING_METHOD, settings.WORD_EMBEDDING_METHOD))
 		train(ARCHITECTURE)
 		if "eval" in sys.argv:
 			evaluate(ARCHITECTURE)

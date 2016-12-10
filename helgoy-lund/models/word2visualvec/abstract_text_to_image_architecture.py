@@ -21,8 +21,7 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 	def predict(self):
 		captions = []
 		while 1:
-			# TODO input not working in python 2
-			user_provided_caption = input("EXIT WITH EMPTY - Enter caption: ")
+			user_provided_caption = raw_input("EXIT WITH EMPTY - Enter caption: ")
 			if user_provided_caption == "":
 				break
 			else:
@@ -31,14 +30,26 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 		for i in range(len(samples)):
 			correct_caption_vector_list = samples[i:i + 1]
 
-			predicted_image_vector = self.model.predict(correct_caption_vector_list)[0]
+			predicted_image_vector = self.prediction_model.predict(correct_caption_vector_list)[0]
 
-			best_image_vector_name_list, _ = find_n_most_similar_images(predicted_image_vector)
-			print("Result for %s:" % captions[i])
-			for i in range(len(best_image_vector_name_list)):
-				filename = best_image_vector_name_list[i]
-				show_image(settings.IMAGE_DIR + filename, str(i + 1) + "-" + filename)
-				print(i + 1, filename)
+			tr_im_filename_image_vector_tuples = fetch_all_image_vector_pairs()
+			tr_im_filenames = [x[0] for x in tr_im_filename_image_vector_tuples]
+			tr_im_image_vectors = [x[1] for x in tr_im_filename_image_vector_tuples]
+
+			similarity_matrix = cosine_similarity(predicted_image_vector, tr_im_image_vectors)
+
+			total_image_size = len(tr_im_image_vectors)
+			similarities = []
+			for i in range(total_image_size):
+				tr_filename = tr_im_filenames[i]
+				similarities.append((tr_filename, similarity_matrix[0][i]))
+			similarities.sort(key=lambda s: s[1], reverse=True)
+
+			for j in range(5):
+				filename = similarities[j][0]
+				sim = similarities[j][0]
+				show_image(settings.IMAGE_DIR + filename, str(j + 1) + "-" + filename)
+				print(j + 1, filename, sim)
 			print("")
 
 	def test(self):
@@ -111,8 +122,12 @@ class AbstractTextToImageArchitecture(AbstractWord2VisualVecArchitecture):
 			test_caption_vector_key = totuple(test_caption_vector)
 			test_filename = tr_ca_caption_vector_filename_dictionary[test_caption_vector_key]
 
+			print("Q: %s" % test_filename)
+
 			for top_image_index in range(1000):
 				comparison_filename = similarities[top_image_index][0]
+				if top_image_index < 5:
+					print("Rank %s: %s, %s" % (top_image_index, similarities[top_image_index][0], similarities[top_image_index][1]))
 				if test_filename == comparison_filename:
 					if top_image_index < 1000:
 						r1000.append(1.0)
