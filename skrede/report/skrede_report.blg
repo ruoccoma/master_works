@@ -17,45 +17,45 @@ Warning--entry type for "discover-weekly" isn't style-file defined
 Warning--entry type for "matrix-factorization" isn't style-file defined
 --line 324 of file references.bib
 Warning--empty booktitle in Rumelhart:1986:LIR:104279.104293
-You've used 9 entries,
+You've used 10 entries,
             1791 wiz_defined-function locations,
-            508 strings with 5669 characters,
-and the built_in function-call counts, 1719 in all, are:
-= -- 146
-> -- 86
-< -- 2
-+ -- 33
-- -- 24
-* -- 91
-:= -- 288
-add.period$ -- 28
-call.type$ -- 9
-change.case$ -- 9
+            516 strings with 5904 characters,
+and the built_in function-call counts, 2055 in all, are:
+= -- 182
+> -- 94
+< -- 3
++ -- 36
+- -- 26
+* -- 107
+:= -- 333
+add.period$ -- 32
+call.type$ -- 10
+change.case$ -- 10
 chr.to.int$ -- 0
-cite$ -- 10
-duplicate$ -- 74
-empty$ -- 169
-format.name$ -- 24
-if$ -- 382
+cite$ -- 11
+duplicate$ -- 93
+empty$ -- 204
+format.name$ -- 26
+if$ -- 467
 int.to.chr$ -- 0
-int.to.str$ -- 9
-missing$ -- 5
-newline$ -- 48
-num.names$ -- 9
-pop$ -- 25
+int.to.str$ -- 10
+missing$ -- 6
+newline$ -- 53
+num.names$ -- 10
+pop$ -- 30
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 45
+skip$ -- 57
 stack$ -- 0
-substring$ -- 63
-swap$ -- 17
-text.length$ -- 2
+substring$ -- 87
+swap$ -- 26
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 14
-width$ -- 10
-write$ -- 95
+while$ -- 18
+width$ -- 12
+write$ -- 107
 (There were 4 warnings)

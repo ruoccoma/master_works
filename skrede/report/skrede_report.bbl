@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{discover-weekly}
 Spotify.
@@ -51,5 +51,12 @@ Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan
 Ian Goodfellow, Yoshua Bengio, and Aaron Courville.
 \newblock Deep learning.
 \newblock Book in preparation for MIT Press, 2016.
+
+\bibitem{Hochreiter96bridginglong}
+Sepp Hochreiter and Jürgen Schmidhuber.
+\newblock Bridging long time lags by weight guessing and "long short term
+  memory".
+\newblock In {\em SPATIOTEMPORAL MODELS IN BIOLOGICAL AND ARTIFICIAL SYSTEMS},
+  pages 65--72. IOS Press, 1996.
 
 \end{thebibliography}
