@@ -1,19 +1,27 @@
-\BOOKMARK [0][-]{chapter*.2}{List of Figures}{}% 1
-\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 2
-\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 3
-\BOOKMARK [1][-]{section.1.2}{Objectives}{chapter.1}% 4
-\BOOKMARK [1][-]{section.1.3}{Background}{chapter.1}% 5
-\BOOKMARK [2][-]{subsection.1.3.1}{Recommender systems}{section.1.3}% 6
-\BOOKMARK [2][-]{subsection.1.3.2}{Collaborative filtering}{section.1.3}% 7
-\BOOKMARK [2][-]{subsection.1.3.3}{Session-based recommender systems}{section.1.3}% 8
-\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 9
-\BOOKMARK [0][-]{chapter.3}{Core}{}% 10
-\BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 11
-\BOOKMARK [1][-]{section.4.1}{Experiments}{chapter.4}% 12
-\BOOKMARK [1][-]{section.4.2}{Results}{chapter.4}% 13
-\BOOKMARK [1][-]{section.4.3}{Discussion}{chapter.4}% 14
-\BOOKMARK [0][-]{chapter.5}{Conclusion and further work}{}% 15
-\BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 16
-\BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 17
-\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 18
-\BOOKMARK [0][-]{appendix*.5}{Bibliography}{}% 19
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Motivation}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Objectives}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Background}{chapter.1}% 4
+\BOOKMARK [2][-]{subsection.1.3.1}{Recommender systems}{section.1.3}% 5
+\BOOKMARK [2][-]{subsection.1.3.2}{Collaborative filtering}{section.1.3}% 6
+\BOOKMARK [2][-]{subsection.1.3.3}{Cold start}{section.1.3}% 7
+\BOOKMARK [2][-]{subsection.1.3.4}{Content-based filtering}{section.1.3}% 8
+\BOOKMARK [2][-]{subsection.1.3.5}{Session-based recommender systems}{section.1.3}% 9
+\BOOKMARK [2][-]{subsection.1.3.6}{Neural networks}{section.1.3}% 10
+\BOOKMARK [2][-]{subsection.1.3.7}{Dropout}{section.1.3}% 11
+\BOOKMARK [2][-]{subsection.1.3.8}{Minibatches}{section.1.3}% 12
+\BOOKMARK [2][-]{subsection.1.3.9}{Deep learning}{section.1.3}% 13
+\BOOKMARK [2][-]{subsection.1.3.10}{Recurrent neural networks}{section.1.3}% 14
+\BOOKMARK [2][-]{subsection.1.3.11}{LSTM and GRU}{section.1.3}% 15
+\BOOKMARK [2][-]{subsection.1.3.12}{RNN as a session-based recommender system}{section.1.3}% 16
+\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 17
+\BOOKMARK [0][-]{chapter.3}{Core}{}% 18
+\BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 19
+\BOOKMARK [1][-]{section.4.1}{Experiments}{chapter.4}% 20
+\BOOKMARK [1][-]{section.4.2}{Results}{chapter.4}% 21
+\BOOKMARK [1][-]{section.4.3}{Discussion}{chapter.4}% 22
+\BOOKMARK [0][-]{chapter.5}{Conclusion and further work}{}% 23
+\BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 24
+\BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 25
+\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 26
+\BOOKMARK [0][-]{appendix*.6}{Bibliography}{}% 27

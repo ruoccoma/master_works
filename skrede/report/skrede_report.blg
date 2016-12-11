@@ -11,48 +11,51 @@ A level-1 auxiliary file: acronyms.aux
 The style file: unsrt.bst
 Database file #1: references.bib
 Warning--entry type for "ZALANDO:understanding-consumer-histories" isn't style-file defined
---line 253 of file references.bib
+--line 271 of file references.bib
 Warning--entry type for "discover-weekly" isn't style-file defined
---line 278 of file references.bib
-You've used 4 entries,
+--line 316 of file references.bib
+Warning--entry type for "matrix-factorization" isn't style-file defined
+--line 324 of file references.bib
+Warning--empty booktitle in Rumelhart:1986:LIR:104279.104293
+You've used 9 entries,
             1791 wiz_defined-function locations,
-            474 strings with 4480 characters,
-and the built_in function-call counts, 637 in all, are:
-= -- 46
-> -- 39
-< -- 0
-+ -- 15
-- -- 11
-* -- 26
-:= -- 118
-add.period$ -- 12
-call.type$ -- 4
-change.case$ -- 4
+            508 strings with 5669 characters,
+and the built_in function-call counts, 1719 in all, are:
+= -- 146
+> -- 86
+< -- 2
++ -- 33
+- -- 24
+* -- 91
+:= -- 288
+add.period$ -- 28
+call.type$ -- 9
+change.case$ -- 9
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 26
-empty$ -- 65
-format.name$ -- 11
-if$ -- 137
+cite$ -- 10
+duplicate$ -- 74
+empty$ -- 169
+format.name$ -- 24
+if$ -- 382
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 2
-newline$ -- 23
-num.names$ -- 4
-pop$ -- 12
+int.to.str$ -- 9
+missing$ -- 5
+newline$ -- 48
+num.names$ -- 9
+pop$ -- 25
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 18
+skip$ -- 45
 stack$ -- 0
-substring$ -- 0
-swap$ -- 4
-text.length$ -- 0
+substring$ -- 63
+swap$ -- 17
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 4
-width$ -- 5
-write$ -- 42
-(There were 2 warnings)
+warning$ -- 1
+while$ -- 14
+width$ -- 10
+write$ -- 95
+(There were 4 warnings)

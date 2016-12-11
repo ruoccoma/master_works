@@ -2,10 +2,10 @@
 
 \usepackage[T1]{fontenc}					% norsk tegnsett (Ã¦Ã¸Ã¥)
 \usepackage[utf8]{inputenc}					% norsk tegnsett
-\usepackage{geometry}						% anbefalt pakke for Ã¥ styre marger.
+\usepackage{geometry}						% anbefalt pakke for å styre marger.
 
 \usepackage{amsmath,amsfonts,amssymb} 		% matematikksymboler
-\usepackage{amsthm}                   		% for Ã¥ lage teoremer og lignende.
+\usepackage{amsthm}                   		% for å lage teoremer og lignende.
 \usepackage{graphicx}                 		% inkludering av grafikk
 \usepackage{subfig}                   		% hvis du vil kunne ha flere figurer inni en figur
 \usepackage{listings}     		            % main aim is to include the source code of any programming language within your document
@@ -14,6 +14,8 @@
 \usepackage{acronym}						% This pack­age en­sures that all acronyms used in the text are spelled out in full at least once.
 \usepackage{hyperref}           		    % Lager hyperlinker i evt. pdf-dokument
 \usepackage{url}							%
+
+\usepackage{gensymb}						% to display degrees (celsius, ..)
 
 \usepackage{xcolor}
 \newcommand\TODO[1]{\textcolor{red}{#1}}			% Add red TODOs in the paper
@@ -36,11 +38,11 @@
 \end{abstract}
 % Table of contents
 \tableofcontents \clearpage
+%\listoffigures \clearpage
 
 % Content
 %%=========================================
 \setcounter{page}{0}
-\listoffigures
 \pagenumbering{arabic}
 \include{introduction}
 \include{stateOfTheArt}
@@ -55,7 +57,7 @@
 %\include{appendix-b}
 
 \bibliographystyle{unsrt}
-\bibliography{references}
+\bibliography{references}{}
 
 \end{document}
 % ==============================================

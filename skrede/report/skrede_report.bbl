@@ -23,4 +23,33 @@ Qiang Liu, Shu Wu, Diyi Wang, Zhaokang Li, and Liang Wang.
 \newblock Context-aware sequential recommendation.
 \newblock {\em CoRR}, abs/1609.05787, 2016.
 
+\bibitem{matrix-factorization}
+Albert~Au Yeung.
+\newblock Matrix factorization: A simple tutorial and implementation in python.
+\newblock
+  \url{http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/}.
+
+\bibitem{DBLP:journals/corr/Lipton15}
+Zachary~Chase Lipton.
+\newblock A critical review of recurrent neural networks for sequence learning.
+\newblock {\em CoRR}, abs/1506.00019, 2015.
+
+\bibitem{Rumelhart:1986:LIR:104279.104293}
+D.~E. Rumelhart, G.~E. Hinton, and R.~J. Williams.
+\newblock Parallel distributed processing: Explorations in the microstructure
+  of cognition, vol. 1.
+\newblock chapter Learning Internal Representations by Error Propagation, pages
+  318--362. MIT Press, Cambridge, MA, USA, 1986.
+
+\bibitem{Srivastava:2014:DSW:2627435.2670313}
+Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan
+  Salakhutdinov.
+\newblock Dropout: A simple way to prevent neural networks from overfitting.
+\newblock {\em J. Mach. Learn. Res.}, 15(1):1929--1958, January 2014.
+
+\bibitem{Goodfellow-et-al-2016-Book}
+Ian Goodfellow, Yoshua Bengio, and Aaron Courville.
+\newblock Deep learning.
+\newblock Book in preparation for MIT Press, 2016.
+
 \end{thebibliography}
