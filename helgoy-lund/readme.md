@@ -1,22 +1,30 @@
 # Prosjektoppgave: Multimodal deep learning
 
 #### Preprocessing
+
 ##### Word embedding
 To create new word embeddings edit `settings.py` and run:
+
 `python models/word_embedding/word_embedding_main.py`
+
 ##### Image embeddings
 To create new word embeddings run either:
+
 `python models/image_embedding/vgg/vgg_19.py`
 for VGG-19 or
+
 `python models/image_embedding/inception/cnn_imagenet.py`
 for Inception.
+
 #### Training
 To train a new model edit `main.py` and add new architectures to ARCHITECTURES array. Then run:
-`python models/word_embedding/word_embedding_main.py`
+`python models/word2visualvec/main.py`
+
 #### Evaluation
-`python models/word_embedding/word_embedding_main.py eval`
+`python models/word2visualvec/main.py eval`
+
 #### Random text-to-image retrieval
-`python models/word_embedding/word_embedding_main.py sample_image_query`
+`python models/word2visualvec/main.py sample_image_query`
 
 #### Requirements
 The following python packages are required. Installed using "pip". 
