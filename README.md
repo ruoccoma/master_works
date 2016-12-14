@@ -12,3 +12,6 @@ _./havikbotn_: Deep Retrieval Models for Q/A
 _./remi_: Dynamic Memory Network Applied To Retrieval-Based Dialogue Systems
 
 [project-idi-rnnchatbot](https://github.com/siljec/project-idi-rnnchatbot) : RNN Chatbot: Implementing a generative conversational agent and comparing Grid-LSTM cells with standard LSTM cells
+
+[CartPole_model_based_RL](https://github.com/mrminy/CartPole_model_based_RL): Model-based RL methods for simple OpenAI problems
+
