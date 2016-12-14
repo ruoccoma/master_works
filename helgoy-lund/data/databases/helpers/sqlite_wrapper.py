@@ -21,6 +21,7 @@ def convert_array(text):
 
 
 db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+# TODO str Not working in python 2, unicode does
 # db.text_factory = lambda x: unicode(x, "utf-8", "ignore")
 
 
@@ -34,6 +35,14 @@ c.execute('''CREATE TABLE IF NOT EXISTS captions (filename TEXT, caption_text TE
 c.execute('''CREATE TABLE IF NOT EXISTS words (word_text TEXT UNIQUE, word_vector array)''')
 db.commit()
 
+def update_database_connection(word_embedding, image_embedding):
+	global db
+	settings.DB_SUFFIX = "%s-%s-%s" % (image_embedding, word_embedding, settings.DATASET)
+	settings.DB_FILE_PATH = settings.ROOT_DIR + "/data/databases/sqlite/database-%s.db" % settings.DB_SUFFIX
+	db = sqlite3.connect(settings.DB_FILE_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
+	settings.STORED_EMBEDDINGS_NAME = "%s-%s" % (settings.DB_SUFFIX, settings.NEG_TAG)
+	settings.IMAGE_EMBEDDING_DIMENSIONS = 4096 if image_embedding == "vgg" else 2048
+	print("Connected to %s" % settings.DB_FILE_PATH)
 
 """ TABLE: WORDS """
 
@@ -81,6 +90,11 @@ def db_all_filename_img_vec_pairs():
 	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
 
 
+def db_update_filename_img_vec_pairs():
+	cursor = db.cursor()
+	return cursor.execute("""SELECT filename, image_vector FROM images""").fetchall()
+
+
 def db_insert_image_vector(filename, image_vector):
 
 	cursor = db.cursor()
@@ -93,6 +107,12 @@ def db_get_filename_from_image_vector(image_vector):
 	result = cursor.execute("""SELECT filename FROM images WHERE image_vector = ?""",
 	                        (image_vector,)).fetchone()
 	return result
+
+
+def db_insert_image_vector_list(tuple_list):
+	cursor = db.cursor()
+	cursor.executemany("""UPDATE images SET image_vector = ? WHERE filename = ?""", tuple_list)
+	db.commit()
 
 
 """ TABLE: CAPTIONS """

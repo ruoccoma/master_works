@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import settings
 from word_database_helper import save_word_vector_tuple
 
 
 def run_glove():
-	with open("glove.6B.300d.txt") as word_embedding:
+	with open(settings.ROOT_DIR + "models/word_embedding/glove/glove.6B.300d.txt") as word_embedding:
 		print("Saving word embeddings to database...")
 		words = []
 		for line in word_embedding.readlines():

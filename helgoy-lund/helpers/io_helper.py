@@ -29,7 +29,8 @@ def create_missing_folders():
 	               "data/embeddings/stored-embeddings",
 	               "models/word2vec/embeddings",
 	               "models/word2visualvec/results",
-	               "models/word2visualvec/stored_models"]
+	               "models/word2visualvec/stored_models",
+	               "models/word2visualvec/model_embeddings"]
 
 	for directory in directories:
 		complete_path = settings.ROOT_DIR + directory

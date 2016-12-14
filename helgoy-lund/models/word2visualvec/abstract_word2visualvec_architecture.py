@@ -31,12 +31,29 @@ class AbstractWord2VisualVecArchitecture:
 		self.model = None
 		self.prediction_model = None
 
+
 		config1 = ker.tf.ConfigProto()
 		config1.gpu_options.allow_growth = True
 		ker.set_session(ker.tf.Session(config=config1))
 
 	@abstractmethod
 	def train(self):
+		pass
+
+	@abstractmethod
+	def predict(self):
+		pass
+
+	@abstractmethod
+	def test(self):
+		pass
+
+	@abstractmethod
+	def generate_training_data_embeddings(self):
+		pass
+
+	@abstractmethod
+	def evaluate(self):
 		pass
 
 	def get_architecture_name(self):
@@ -54,4 +71,8 @@ class AbstractWord2VisualVecArchitecture:
 		pass
 
 	def get_parameter_string(self):
-		return "%s-%s-%s-%s" % (self.epochs, self.batch_size, self.optimizer, self.loss.__name__)
+		if isinstance(self.loss, str):
+			loss_name = self.loss
+		else:
+			loss_name = self.loss.__name__
+		return "%s-%s-%s-%s" % (self.epochs, self.batch_size, self.optimizer, loss_name)

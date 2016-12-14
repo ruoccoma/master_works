@@ -1,16 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import itertools
+from keras.preprocessing import sequence
 import numpy as np  # Make sure that numpy is imported
 
 import settings
-from caption_database_helper import save_caption_vector, save_caption_vector_list
+from caption_database_helper import save_caption_vector_list
 from list_helpers import print_progress
-from word_database_helper import fetch_all_word_vectors, fetch_word_vector
+from word_database_helper import fetch_all_word_vectors
 
 
 def getWordVectors():
 	return fetch_all_word_vectors()
+
+
+def create_pad_sequences(sentences):
+	all_tokens = itertools.chain.from_iterable(sentences)
+	word_to_id = {token: idx for idx, token in enumerate(set(all_tokens))}
+
+	# TODO: Size of vocabulary is needed in embedding layer
+	# len(word_to_id)
+
+	index_sentences = []
+
+	for sentence in sentences:
+		index_sentence = []
+		for word in sentence:
+			if word in word_to_id:
+				index_sentence.append(word_to_id[word])
+		index_sentences.append(index_sentence)
+
+	pad_index_sentences = sequence.pad_sequences(index_sentences)
+
+	return pad_index_sentences
 
 
 def generate_and_store_caption_vectors(filepath):
@@ -20,9 +42,19 @@ def generate_and_store_caption_vectors(filepath):
 
 	sentences = extract_sentences(lines)
 
-	mean_vectors = convert_sentences(np.asarray(sentences), settings.WORD_EMBEDDING_DIMENSION)
+	maxlen = 0
+	for sentence in sentences:
+		if maxlen < len(sentence):
+			maxlen = len(sentence)
 
-	store_caption_vector(filepath, mean_vectors)
+	if settings.WORD_EMBEDDING_METHOD == "sequence":
+		sequence_embedding_vectors = create_pad_sequences(sentences)
+
+		store_caption_vector(filepath, sequence_embedding_vectors)
+	else:
+		mean_vectors = convert_sentences(np.asarray(sentences), settings.WORD_EMBEDDING_DIMENSION)
+
+		store_caption_vector(filepath, mean_vectors)
 
 
 def extract_sentences(lines):

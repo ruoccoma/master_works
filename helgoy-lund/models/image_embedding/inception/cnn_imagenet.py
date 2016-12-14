@@ -116,8 +116,7 @@ def convert_images_to_vectors():
 			image_path = settings.IMAGE_DIR + "/" + images[i]
 			image_data = tf.gfile.FastGFile(image_path, 'rb').read()
 			image_vector = sess.run(pool3, {'DecodeJpeg/contents:0': image_data})[0][0][0]
-			norm_image_vector = np.asarray(l2norm(image_vector))
-			store_image_vector_to_db(images[i], norm_image_vector)
+			store_image_vector_to_db(images[i], image_vector)
 			print(str(i + 1) + "/" + num_images_string)
 
 
