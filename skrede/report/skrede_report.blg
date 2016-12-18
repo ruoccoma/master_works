@@ -13,49 +13,66 @@ Database file #1: references.bib
 Warning--entry type for "ZALANDO:understanding-consumer-histories" isn't style-file defined
 --line 271 of file references.bib
 Warning--entry type for "discover-weekly" isn't style-file defined
---line 316 of file references.bib
+--line 427 of file references.bib
 Warning--entry type for "matrix-factorization" isn't style-file defined
---line 324 of file references.bib
+--line 435 of file references.bib
+Warning--entry type for "dataset:recsys15" isn't style-file defined
+--line 443 of file references.bib
+Warning--entry type for "dataset:taobao" isn't style-file defined
+--line 450 of file references.bib
+Warning--entry type for "dataset:movielens" isn't style-file defined
+--line 457 of file references.bib
+Warning--entry type for "skrede:code" isn't style-file defined
+--line 598 of file references.bib
+Warning--entry type for "hidasi:code" isn't style-file defined
+--line 605 of file references.bib
+Warning--entry type for "glample-rnn-benchmarks" isn't style-file defined
+--line 641 of file references.bib
+Warning--entry type for "kuster-good-bad-ugly" isn't style-file defined
+--line 649 of file references.bib
+A bad cross reference---entry "conf/recsys/WanLWGXC15"
+refers to entry "conf/recsys/2015p", which doesn't exist
+Warning--I didn't find a database entry for "conf/recsys/2015p"
 Warning--empty booktitle in Rumelhart:1986:LIR:104279.104293
-You've used 10 entries,
+You've used 38 entries,
             1791 wiz_defined-function locations,
-            516 strings with 5904 characters,
-and the built_in function-call counts, 2055 in all, are:
-= -- 182
-> -- 94
-< -- 3
-+ -- 36
-- -- 26
-* -- 107
-:= -- 333
-add.period$ -- 32
-call.type$ -- 10
-change.case$ -- 10
+            670 strings with 12125 characters,
+and the built_in function-call counts, 8769 in all, are:
+= -- 760
+> -- 484
+< -- 12
++ -- 178
+- -- 140
+* -- 505
+:= -- 1378
+add.period$ -- 120
+call.type$ -- 38
+change.case$ -- 37
 chr.to.int$ -- 0
-cite$ -- 11
-duplicate$ -- 93
-empty$ -- 204
-format.name$ -- 26
-if$ -- 467
+cite$ -- 39
+duplicate$ -- 401
+empty$ -- 824
+format.name$ -- 140
+if$ -- 2018
 int.to.chr$ -- 0
-int.to.str$ -- 10
-missing$ -- 6
-newline$ -- 53
-num.names$ -- 10
-pop$ -- 30
+int.to.str$ -- 38
+missing$ -- 25
+newline$ -- 188
+num.names$ -- 36
+pop$ -- 121
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 57
+skip$ -- 270
 stack$ -- 0
-substring$ -- 87
-swap$ -- 26
-text.length$ -- 3
+substring$ -- 351
+swap$ -- 131
+text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 18
-width$ -- 12
-write$ -- 107
-(There were 4 warnings)
+while$ -- 67
+width$ -- 40
+write$ -- 414
+(There was 1 error message)

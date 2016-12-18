@@ -1,9 +1,0 @@
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Recommendations from Amazon (left) and YouTube (right) when looking at Xbox One.\relax }}{4}{figure.caption.3}
-\contentsline {figure}{\numberline {1.2}{\ignorespaces Illustration of collaborative filtering\relax }}{6}{figure.caption.4}
-\contentsline {figure}{\numberline {1.3}{\ignorespaces A feed forward network. Exmaples are inserted into the network by setting the values in the input layer. The values of the nodes in each layer are computed as a function of the values in the nodes in the prior layer.\relax }}{8}{figure.caption.5}
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }

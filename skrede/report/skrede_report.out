@@ -13,15 +13,44 @@
 \BOOKMARK [2][-]{subsection.1.3.9}{Deep learning}{section.1.3}% 13
 \BOOKMARK [2][-]{subsection.1.3.10}{Recurrent neural networks}{section.1.3}% 14
 \BOOKMARK [2][-]{subsection.1.3.11}{LSTM and GRU}{section.1.3}% 15
-\BOOKMARK [2][-]{subsection.1.3.12}{RNN as a session-based recommender system}{section.1.3}% 16
-\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 17
-\BOOKMARK [0][-]{chapter.3}{Core}{}% 18
-\BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 19
-\BOOKMARK [1][-]{section.4.1}{Experiments}{chapter.4}% 20
-\BOOKMARK [1][-]{section.4.2}{Results}{chapter.4}% 21
-\BOOKMARK [1][-]{section.4.3}{Discussion}{chapter.4}% 22
-\BOOKMARK [0][-]{chapter.5}{Conclusion and further work}{}% 23
-\BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 24
-\BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 25
-\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 26
-\BOOKMARK [0][-]{appendix*.6}{Bibliography}{}% 27
+\BOOKMARK [2][-]{subsection.1.3.12}{One-hot vectors}{section.1.3}% 16
+\BOOKMARK [2][-]{subsection.1.3.13}{Embeddings}{section.1.3}% 17
+\BOOKMARK [2][-]{subsection.1.3.14}{RNN as a session-based recommender system}{section.1.3}% 18
+\BOOKMARK [0][-]{chapter.2}{State of the Art}{}% 19
+\BOOKMARK [1][-]{section.2.1}{Other approaches}{chapter.2}% 20
+\BOOKMARK [2][-]{subsection.2.1.1}{The item-to-item approach}{section.2.1}% 21
+\BOOKMARK [2][-]{subsection.2.1.2}{Markov models}{section.2.1}% 22
+\BOOKMARK [2][-]{subsection.2.1.3}{Deep learning}{section.2.1}% 23
+\BOOKMARK [1][-]{section.2.2}{Session-based recommendations with recurrent neural networks}{chapter.2}% 24
+\BOOKMARK [2][-]{subsection.2.2.1}{Input layer}{section.2.2}% 25
+\BOOKMARK [2][-]{subsection.2.2.2}{Embedding layer}{section.2.2}% 26
+\BOOKMARK [2][-]{subsection.2.2.3}{GRU layers}{section.2.2}% 27
+\BOOKMARK [2][-]{subsection.2.2.4}{Feedforward layers}{section.2.2}% 28
+\BOOKMARK [2][-]{subsection.2.2.5}{Training}{section.2.2}% 29
+\BOOKMARK [2][-]{subsection.2.2.6}{Evaluation metrics}{section.2.2}% 30
+\BOOKMARK [2][-]{subsection.2.2.7}{Results and Conclusion}{section.2.2}% 31
+\BOOKMARK [1][-]{section.2.3}{Improving RNNs for session-based recommendations}{chapter.2}% 32
+\BOOKMARK [2][-]{subsection.2.3.1}{Data augmentation}{section.2.3}% 33
+\BOOKMARK [2][-]{subsection.2.3.2}{Pre-training to adapt to temporal changes}{section.2.3}% 34
+\BOOKMARK [2][-]{subsection.2.3.3}{Privileged information}{section.2.3}% 35
+\BOOKMARK [2][-]{subsection.2.3.4}{Output embeddings}{section.2.3}% 36
+\BOOKMARK [2][-]{subsection.2.3.5}{Results and conclusion}{section.2.3}% 37
+\BOOKMARK [1][-]{section.2.4}{Utilizing context information}{chapter.2}% 38
+\BOOKMARK [1][-]{section.2.5}{Multi-rate learning}{chapter.2}% 39
+\BOOKMARK [1][-]{section.2.6}{Modeling event information}{chapter.2}% 40
+\BOOKMARK [1][-]{section.2.7}{Parallell RNN for feature-rich sessions}{chapter.2}% 41
+\BOOKMARK [0][-]{chapter.3}{Core}{}% 42
+\BOOKMARK [1][-]{section.3.1}{Goal}{chapter.3}% 43
+\BOOKMARK [1][-]{section.3.2}{Implementation}{chapter.3}% 44
+\BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 45
+\BOOKMARK [1][-]{section.4.1}{Datasets}{chapter.4}% 46
+\BOOKMARK [2][-]{subsection.4.1.1}{Movielens-1M}{section.4.1}% 47
+\BOOKMARK [2][-]{subsection.4.1.2}{RSC15}{section.4.1}% 48
+\BOOKMARK [1][-]{section.4.2}{Experiment}{chapter.4}% 49
+\BOOKMARK [1][-]{section.4.3}{Results}{chapter.4}% 50
+\BOOKMARK [1][-]{section.4.4}{Discussion}{chapter.4}% 51
+\BOOKMARK [0][-]{chapter.5}{Conclusion and further work}{}% 52
+\BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 53
+\BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 54
+\BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 55
+\BOOKMARK [0][-]{appendix*.18}{Bibliography}{}% 56

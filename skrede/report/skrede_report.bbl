@@ -59,4 +59,174 @@ Sepp Hochreiter and Jürgen Schmidhuber.
 \newblock In {\em SPATIOTEMPORAL MODELS IN BIOLOGICAL AND ARTIFICIAL SYSTEMS},
   pages 65--72. IOS Press, 1996.
 
+\bibitem{DBLP:journals/corr/ChoMGBSB14}
+Kyunghyun Cho, Bart van Merrienboer, {\c{C}}aglar G{\"{u}}l{\c{c}}ehre, Fethi
+  Bougares, Holger Schwenk, and Yoshua Bengio.
+\newblock Learning phrase representations using {RNN} encoder-decoder for
+  statistical machine translation.
+\newblock {\em CoRR}, abs/1406.1078, 2014.
+
+\bibitem{DBLP:journals/corr/ChungGCB14}
+Junyoung Chung, {\c{C}}aglar G{\"{u}}l{\c{c}}ehre, KyungHyun Cho, and Yoshua
+  Bengio.
+\newblock Empirical evaluation of gated recurrent neural networks on sequence
+  modeling.
+\newblock {\em CoRR}, abs/1412.3555, 2014.
+
+\bibitem{DBLP:journals/corr/abs-1301-3781}
+Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock Efficient estimation of word representations in vector space.
+\newblock {\em CoRR}, abs/1301.3781, 2013.
+
+\bibitem{DBLP:journals/corr/TanXL16}
+Yong~Kiam Tan, Xinxing Xu, and Yong Liu.
+\newblock Improved recurrent neural networks for session-based recommendations.
+\newblock {\em CoRR}, abs/1606.08117, 2016.
+
+\bibitem{Salakhutdinov:2007:RBM:1273496.1273596}
+Ruslan Salakhutdinov, Andriy Mnih, and Geoffrey Hinton.
+\newblock Restricted boltzmann machines for collaborative filtering.
+\newblock In {\em Proceedings of the 24th International Conference on Machine
+  Learning}, ICML '07, pages 791--798, New York, NY, USA, 2007. ACM.
+
+\bibitem{DBLP:journals/corr/WangWY14}
+Hao Wang, Naiyan Wang, and Dit{-}Yan Yeung.
+\newblock Collaborative deep learning for recommender systems.
+\newblock {\em CoRR}, abs/1409.2944, 2014.
+
+\bibitem{Oord:2013:DCM:2999792.2999907}
+A\"{a}ron van~den Oord, Sander Dieleman, and Benjamin Schrauwen.
+\newblock Deep content-based music recommendation.
+\newblock In {\em Proceedings of the 26th International Conference on Neural
+  Information Processing Systems}, NIPS'13, pages 2643--2651, USA, 2013. Curran
+  Associates Inc.
+
+\bibitem{conf/recsys/WanLWGXC15}
+Shengxian Wan, Yanyan Lan, Pengfei Wang, Jiafeng Guo, Jun Xu, and Xueqi Cheng.
+\newblock Next basket recommendation with neural networks.
+\newblock In Pablo Castells, editor, {\em RecSys Posters}, volume 1441 of {\em
+  CEUR Workshop Proceedings}. CEUR-WS.org, 2015.
+
+\bibitem{Yu:2016:DRM:2911451.2914683}
+Feng Yu, Qiang Liu, Shu Wu, Liang Wang, and Tieniu Tan.
+\newblock A dynamic recurrent model for next basket recommendation.
+\newblock In {\em Proceedings of the 39th International ACM SIGIR Conference on
+  Research and Development in Information Retrieval}, SIGIR '16, pages
+  729--732, New York, NY, USA, 2016. ACM.
+
+\bibitem{dataset:recsys15}
+Recsys challange 2015.
+\newblock \url{http://2015.recsyschallenge.com/challenge.html}.
+
+\bibitem{Rendle:2009:BBP:1795114.1795167}
+Steffen Rendle, Christoph Freudenthaler, Zeno Gantner, and Lars Schmidt-Thieme.
+\newblock Bpr: Bayesian personalized ranking from implicit feedback.
+\newblock In {\em Proceedings of the Twenty-Fifth Conference on Uncertainty in
+  Artificial Intelligence}, UAI '09, pages 452--461, Arlington, Virginia,
+  United States, 2009. AUAI Press.
+
+\bibitem{DBLP:journals/corr/BrebissonSAVB15}
+Alexandre de~Br{\'{e}}bisson, {\'{E}}tienne Simon, Alex Auvolat, Pascal
+  Vincent, and Yoshua Bengio.
+\newblock Artificial neural networks applied to taxi destination prediction.
+\newblock {\em CoRR}, abs/1508.00021, 2015.
+
+\bibitem{rnn-dropout}
+Yarin Gal and Zoubin Ghahramani.
+\newblock A theoretically grounded application of dropout in recurrent neural
+  networks.
+\newblock {\em CoRR}, abs/1512.05287, 2016.
+
+\bibitem{DBLP:journals/corr/ChatfieldSVZ14}
+Ken Chatfield, Karen Simonyan, Andrea Vedaldi, and Andrew Zisserman.
+\newblock Return of the devil in the details: Delving deep into convolutional
+  nets.
+\newblock {\em CoRR}, abs/1405.3531, 2014.
+
+\bibitem{email:Hidasi}
+Bal{\'{a}}zs Hidasi.
+\newblock Personal communication, 2016.
+
+\bibitem{dataset:taobao}
+Taobao.
+\newblock \url{https://tianchi.shuju.aliyun.com/competition/index.htm}.
+
+\bibitem{dataset:movielens}
+Movielens-1m.
+\newblock \url{http://files.grouplens.org/datasets/movielens/ml-1m.zip}.
+
+\bibitem{Song:2016:MDL:2911451.2914726}
+Yang Song, Ali~Mamdouh Elkahky, and Xiaodong He.
+\newblock Multi-rate deep learning for temporal recommendation.
+\newblock In {\em Proceedings of the 39th International ACM SIGIR Conference on
+  Research and Development in Information Retrieval}, SIGIR '16, pages
+  909--912, New York, NY, USA, 2016. ACM.
+
+\bibitem{Elkahky:2015:MDL:2736277.2741667}
+Ali~Mamdouh Elkahky, Yang Song, and Xiaodong He.
+\newblock A multi-view deep learning approach for cross domain user modeling in
+  recommendation systems.
+\newblock In {\em Proceedings of the 24th International Conference on World
+  Wide Web}, WWW '15, pages 278--288, Republic and Canton of Geneva,
+  Switzerland, 2015. International World Wide Web Conferences Steering
+  Committee.
+
+\bibitem{Twardowski:2016:MCI:2959100.2959162}
+Bartlomiej Twardowski.
+\newblock Modelling contextual information in session-aware recommender systems
+  with neural networks.
+\newblock In {\em Proceedings of the 10th ACM Conference on Recommender
+  Systems}, RecSys '16, pages 273--276, New York, NY, USA, 2016. ACM.
+
+\bibitem{Hidasi:2016:PRN:2959100.2959167}
+Bal\'{a}zs Hidasi, Massimo Quadrana, Alexandros Karatzoglou, and Domonkos Tikk.
+\newblock Parallel recurrent neural network architectures for feature-rich
+  session-based recommendations.
+\newblock In {\em Proceedings of the 10th ACM Conference on Recommender
+  Systems}, RecSys '16, pages 241--248, New York, NY, USA, 2016. ACM.
+
+\bibitem{tensorflow2015-whitepaper}
+Mart\'{\i}n Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo, Zhifeng Chen,
+  Craig Citro, Greg~S. Corrado, Andy Davis, Jeffrey Dean, Matthieu Devin,
+  Sanjay Ghemawat, Ian Goodfellow, Andrew Harp, Geoffrey Irving, Michael Isard,
+  Yangqing Jia, Rafal Jozefowicz, Lukasz Kaiser, Manjunath Kudlur, Josh
+  Levenberg, Dan Man\'{e}, Rajat Monga, Sherry Moore, Derek Murray, Chris Olah,
+  Mike Schuster, Jonathon Shlens, Benoit Steiner, Ilya Sutskever, Kunal Talwar,
+  Paul Tucker, Vincent Vanhoucke, Vijay Vasudevan, Fernanda Vi\'{e}gas, Oriol
+  Vinyals, Pete Warden, Martin Wattenberg, Martin Wicke, Yuan Yu, and Xiaoqiang
+  Zheng.
+\newblock {TensorFlow}: Large-scale machine learning on heterogeneous systems,
+  2015.
+\newblock Software available from tensorflow.org.
+
+\bibitem{skrede:code}
+Skrede rnn implementation.
+\newblock \url{https://github.com/ruoccoma/master_works/tree/master/skrede}.
+
+\bibitem{hidasi:code}
+Hidasi.
+\newblock Gru4rec code on github.
+\newblock \url{https://github.com/hidasib/GRU4Rec}.
+
+\bibitem{DBLP:journals/corr/KingmaB14}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock Adam: {A} method for stochastic optimization.
+\newblock {\em CoRR}, abs/1412.6980, 2014.
+
+\bibitem{DBLP:journals/corr/BahrampourRSS15}
+Soheil Bahrampour, Naveen Ramakrishnan, Lukas Schott, and Mohak Shah.
+\newblock Comparative study of caffe, neon, theano, and torch for deep
+  learning.
+\newblock {\em CoRR}, abs/1511.06435, 2015.
+
+\bibitem{glample-rnn-benchmarks}
+glample.
+\newblock rnn-benchmarks.
+\newblock \url{https://github.com/glample/rnn-benchmarks}.
+
+\bibitem{kuster-good-bad-ugly}
+Dan Kuster.
+\newblock The good, bad, \& ugly of tensorflow.
+\newblock \url{https://indico.io/blog/the-good-bad-ugly-of-tensorflow/}.
+
 \end{thebibliography}
