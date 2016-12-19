@@ -25,6 +25,7 @@
 \title{Title}
 \author{Ole Steinar Lillestøl Skrede}
 
+
 % ==============================================
 % ==============================================
 \begin{document}
@@ -35,6 +36,7 @@
 %%=========================================
 \pagenumbering{roman}
 \begin{abstract}
+	Many websites face the task of providing good recommendations to users which they know little about. E.g. an e-commerce site where many users are not logged in, or most users are new to the site. Recommender models based on having user profiles, struggle in this setting. The solution is often to use item-to-item models, where recommendations are made based on similar items. This approach does not utilize the full sequence of actions in a user session. Recurrent neural networks (RNNs) have the capability to perform predictions based on sequences. Recently, research has been done on applying RNNs in the session-based recommender setting. The results have been promising, RNNs have been shown to outperform state of the art models. We explore research on RNNs as recommender systems, and build our own basic RNN recommender model, which we will use for further research. A simple RNN model can perform well enough that it should be considered for practical applications, and several ways of further improving the performance has been studied. Apart from data augmentation techniques and customized training approaches, supplying the RNN model with additional information can improve performance. External contextual information such as time and weather, time between user actions in the session, and additional item descriptions such as text and images, can all be used to improve predictions.
 \end{abstract}
 % Table of contents
 \tableofcontents \clearpage

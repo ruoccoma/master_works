@@ -39,7 +39,7 @@
 \BOOKMARK [1][-]{section.2.5}{Multi-rate learning}{chapter.2}% 39
 \BOOKMARK [1][-]{section.2.6}{Modeling event information}{chapter.2}% 40
 \BOOKMARK [1][-]{section.2.7}{Parallell RNN for feature-rich sessions}{chapter.2}% 41
-\BOOKMARK [0][-]{chapter.3}{Core}{}% 42
+\BOOKMARK [0][-]{chapter.3}{RNN for session-based recommendation}{}% 42
 \BOOKMARK [1][-]{section.3.1}{Goal}{chapter.3}% 43
 \BOOKMARK [1][-]{section.3.2}{Implementation}{chapter.3}% 44
 \BOOKMARK [0][-]{chapter.4}{Experiments and results}{}% 45
