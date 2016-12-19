@@ -46,17 +46,18 @@
 \citation{DBLP:journals/corr/HidasiKBT15}
 \@writefile{toc}{\contentsline {subsubsection}{Recall@N}{20}{section*.8}}
 \@writefile{toc}{\contentsline {subsubsection}{MRR@N}{20}{section*.9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.7}Results and Conclusion}{20}{subsection.2.2.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.7}Results and conclusion}{20}{subsection.2.2.7}}
 \citation{DBLP:journals/corr/BrebissonSAVB15}
 \citation{rnn-dropout}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/ChatfieldSVZ14}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}Improving RNNs for session-based recommendations}{21}{section.2.3}}
+\newlabel{sec:improved-rnn}{{2.3}{21}{Improving RNNs for session-based recommendations}{section.2.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Data augmentation}{21}{subsection.2.3.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Pre-training to adapt to temporal changes}{21}{subsection.2.3.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Data augmentation for training sequences as suggested in \cite  {DBLP:journals/corr/TanXL16}. Multiple training sequences are generated from a original sequence. Random dropout is applied to the clicks in the sequences.\relax }}{22}{figure.caption.10}}
-\newlabel{fig:sequence-augmentation}{{2.3}{22}{Data augmentation for training sequences as suggested in \cite {DBLP:journals/corr/TanXL16}. Multiple training sequences are generated from a original sequence. Random dropout is applied to the clicks in the sequences.\relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Data augmentation for training sequences as suggested in \cite  {DBLP:journals/corr/TanXL16}. Multiple training sequences are generated from the original sequence. Random dropout is applied to the clicks in the sequences.\relax }}{22}{figure.caption.10}}
+\newlabel{fig:sequence-augmentation}{{2.3}{22}{Data augmentation for training sequences as suggested in \cite {DBLP:journals/corr/TanXL16}. Multiple training sequences are generated from the original sequence. Random dropout is applied to the clicks in the sequences.\relax }{figure.caption.10}{}}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/TanXL16}
@@ -67,11 +68,21 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Data augmentation with teacher labels as suggested in \cite  {DBLP:journals/corr/TanXL16}. The student model is trained to predict a tradeoff between the real label and the label predicted by the teacher model. The label produced by the teacher model is the teacher model's prediction of the correct label but on the remainder of the sequence in reverse.\relax }}{23}{figure.caption.11}}
 \newlabel{fig:rnn-teacher-student}{{2.4}{23}{Data augmentation with teacher labels as suggested in \cite {DBLP:journals/corr/TanXL16}. The student model is trained to predict a tradeoff between the real label and the label predicted by the teacher model. The label produced by the teacher model is the teacher model's prediction of the correct label but on the remainder of the sequence in reverse.\relax }{figure.caption.11}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Output embeddings}{23}{subsection.2.3.4}}
+\citation{DBLP:journals/corr/TanXL16}
+\citation{DBLP:journals/corr/HidasiKBT15}
+\citation{DBLP:journals/corr/TanXL16}
+\citation{DBLP:journals/corr/TanXL16}
+\citation{DBLP:journals/corr/HidasiKBT15}
+\citation{DBLP:journals/corr/TanXL16}
+\citation{DBLP:journals/corr/TanXL16}
+\citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/HidasiKBT15}
 \citation{email:Hidasi}
-\citation{DBLP:journals/corr/LiuWWL016}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Results and conclusion}{24}{subsection.2.3.5}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Utilizing context information}{24}{section.2.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Results from \cite  {DBLP:journals/corr/TanXL16}. \textbf  {B} is the baseline, which is the reported performance from \cite  {DBLP:journals/corr/HidasiKBT15}. ''Plots of both evaluation metrics on models with GRU size 100 (left) and 1000 (right). The x-axis is logarithmic in dataset fraction, the rightmost point corresponds to the full dataset. M2 does not apply to the full dataset, and results for M3 on the larger GRU size were omitted'' \cite  {DBLP:journals/corr/TanXL16}\relax }}{24}{figure.caption.12}}
+\newlabel{fig:improved-rnn-results}{{2.5}{24}{Results from \cite {DBLP:journals/corr/TanXL16}. \textbf {B} is the baseline, which is the reported performance from \cite {DBLP:journals/corr/HidasiKBT15}. ''Plots of both evaluation metrics on models with GRU size 100 (left) and 1000 (right). The x-axis is logarithmic in dataset fraction, the rightmost point corresponds to the full dataset. M2 does not apply to the full dataset, and results for M3 on the larger GRU size were omitted'' \cite {DBLP:journals/corr/TanXL16}\relax }{figure.caption.12}{}}
+\citation{DBLP:journals/corr/LiuWWL016}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Utilizing context information}{25}{section.2.4}}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{dataset:taobao}
 \citation{dataset:movielens}
@@ -80,21 +91,21 @@
 \citation{Song:2016:MDL:2911451.2914726}
 \citation{DBLP:journals/corr/TanXL16}
 \citation{DBLP:journals/corr/TanXL16}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Multi-rate learning}{26}{section.2.5}}
 \citation{Twardowski:2016:MCI:2959100.2959162}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Multi-rate learning}{27}{section.2.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Modeling event information}{27}{section.2.6}}
 \citation{Hidasi:2016:PRN:2959100.2959167}
 \citation{DBLP:journals/corr/HidasiKBT15}
 \citation{Hidasi:2016:PRN:2959100.2959167}
 \citation{Hidasi:2016:PRN:2959100.2959167}
 \citation{Hidasi:2016:PRN:2959100.2959167}
-\@writefile{toc}{\contentsline {section}{\numberline {2.6}Modeling event information}{27}{section.2.6}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.7}Parallell RNN for feature-rich sessions}{27}{section.2.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces One of the proposed architectures from \cite  {Hidasi:2016:PRN:2959100.2959167}. The image feature vector can be replaced with a text feature vector. f() is a nonlinearity applied to the output, in the paper they used tanh.\relax }}{28}{figure.caption.12}}
-\newlabel{fig:parallell-rnn}{{2.5}{28}{One of the proposed architectures from \cite {Hidasi:2016:PRN:2959100.2959167}. The image feature vector can be replaced with a text feature vector. f() is a nonlinearity applied to the output, in the paper they used tanh.\relax }{figure.caption.12}{}}
 \citation{Hidasi:2016:PRN:2959100.2959167}
 \citation{Hidasi:2016:PRN:2959100.2959167}
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Parallell RNN for feature-rich sessions}{28}{section.2.7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces One of the proposed architectures from \cite  {Hidasi:2016:PRN:2959100.2959167}. The image feature vector can be replaced with a text feature vector. f() is a nonlinearity applied to the output, in the paper they used tanh.\relax }}{29}{figure.caption.13}}
+\newlabel{fig:parallell-rnn}{{2.6}{29}{One of the proposed architectures from \cite {Hidasi:2016:PRN:2959100.2959167}. The image feature vector can be replaced with a text feature vector. f() is a nonlinearity applied to the output, in the paper they used tanh.\relax }{figure.caption.13}{}}
 \@setckpt{stateOfTheArt}{
-\setcounter{page}{30}
+\setcounter{page}{31}
 \setcounter{equation}{0}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
@@ -109,7 +120,7 @@
 \setcounter{subsubsection}{0}
 \setcounter{paragraph}{0}
 \setcounter{subparagraph}{0}
-\setcounter{figure}{5}
+\setcounter{figure}{6}
 \setcounter{table}{0}
 \setcounter{parentequation}{0}
 \setcounter{ContinuedFloat}{0}

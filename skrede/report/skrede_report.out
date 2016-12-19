@@ -28,7 +28,7 @@
 \BOOKMARK [2][-]{subsection.2.2.4}{Feedforward layers}{section.2.2}% 28
 \BOOKMARK [2][-]{subsection.2.2.5}{Training}{section.2.2}% 29
 \BOOKMARK [2][-]{subsection.2.2.6}{Evaluation metrics}{section.2.2}% 30
-\BOOKMARK [2][-]{subsection.2.2.7}{Results and Conclusion}{section.2.2}% 31
+\BOOKMARK [2][-]{subsection.2.2.7}{Results and conclusion}{section.2.2}% 31
 \BOOKMARK [1][-]{section.2.3}{Improving RNNs for session-based recommendations}{chapter.2}% 32
 \BOOKMARK [2][-]{subsection.2.3.1}{Data augmentation}{section.2.3}% 33
 \BOOKMARK [2][-]{subsection.2.3.2}{Pre-training to adapt to temporal changes}{section.2.3}% 34
@@ -53,4 +53,4 @@
 \BOOKMARK [1][-]{section.5.1}{Conclusion}{chapter.5}% 53
 \BOOKMARK [1][-]{section.5.2}{Further work}{chapter.5}% 54
 \BOOKMARK [0][-]{appendix.A}{List of Acronyms}{}% 55
-\BOOKMARK [0][-]{appendix*.18}{Bibliography}{}% 56
+\BOOKMARK [0][-]{appendix*.19}{Bibliography}{}% 56

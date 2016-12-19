@@ -30,29 +30,29 @@
 \contentsline {subsection}{\numberline {2.2.6}Evaluation metrics}{19}{subsection.2.2.6}
 \contentsline {subsubsection}{Recall@N}{20}{section*.8}
 \contentsline {subsubsection}{MRR@N}{20}{section*.9}
-\contentsline {subsection}{\numberline {2.2.7}Results and Conclusion}{20}{subsection.2.2.7}
+\contentsline {subsection}{\numberline {2.2.7}Results and conclusion}{20}{subsection.2.2.7}
 \contentsline {section}{\numberline {2.3}Improving RNNs for session-based recommendations}{21}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Data augmentation}{21}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Pre-training to adapt to temporal changes}{21}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Privileged information}{23}{subsection.2.3.3}
 \contentsline {subsection}{\numberline {2.3.4}Output embeddings}{23}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Results and conclusion}{24}{subsection.2.3.5}
-\contentsline {section}{\numberline {2.4}Utilizing context information}{24}{section.2.4}
-\contentsline {section}{\numberline {2.5}Multi-rate learning}{26}{section.2.5}
+\contentsline {section}{\numberline {2.4}Utilizing context information}{25}{section.2.4}
+\contentsline {section}{\numberline {2.5}Multi-rate learning}{27}{section.2.5}
 \contentsline {section}{\numberline {2.6}Modeling event information}{27}{section.2.6}
-\contentsline {section}{\numberline {2.7}Parallell RNN for feature-rich sessions}{27}{section.2.7}
-\contentsline {chapter}{\numberline {3}RNN for session-based recommendation}{30}{chapter.3}
-\contentsline {section}{\numberline {3.1}Goal}{30}{section.3.1}
-\contentsline {section}{\numberline {3.2}Implementation}{30}{section.3.2}
-\contentsline {chapter}{\numberline {4}Experiments and results}{33}{chapter.4}
-\contentsline {section}{\numberline {4.1}Datasets}{33}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Movielens-1M}{33}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}RSC15}{35}{subsection.4.1.2}
-\contentsline {section}{\numberline {4.2}Experiment}{35}{section.4.2}
-\contentsline {section}{\numberline {4.3}Results}{36}{section.4.3}
-\contentsline {section}{\numberline {4.4}Discussion}{37}{section.4.4}
-\contentsline {chapter}{\numberline {5}Conclusion and further work}{39}{chapter.5}
-\contentsline {section}{\numberline {5.1}Conclusion}{39}{section.5.1}
-\contentsline {section}{\numberline {5.2}Further work}{40}{section.5.2}
-\contentsline {chapter}{\numberline {A}List of Acronyms}{41}{appendix.A}
-\contentsline {chapter}{Bibliography}{42}{appendix*.18}
+\contentsline {section}{\numberline {2.7}Parallell RNN for feature-rich sessions}{28}{section.2.7}
+\contentsline {chapter}{\numberline {3}RNN for session-based recommendation}{31}{chapter.3}
+\contentsline {section}{\numberline {3.1}Goal}{31}{section.3.1}
+\contentsline {section}{\numberline {3.2}Implementation}{31}{section.3.2}
+\contentsline {chapter}{\numberline {4}Experiments and results}{34}{chapter.4}
+\contentsline {section}{\numberline {4.1}Datasets}{34}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Movielens-1M}{34}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}RSC15}{36}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Experiment}{36}{section.4.2}
+\contentsline {section}{\numberline {4.3}Results}{37}{section.4.3}
+\contentsline {section}{\numberline {4.4}Discussion}{38}{section.4.4}
+\contentsline {chapter}{\numberline {5}Conclusion and further work}{40}{chapter.5}
+\contentsline {section}{\numberline {5.1}Conclusion}{40}{section.5.1}
+\contentsline {section}{\numberline {5.2}Further work}{41}{section.5.2}
+\contentsline {chapter}{\numberline {A}List of Acronyms}{42}{appendix.A}
+\contentsline {chapter}{Bibliography}{43}{appendix*.19}
