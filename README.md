@@ -16,7 +16,7 @@ List of folders containing projects/works of my students, doing Master Thesis or
 
 ### DL For NLP ###
 
-_./havikbotn_: Deep Retrieval Models for Q/A
+[DeepModels for QA](https://github.com/eivhav/DeepQA): Deep Retrieval Models for Q/A
 
 [MemNW_Dialogue_Systems](https://github.com/Remeus/MemN2N-UDC): Dynamic Memory Networks Applied To Retrieval-Based Dialogue Systems (also [here](https://github.com/Remeus/SeqMod))
 
